@@ -21,7 +21,7 @@ public interface ServerServiceAsync {
 	 * @param callback AsyncCallback<Boolean> AsyncCallback with the result.
 	 * @return Boolean
 	 */
-	void addUser(User u, AsyncCallback<Boolean> callback);
+	void addUser(User u, AsyncCallback<User> callback);
 	
 	/**
 	 * Gets an ArrayList of all users currently in the DataStore.

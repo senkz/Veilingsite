@@ -3,9 +3,11 @@ package com.veilingsite.server;
 import java.util.ArrayList;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.gwt.user.server.rpc.UnexpectedException;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.domain.User;
 
@@ -24,7 +26,10 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		try {
 			Query q = em.createQuery("select us from User us where us.userName = ?1").setParameter(1, s);
 			u = (User) q.getSingleResult();
-		} finally {
+		} catch (NoResultException nre){
+			return null;
+		}
+		finally {
 			em.close();
 		}
 		return u;
@@ -34,18 +39,18 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	 * adds User u to the DataStore.
 	 * @param u User The user to be added.
 	 */
-	public Boolean addUser(User u) {
+	public User addUser(User u) {
 		EntityManager em = EMF.get().createEntityManager();
 		
 		if(getUser(u.getUserName())!=null)
-			return false;
+			return null;
 			
 		try {
 			em.persist(u);
 		} finally {
 			em.close();
 		}
-		return true;
+		return u;
 	}
 
 	/**

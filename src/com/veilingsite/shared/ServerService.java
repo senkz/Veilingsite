@@ -22,7 +22,7 @@ public interface ServerService extends RemoteService {
 	 * @param u User The user to be added.
 	 * @return True or False if user is added
 	 */
-	public Boolean addUser(User u);
+	public User addUser(User u);
 	
 	/**
 	 * Gets an ArrayList of all users currently in the DataStore.

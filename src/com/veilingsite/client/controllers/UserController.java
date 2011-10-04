@@ -20,38 +20,6 @@ public class UserController {
 		this.lw = lw;
 	}
 	
-	public Boolean addUser(User u) {
-		b = false;
-		
-		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
-		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {		
-			@Override
-			public void onFailure(Throwable caught) {}	
-			
-			@Override
-			public void onSuccess(Boolean result) {
-				b = result;
-			}
-		};
-		myService.addUser(u, callback);
-
-		return b;
-	}
-	
-	public void loginUser(User u) {
-		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
-		AsyncCallback<User> callback = new AsyncCallback<User>() {		
-			@Override
-			public void onFailure(Throwable caught) {}	
-			
-			@Override
-			public void onSuccess(User result) {
-				lw.setLogin(result);
-			}
-		};
-		myService.loginUser(u, callback);
-	}
-	
 	/*
 	 *  Update this later?
 	 * 
