@@ -1,53 +1,41 @@
 package com.veilingsite.shared.domain;
-import java.util.Vector;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 public class Category {
 
-  public int categoryId;
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int categoryId;
+    public String title;
+    public int parentCategory;
 
-  public String category;
+    public Category() {
+    }
+    
+    public Category(String title, int parentId) {
+    	this.title = title;
+    	this.parentCategory = parentId;
+    }
 
-  public int parentCategory;
+    public int getCategoryId() {
+    	return categoryId;
+    }
 
-    /**
-   * 
-   * @element-type Category
-   */
-  public Vector  Parent;
-    public Category Parent;
-    public Vector  my;
-    /**
-   * 
-   * @element-type Auction
-   */
-  public Vector  Auction Category;
+    public String getTitle() {
+    	return title;
+    }
 
-  public Boolean Category(id int) {
-  return null;
-  }
+    public void setTitle(String s) {
+    	this.title = s;
+    }
 
-  public Boolean Category(s String) {
-  return null;
-  }
+    public int getParent() {
+    	return parentCategory;
+    }
 
-  public int getCategoryId() {
-  return 0;
-  }
-
-  public String getCategory() {
-  return null;
-  }
-
-  public Boolean setCategory( s) {
-  return null;
-  }
-
-  public int getParent() {
-  return 0;
-  }
-
-  public Boolean setParent(i int) {
-  return null;
-  }
-
+    public void setParent(int parentId) {
+    	this.parentCategory = parentId;
+    }
 }

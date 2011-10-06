@@ -20,8 +20,8 @@ public class Auction extends User {
     public Date closeDate;
     public Double startAmount;
 
-    public User Owner;
-    public Category Category;
+    public User owner;
+    public Category category;
     /**
      * 
      * @element-type Image
@@ -35,11 +35,11 @@ public class Auction extends User {
     }
     
     public Auction(String title, String desc, Double amount, User owner, Category cat) {
-    	this.title = title;
-    	this.description = desc;
-    	this.startAmount = amount;
-    	this.Owner = owner;
-    	this.Category = cat;
+    	setTitle(title);
+    	setDescription(desc);
+    	setStartAmount(amount);
+    	setOwner(owner);
+    	setCategory(cat);
     }
 
     public String getTitle() {
@@ -80,5 +80,21 @@ public class Auction extends User {
 
     public void setStartAmount(Double d) {
     	startAmount = d;
+    }
+    
+    public User getOwner() {
+    	return owner;
+    }
+    
+    private void setOwner(User owner) {
+    	this.owner = owner;
+    }
+    
+    public Category getCategory() {
+    	return category;
+    }
+    
+    public void setCategory(Category category) {
+    	this.category = category;
     }
 }
