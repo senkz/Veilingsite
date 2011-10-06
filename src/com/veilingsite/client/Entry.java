@@ -7,19 +7,17 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.veilingsite.client.controllers.UserController;
+import com.veilingsite.client.pages.AuctionPage;
 import com.veilingsite.client.pages.HomePage;
 
 public class Entry implements EntryPoint {
 
-	UserController uc = new UserController();
-
 	@Override
 	public void onModuleLoad() {
-		RootPanel rp = RootPanel.get("main");	
+		
 		final TabPanel myTabPanel = new TabPanel();
 
-		myTabPanel.setSize("800px", "100px");
+		myTabPanel.setSize("960px", "100px");
 		myTabPanel.setAnimationEnabled(true);
 
 		myTabPanel.addSelectionHandler(new SelectionHandler<Integer>() {
@@ -30,14 +28,17 @@ public class Entry implements EntryPoint {
 				switch(event.getSelectedItem()) {
 				default:
 				case 0:
-					p.add(new HomePage(uc));
+					p.add(new HomePage());
+					break;
+				case 1:
+					p.add(new AuctionPage());
 					break;
 				}
 			}
 		});
 
 		myTabPanel.add(new HorizontalPanel(), "Home");
-		//myTabPanel.add(new HorizontalPanel(), "Registreren");
+		myTabPanel.add(new HorizontalPanel(), "Auctions");
 		//myTabPanel.add(new HorizontalPanel(), "Bestemmingen");
 		//myTabPanel.add(new HorizontalPanel(), "Mijn Boekingen");
 		//myTabPanel.add(new HorizontalPanel(), "Contact");
