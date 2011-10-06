@@ -6,14 +6,13 @@ public class Image {
 
   public String imageUrl;
 
-    public Auction Auction image;
+  public Auction auction;
 
-  public Boolean Image(s String) {
-  return null;
+  public Boolean Image(String s) {
+	  return null;
   }
 
   public String getImageUrl() {
-  return null;
+	  return null;
   }
-
 }

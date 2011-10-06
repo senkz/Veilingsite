@@ -1,3 +1,5 @@
+package com.veilingsite.shared.domain;
+
 import java.util.Vector;
 
 public class Payment {
@@ -7,11 +9,10 @@ public class Payment {
   public String paymentType;
 
   public String accountidentifier;
+  
+  public User User;
 
-    public Vector  myUser;
-    public User User Address;
-
-  public void Payment(id int) {
+  public void Payment(int id) {
   }
 
   public String getPaymentType() {
