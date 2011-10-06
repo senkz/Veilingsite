@@ -20,7 +20,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	 * @param s String User name of the user to be returned.
 	 * @return User returns the User if found, else null.
 	 */
-	public User getUser(String s) {
+	public User getUser(String s) {		
 		EntityManager em = EMF.get().createEntityManager();
 		User u = null;
 		try {
