@@ -9,6 +9,7 @@ import javax.persistence.Query;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.user.server.rpc.UnexpectedException;
 import com.veilingsite.shared.ServerService;
+import com.veilingsite.shared.domain.Auction;
 import com.veilingsite.shared.domain.User;
 
 public class ServerServiceImpl extends RemoteServiceServlet implements ServerService {
@@ -51,6 +52,17 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			em.close();
 		}
 		return u;
+	}
+	
+	public Auction addAuction(Auction a) {
+		EntityManager em = EMF.get().createEntityManager();
+		System.out.println(a.getDescription());
+		try {
+			em.persist(a);
+		} finally {
+			em.close();
+		}
+		return a;
 	}
 
 	/**

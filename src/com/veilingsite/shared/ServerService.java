@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.veilingsite.shared.domain.Auction;
 import com.veilingsite.shared.domain.User;
 
 @RemoteServiceRelativePath("myServer")
@@ -23,6 +24,8 @@ public interface ServerService extends RemoteService {
 	 * @return True or False if user is added
 	 */
 	public User addUser(User u);
+	
+	public Auction addAuction(Auction a);
 	
 	/**
 	 * Gets an ArrayList of all users currently in the DataStore.

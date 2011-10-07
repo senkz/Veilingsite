@@ -3,6 +3,7 @@ package com.veilingsite.shared;
 import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.veilingsite.shared.domain.Auction;
 import com.veilingsite.shared.domain.User;
 
 public interface ServerServiceAsync {
@@ -22,6 +23,8 @@ public interface ServerServiceAsync {
 	 * @return Boolean
 	 */
 	void addUser(User u, AsyncCallback<User> callback);
+	
+	void addAuction(Auction a, AsyncCallback<Auction> callback);
 	
 	/**
 	 * Gets an ArrayList of all users currently in the DataStore.

@@ -2,7 +2,6 @@ package com.veilingsite.shared.domain;
 
 import java.util.ArrayList;
 import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,12 +33,14 @@ public class Auction extends User {
     public Auction() {
     }
     
-    public Auction(String title, String desc, Double amount, User owner, Category cat) {
+    public Auction(String title, String desc, Double amount, User owner, Category cat, Date date) {
     	setTitle(title);
     	setDescription(desc);
     	setStartAmount(amount);
     	setOwner(owner);
     	setCategory(cat);
+    	setCloseDate(date);
+    	setStartDate(new Date());
     }
 
     public String getTitle() {

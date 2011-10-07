@@ -1,12 +1,14 @@
 package com.veilingsite.shared.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Address {
+public class Address implements Serializable {
 
 	public String street;
     public String postalCode;
