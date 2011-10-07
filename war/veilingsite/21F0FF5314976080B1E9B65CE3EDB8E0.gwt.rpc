@@ -1,0 +1,28 @@
+com.google.gwt.i18n.shared.impl.DateRecord, true, true, true, true, com.google.gwt.i18n.shared.impl.DateRecord/3375188634, 3375188634
+com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException, true, true, true, true, com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException/3936916533, 3936916533
+com.google.gwt.user.client.rpc.RpcTokenException, true, true, false, false, com.google.gwt.user.client.rpc.RpcTokenException/2345075298, 2345075298
+com.google.gwt.user.client.rpc.XsrfToken, false, false, true, true, com.google.gwt.user.client.rpc.XsrfToken/4254043109, 4254043109
+com.veilingsite.shared.ServerService, false, false, false, false, _, 352814566
+com.veilingsite.shared.domain.Auction, true, true, true, true, com.veilingsite.shared.domain.Auction/3023471755, 3023471755
+@ClientFields,com.veilingsite.shared.domain.Auction,auctionId,title,description,startDate,closeDate,startAmount,owner,category,Image,myBid
+com.veilingsite.shared.domain.Bid, true, true, true, true, com.veilingsite.shared.domain.Bid/3838102960, 3838102960
+@ClientFields,com.veilingsite.shared.domain.Bid,bidId,amount,date,myUser,myAuction
+com.veilingsite.shared.domain.Category, true, true, true, true, com.veilingsite.shared.domain.Category/2342117137, 2342117137
+@ClientFields,com.veilingsite.shared.domain.Category,categoryId,title,parentCategory
+com.veilingsite.shared.domain.Image, true, true, true, true, com.veilingsite.shared.domain.Image/2381075630, 2381075630
+@ClientFields,com.veilingsite.shared.domain.Image,imageId,imageUrl,auction
+com.veilingsite.shared.domain.User, true, true, true, true, com.veilingsite.shared.domain.User/265302030, 265302030
+@ClientFields,com.veilingsite.shared.domain.User,userId,userName,email,firstName,surName,mobilePhoneNumber,password,permission
+java.lang.Double, true, true, true, true, java.lang.Double/858496421, 858496421
+java.lang.Exception, true, false, true, false, java.lang.Exception/1920171873, 1920171873
+java.lang.Integer, true, true, true, true, java.lang.Integer/3438268394, 3438268394
+java.lang.Long, true, true, true, true, java.lang.Long/4227064769, 4227064769
+java.lang.Number, true, false, true, false, java.lang.Number/300033342, 300033342
+java.lang.RuntimeException, true, false, true, false, java.lang.RuntimeException/515124647, 515124647
+java.lang.String, true, true, true, true, java.lang.String/2004016611, 2004016611
+java.lang.Throwable, true, false, true, false, java.lang.Throwable/2953622131, 2953622131
+java.sql.Date, true, true, true, true, java.sql.Date/730999118, 730999118
+java.sql.Time, true, true, true, true, java.sql.Time/1816797103, 1816797103
+java.sql.Timestamp, true, true, true, true, java.sql.Timestamp/3040052672, 3040052672
+java.util.ArrayList, true, true, true, true, java.util.ArrayList/4159755760, 4159755760
+java.util.Date, true, true, true, true, java.util.Date/3385151746, 3385151746
