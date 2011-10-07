@@ -6,9 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-/**
- * TODO	constructor checking if user name already exists upon creation.
- */
 @Entity
 public class User implements Serializable {
 	@Id
@@ -113,5 +110,47 @@ public class User implements Serializable {
 	 */
 	public void setPermission(int i) {
 		this.permission = i;
+	}
+
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * @param surName the surName to set
+	 */
+	public void setSurName(String surName) {
+		this.surName = surName;
+	}
+
+	/**
+	 * @param mobilePhoneNumber the mobilePhoneNumber to set
+	 */
+	public void setMobilePhoneNumber(String mobilePhoneNumber) {
+		this.mobilePhoneNumber = mobilePhoneNumber;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

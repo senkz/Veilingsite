@@ -1,45 +1,43 @@
 package com.veilingsite.client.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.veilingsite.shared.ServerService;
-import com.veilingsite.shared.ServerServiceAsync;
+import com.google.gwt.user.client.ui.*;
+import com.veilingsite.shared.*;
 import com.veilingsite.shared.domain.User;
 
 public class RegisterWidget extends VerticalPanel {
-
-	private Label myLabel = new Label();
+	
+	private FlexTable table = new FlexTable();
+	private Label systemStatus = new Label("Register User");
+	private TextBox name = new TextBox();
+	private Button login = new Button("Register");
+	private TextBox password = new TextBox();
 	
 	public RegisterWidget() {	
-		final TextBox name = new TextBox();
-		final TextBox pw = new TextBox();
-		Button login = new Button("Register user");
-		
-		add(myLabel);
-		add(name);
-		add(pw);
-		add(login);
+		add(systemStatus);
+		add(table);
+		table.setWidget(0, 0, new Label("Username: "));
+		table.setWidget(0, 1, name);
+		table.setWidget(1, 0, new Label("Password: "));
+		table.setWidget(1, 1, password);
+		table.setWidget(2, 0, login);
 		
 		login.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				addUser(new User(name.getText(), pw.getText()));
-				myLabel.setText("Register request processing...");
+				addUser(new User(name.getText(), password.getText()));
+				systemStatus.setText("Register request processing...");
 			}
 		});
 	}
 	
 	private void setRegisterStatus(User u) {
 		if(u != null) {
-			myLabel.setText("Welkom "+u.getUserName());
+			systemStatus.setText("Welcome "+u.getUserName());
 		} else {
-			myLabel.setText("User addition was unsuccesfull, username probably already existed");
+			systemStatus.setText("User addition was unsuccesfull, username probably already existed");
 		}
 	}
 	

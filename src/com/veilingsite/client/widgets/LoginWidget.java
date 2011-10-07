@@ -1,40 +1,38 @@
 package com.veilingsite.client.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.*;
 import com.veilingsite.client.controllers.UC;
-import com.veilingsite.shared.ServerService;
-import com.veilingsite.shared.ServerServiceAsync;
+import com.veilingsite.shared.*;
 import com.veilingsite.shared.domain.User;
 
 public class LoginWidget extends VerticalPanel {
 
-	private Label myLabel = new Label();
-	Button login = new Button("Login");
-	
-	public LoginWidget() {	
-		final TextBox name = new TextBox();
-		final TextBox pw = new TextBox();
+	private Label systemStatus = new Label("Login User");
+	private Button login = new Button("Login");
+	private TextBox username = new TextBox();
+	private TextBox password = new TextBox();
+	private FlexTable table = new FlexTable();
 		
-		add(myLabel);
-		add(name);
-		add(pw);
-		add(login);
+	public LoginWidget() {
+		add(systemStatus);
+		add(table);	
+		table.setWidget(0, 0, new Label("Username:"));
+		table.setWidget(0, 1, username);
+		table.setWidget(1, 0, new Label("Password:"));
+		table.setWidget(1, 1, password);
+		table.setWidget(2, 0, login);		
 		
 		login.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
 				if(UC.getLoggedIn() == null) {
-					loginUser(new User(name.getText(), pw.getText()));
-					myLabel.setText("Login request processing...");
+					loginUser(new User(username.getText(), password.getText()));
+					systemStatus.setText("Login request processing...");
 				} else {
-					myLabel.setText("User logged out.");
+					systemStatus.setText("User logged out.");
 					login.setText("Login");
 					UC.setLoggedIn(null);
 					return;
@@ -45,11 +43,11 @@ public class LoginWidget extends VerticalPanel {
 	
 	private void setLogin(User u) {
 		if(u != null) {
-			myLabel.setText("Welkom "+u.getUserName());
+			systemStatus.setText("Welkom "+u.getUserName());
 			login.setText("Logout");
 			UC.setLoggedIn(u);
 		} else {
-			myLabel.setText("User was not found or submitted data was incorrect.");
+			systemStatus.setText("User was not found or submitted data was incorrect.");
 		}
 	}
 	
