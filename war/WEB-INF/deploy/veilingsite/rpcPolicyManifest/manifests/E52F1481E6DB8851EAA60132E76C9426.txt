@@ -1,2 +1,0 @@
-serviceClass: com.veilingsite.shared.ServerService
-path: D9B626074881F426F9BF118E4C8E2215.gwt.rpc
