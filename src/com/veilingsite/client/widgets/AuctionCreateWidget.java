@@ -31,7 +31,6 @@ public class AuctionCreateWidget extends VerticalPanel{
 		public AuctionCreateWidget() throws UserException  {
 			if(UC.getLoggedIn() == null)
 				throw new UserException("ERROR: User must be logged in.");
-
 			
 			table.setWidget(0, 0, new Label("Title: "));
 			table.setWidget(0, 1, title);
@@ -55,9 +54,16 @@ public class AuctionCreateWidget extends VerticalPanel{
 			addAuction.addClickHandler(new ClickHandler(){
 				@Override
 				public void onClick(ClickEvent event) {
+					double d;
+					try {
+						d = Double.parseDouble(startamount.getText());
+					} catch(NumberFormatException nfe) {
+						Window.alert("Start amount must be a numerical value");
+						return;
+					}
 					if(UC.getLoggedIn() == null)
 						return;
-					addAuction(new Auction(title.getText(), description.getText(), Double.parseDouble(startamount.getText()), UC.getLoggedIn().getUserName(), null, auctionclosedate.getValue()));
+					addAuction(new Auction(title.getText(), description.getText(), d, UC.getLoggedIn().getUserName(), null, auctionclosedate.getValue()));
 				}
 			});
 			
@@ -68,10 +74,8 @@ public class AuctionCreateWidget extends VerticalPanel{
 			ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
 			AsyncCallback<Auction> callback = new AsyncCallback<Auction>() {		
 				@Override
-				public void onFailure(Throwable caught) {
-					
-					caught.printStackTrace();
-				}	
+				public void onFailure(Throwable caught) {}	
+				
 				@Override
 				public void onSuccess(Auction result) {
 					Window.alert("Auction has been added succesfully");

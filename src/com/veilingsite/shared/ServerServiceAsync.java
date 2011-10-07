@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.veilingsite.shared.domain.Auction;
+import com.veilingsite.shared.domain.Bid;
+import com.veilingsite.shared.domain.Category;
 import com.veilingsite.shared.domain.User;
 
 public interface ServerServiceAsync {
@@ -36,4 +38,6 @@ public interface ServerServiceAsync {
 	void getUserList(AsyncCallback<ArrayList<User>> callback);
 
 	void loginUser(User u, AsyncCallback<User> callback);
+
+	void getAuctionList(User limitUser, Category limitCat, AsyncCallback<ArrayList<Auction>> callback);
 }

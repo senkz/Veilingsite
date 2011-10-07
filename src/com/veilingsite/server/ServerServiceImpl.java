@@ -1,6 +1,7 @@
 package com.veilingsite.server;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -10,6 +11,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.user.server.rpc.UnexpectedException;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.domain.Auction;
+import com.veilingsite.shared.domain.Bid;
+import com.veilingsite.shared.domain.Category;
 import com.veilingsite.shared.domain.User;
 
 public class ServerServiceImpl extends RemoteServiceServlet implements ServerService {
@@ -70,7 +73,6 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	
 	public Auction addAuction(Auction a) {
 		EntityManager em = EMF.get().createEntityManager();
-		System.out.println(a.getDescription());
 		try {
 			em.persist(a);
 		} finally {
@@ -106,5 +108,20 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public ArrayList<Auction> getAuctionList(User limitUser, Category limitCat) {
+		EntityManager em = EMF.get().createEntityManager();
+		ArrayList<Auction> l = new ArrayList<Auction>();
+		
+		String query = "select from Auction";
+		
+		try {
+			l = new ArrayList<Auction>(em.createQuery(query).getResultList());
+		} finally {
+			em.close();
+		}
+		return l;
 	}
 }

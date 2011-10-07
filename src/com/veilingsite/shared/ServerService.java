@@ -2,10 +2,11 @@ package com.veilingsite.shared;
 
 import java.util.ArrayList;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.veilingsite.shared.domain.Auction;
+import com.veilingsite.shared.domain.Bid;
+import com.veilingsite.shared.domain.Category;
 import com.veilingsite.shared.domain.User;
 
 @RemoteServiceRelativePath("myServer")
@@ -36,4 +37,6 @@ public interface ServerService extends RemoteService {
 	public ArrayList<User> getUserList();
 	
 	public User loginUser(User u);
+
+	public ArrayList<Auction> getAuctionList(User limitUser, Category limitCat);
 }

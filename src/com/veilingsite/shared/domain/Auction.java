@@ -16,6 +16,7 @@ public class Auction implements Serializable {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long auctionId;
+
 	private String title;
 	private String description;
 	private Date startDate;
@@ -28,11 +29,11 @@ public class Auction implements Serializable {
      * @element-type Image
      */
     public Image Image;
-    public ArrayList<Bid> myBid = new ArrayList<Bid>();
     
-    
+    @NotPersistent
+    public ArrayList<Bid> bidList = new ArrayList<Bid>();
 
-    public Auction() {
+	public Auction() {
     }
     
     public Auction(String title, String desc, Double amount, String owner, Category cat, Date date) {
@@ -100,4 +101,39 @@ public class Auction implements Serializable {
     public void setCategory(Category category) {
     	this.category = category;
     }
+    
+    public Bid getHighestBid() {
+    	Bid bid = null;
+    	for(Bid nbid : bidList)
+    		if(bid == null)
+    			bid = nbid;
+    		else if(bid.getAmount() < nbid.getAmount())
+    			bid = nbid;
+    	return bid;
+    }
+
+	public void addBid(Bid bid) {
+		bidList.add(bid);
+	}
+	
+	/**
+	 * @return the auctionId
+	 */
+	public Long getAuctionId() {
+		return auctionId;
+	}
+
+    /**
+	 * @return the bidList
+	 */
+	public ArrayList<Bid> getBidList() {
+		return bidList;
+	}
+
+	/**
+	 * @param bidList the bidList to set
+	 */
+	public void setBidList(ArrayList<Bid> bidList) {
+		this.bidList = bidList;
+	}
 }
