@@ -1,26 +1,28 @@
 package com.veilingsite.shared.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+
+import javax.jdo.annotations.NotPersistent;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Auction extends User {
+public class Auction implements Serializable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer auctionId;
-    public String title;
-    public String description;
-    public Date startDate;
-    public Date closeDate;
-    public Double startAmount;
-
-    public User owner;
-    public Category category;
+    private Long auctionId;
+	private String title;
+	private String description;
+	private Date startDate;
+	private Date closeDate;
+	private Double startAmount;
+	private String owner;
+	private Category category;
     /**
      * 
      * @element-type Image
@@ -33,7 +35,7 @@ public class Auction extends User {
     public Auction() {
     }
     
-    public Auction(String title, String desc, Double amount, User owner, Category cat, Date date) {
+    public Auction(String title, String desc, Double amount, String owner, Category cat, Date date) {
     	setTitle(title);
     	setDescription(desc);
     	setStartAmount(amount);
@@ -83,11 +85,11 @@ public class Auction extends User {
     	startAmount = d;
     }
     
-    public User getOwner() {
+    public String getOwner() {
     	return owner;
     }
     
-    private void setOwner(User owner) {
+    private void setOwner(String owner) {
     	this.owner = owner;
     }
     

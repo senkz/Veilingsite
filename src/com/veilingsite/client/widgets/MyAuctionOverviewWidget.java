@@ -82,7 +82,7 @@ public class MyAuctionOverviewWidget extends VerticalPanel{
 			addAuction.addClickHandler(new ClickHandler(){
 				@Override
 				public void onClick(ClickEvent event) {
-					addAuction(new Auction(title.getText(), description.getText(), Double.parseDouble(startamount.getText()), UC.getLoggedIn(), null, auctionclosedate.getValue()));
+					addAuction(new Auction(title.getText(), description.getText(), Double.parseDouble(startamount.getText()), UC.getLoggedIn().getUserName(), null, auctionclosedate.getValue()));
 				}
 			});
 			
