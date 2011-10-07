@@ -10,8 +10,8 @@ public class HomePage extends VerticalPanel {
 	private Label myLabel = new Label();
 	
 	private AdminUserEditWidget uew = new AdminUserEditWidget();
-	private LoginWidget lw = new LoginWidget();
-	private RegisterWidget rw = new RegisterWidget();
+	private UserLoginWidget lw = new UserLoginWidget();
+	private UserRegisterWidget rw = new UserRegisterWidget();
 	
 	public HomePage(){
 		add(myLabel);
