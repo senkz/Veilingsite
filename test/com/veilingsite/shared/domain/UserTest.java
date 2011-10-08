@@ -10,7 +10,7 @@ public class UserTest {
 	public void testUser() {
 		// Testcase: create User
 		User u = new User();
-		assertEquals(null, u.getUserName());
+		assertTrue(u instanceof User);
 	}
 
 	@Test
@@ -29,7 +29,7 @@ public class UserTest {
 		assertEquals("test", u.getPassword());
 		assertEquals("sethsnel@hotmail.com", u.getEmail());
 		assertEquals("seth", u.getFirstName());
-		assertEquals("snel", u.getSurName());		
+		assertEquals("snel", u.getSurName());
 	}
 
 	@Test
