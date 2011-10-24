@@ -16,9 +16,9 @@ public class CategroyTest {
 	@Test
 	public void testCategoryStringInt() {
 		// Testcase: create Category full constructor
-		Category c = new Category("categorie",4);
+		Category c = new Category("categorie","fiets");
 		assertEquals("categorie", c.getTitle());
-		assertEquals(4, c.getParent());
+		assertEquals("fiets", c.getParent());
 	}
 
 	@Test
@@ -33,8 +33,8 @@ public class CategroyTest {
 	public void testGetParent() {
 		// Testcase: set & retrieve category parent
 		Category c = new Category();
-		c.setParent(3);
-		assertEquals(3, c.getParent());
+		c.setParent("test");
+		assertEquals("test", c.getParent());
 	}
 
 }

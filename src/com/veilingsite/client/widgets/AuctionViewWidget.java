@@ -90,7 +90,8 @@ public class AuctionViewWidget extends VerticalPanel {
 		
 		for(final Auction a : al) {
 			final TextBox t_bid = new TextBox();
-			Button b_bid = new Button("Bid");
+			Button b_bid = new Button("View");
+			Button e_bid = new Button("Edit");
 			int rown = table.getRowCount();
 			
 			table.setWidget(rown, 0, new Label(a.getTitle()));
@@ -106,8 +107,10 @@ public class AuctionViewWidget extends VerticalPanel {
 			table.setWidget(rown, 4, new Label(s));
 			
 			if(UC.getLoggedIn() != null) {
-				table.setWidget(rown, 5, t_bid);
-				table.setWidget(rown, 6, b_bid);
+				table.setWidget(rown, 5, b_bid);
+				if(UC.getLoggedIn().getUserName().equals(a.getOwner())){
+					table.setWidget(rown, 6, e_bid);
+				}
 				
 				b_bid.addClickHandler(new ClickHandler() {
 					@Override
