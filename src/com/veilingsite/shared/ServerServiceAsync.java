@@ -40,4 +40,6 @@ public interface ServerServiceAsync {
 	void loginUser(User u, AsyncCallback<User> callback);
 
 	void getAuctionList(User limitUser, Category limitCat, AsyncCallback<ArrayList<Auction>> callback);
+	
+	void getCategoryList(AsyncCallback<ArrayList<Category>> callback);
 }

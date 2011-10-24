@@ -81,6 +81,7 @@ h1 {
   position: absolute;
   bottom: 0;
   right: 0;
+  text-transform: capitalize;
 }
 
 .sendButton {

@@ -9,16 +9,16 @@ import javax.persistence.Id;
 @Entity
 public class Category implements Serializable{
 
-	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int categoryId;
+	@Id
     public String title;
-    public int parentCategory;
+    public String parentCategory;
 
     public Category() {
     }
     
-    public Category(String title, int parentId) {
+    public Category(String title, String parentId) {
     	this.title = title;
     	this.parentCategory = parentId;
     }
@@ -35,11 +35,11 @@ public class Category implements Serializable{
     	this.title = s;
     }
 
-    public int getParent() {
+    public String getParent() {
     	return parentCategory;
     }
 
-    public void setParent(int parentId) {
+    public void setParent(String parentId) {
     	this.parentCategory = parentId;
     }
 }

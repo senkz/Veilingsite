@@ -39,4 +39,5 @@ public interface ServerService extends RemoteService {
 	public User loginUser(User u);
 
 	public ArrayList<Auction> getAuctionList(User limitUser, Category limitCat);
+	public ArrayList<Category> getCategoryList();
 }

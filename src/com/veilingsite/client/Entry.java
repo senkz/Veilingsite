@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
+import com.veilingsite.client.pages.AdminAuctionPage;
 import com.veilingsite.client.pages.AuctionPage;
 import com.veilingsite.client.pages.HomePage;
 
@@ -35,12 +36,16 @@ public class Entry implements EntryPoint {
 				case 1:
 					p.add(new AuctionPage());
 					break;
+				case 3:
+					p.add(new AdminAuctionPage());
+					break;
 				}
 			}
 		});
 
 		myTabPanel.add(new HorizontalPanel(), "Home");
 		myTabPanel.add(new HorizontalPanel(), "Auctions");
+		myTabPanel.add(new HorizontalPanel(), "Admin Auctions");
 		//myTabPanel.add(new HorizontalPanel(), "Bestemmingen");
 		//myTabPanel.add(new HorizontalPanel(), "Mijn Boekingen");
 		//myTabPanel.add(new HorizontalPanel(), "Contact");

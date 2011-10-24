@@ -1,17 +1,14 @@
 package com.veilingsite.server;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.google.gwt.user.server.rpc.UnexpectedException;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.domain.Auction;
-import com.veilingsite.shared.domain.Bid;
 import com.veilingsite.shared.domain.Category;
 import com.veilingsite.shared.domain.User;
 
@@ -124,4 +121,49 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		}
 		return l;
 	}
+	
+	@Override
+	public ArrayList<Category> getCategoryList() {
+		EntityManager em = EMF.get().createEntityManager();
+		ArrayList<Category> l = new ArrayList<Category>();
+		
+		String query = "select from Category";
+		
+		try {
+			l = new ArrayList<Category>(em.createQuery(query).getResultList());
+		} finally {
+			em.close();
+		}
+		return l;
+	}
+	
+	public Category addCategory(Category c) {
+		EntityManager em = EMF.get().createEntityManager();
+		
+		if(getCategory(c.getTitle())!=null)
+			return null;
+			
+		try {
+			em.persist(c);
+		} finally {
+			em.close();
+		}
+		return c;
+	}
+	
+	public Category getCategory(String s) {		
+		EntityManager em = EMF.get().createEntityManager();
+		Category c = null;
+		try {
+			Query q = em.createQuery("select from Category where title = ?1").setParameter(1, s);
+			c = (Category) q.getSingleResult();
+		} catch (NoResultException nre){
+			return null;
+		}
+		finally {
+			em.close();
+		}
+		return c;
+	}
 }
+
