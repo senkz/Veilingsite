@@ -17,6 +17,10 @@ public class UserLoginWidget extends VerticalPanel {
 	private FlexTable table = new FlexTable();
 		
 	public UserLoginWidget() {
+		
+		//add class for styling
+		this.addStyleName("widget");
+		
 		add(systemStatus);
 		add(table);	
 		table.setWidget(0, 0, new Label("Username:"));

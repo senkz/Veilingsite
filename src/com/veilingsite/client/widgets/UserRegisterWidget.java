@@ -15,7 +15,11 @@ public class UserRegisterWidget extends VerticalPanel {
 	private Button login = new Button("Register");
 	private TextBox password = new TextBox();
 	
-	public UserRegisterWidget() {	
+	public UserRegisterWidget() {
+
+		//add class for styling
+		this.addStyleName("widget");
+		
 		add(systemStatus);
 		add(table);
 		table.setWidget(0, 0, new Label("Username: "));

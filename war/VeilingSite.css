@@ -1,13 +1,86 @@
 /** Add css rules here for your application. */
 
+#header {
+	width: 960px;
+	margin: 0 auto;
+	height: 140px;	
+	position: relative;
+}
+
+#menuContainer {
+	width: 100%;
+	margin: 0 auto;
+	border-bottom: 1px solid black;
+}
+
+#menubar {
+	width: 960px;
+	margin: 0 auto;
+	border-left: 1px solid black;
+	position: relative;
+}
+
+#content {
+	width: 960px;
+	margin: 0 auto;
+	padding: 20px 0;
+	position: relative;
+}
+
+#content .widget {
+	border: 1px solid black;
+	background: #f5f5f5;
+	padding: 15px;
+	width: 470px;
+	margin: 15px auto;
+}
+
+/** menu	*/
+
+.menu .gwt-Label {
+	padding: 7px;
+	background: white;
+	border: 1px solid black;
+	border-left: none;
+	border-bottom: none;
+	font-size:16px;
+	text-transform: uppercase;
+	cursor: pointer;	
+}
+
+.menu .gwt-Label:hover {
+	background: #f5f5f5;	
+}
+
+/** Containers */
+
+#containerLeft {
+	position: absolute;
+	left: 0;
+	width: 470px;	
+}
+
+#containerRight {
+	position: absolute;
+	right: 0;
+	width: 470px;	
+}
+
+/** irritante padding weghalen! */
+.menu .gwt-TabBarFirst {
+	display: none;	
+}
 
 /** Example rules used by the template application (remove for your app) */
 h1 {
   font-size: 2em;
   font-weight: bold;
-  color: #777777;
-  margin: 40px 0px 70px;
-  text-align: center;
+  color: #555;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 
 .sendButton {

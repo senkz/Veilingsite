@@ -29,6 +29,10 @@ public class AuctionCreateWidget extends VerticalPanel{
 	private FlexTable table = new FlexTable();
 		
 		public AuctionCreateWidget() throws UserException  {
+			
+			//add class for styling
+			this.addStyleName("widget");
+			
 			if(UC.getLoggedIn() == null)
 				throw new UserException("ERROR: User must be logged in.");
 			

@@ -26,6 +26,10 @@ public class AuctionViewWidget extends VerticalPanel {
 	private FlexTable table = new FlexTable();
 	
 	public AuctionViewWidget() {
+		
+		//add class for styling
+		this.addStyleName("widget");
+		
 		add(table);
 		table.setWidth("100%");
 	}

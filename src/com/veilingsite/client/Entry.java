@@ -48,10 +48,11 @@ public class Entry implements EntryPoint {
 		//TabBar myTabBar = myTabPanel.getTabBar();
 		//myTabBar.setTabEnabled(3, false);
 
+		myTabPanel.getTabBar().setStyleName("menu");
+		myTabPanel.getDeckPanel().setStyleName("page");
 		//RootPanel.get("login").add(new InloggenPage(serviceImpl));
-		RootPanel.get("header").add(myTabPanel.getTabBar());
+		RootPanel.get("menubar").add(myTabPanel.getTabBar());
 		RootPanel.get("content").add(myTabPanel.getDeckPanel());
-
 	}
 	
 }

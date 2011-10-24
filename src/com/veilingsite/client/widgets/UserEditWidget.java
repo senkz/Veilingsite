@@ -37,6 +37,9 @@ public class UserEditWidget extends VerticalPanel {
 	
 	public UserEditWidget() {
 		
+		//add class for styling
+		this.addStyleName("widget");
+		
 		// Load logged User object into local variable widgetUser
 		widgetUser = (UC.getLoggedIn());
 		
