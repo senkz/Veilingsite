@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.veilingsite.client.pages.AuctionPage;
 import com.veilingsite.client.pages.HomePage;
+import com.veilingsite.client.pages.UserAccountPage;
 
 public class Entry implements EntryPoint {
 
@@ -35,13 +36,20 @@ public class Entry implements EntryPoint {
 				case 1:
 					p.add(new AuctionPage());
 					break;
+				case 2:
+					//p.add(new UserAccountPage());
+					break;
+				case 3:
+					p.add(new UserAccountPage());
+					break;
 				}
 			}
 		});
 
 		myTabPanel.add(new HorizontalPanel(), "Home");
 		myTabPanel.add(new HorizontalPanel(), "Auctions");
-		//myTabPanel.add(new HorizontalPanel(), "Bestemmingen");
+		myTabPanel.add(new HorizontalPanel(), "Find Auctions");
+		myTabPanel.add(new HorizontalPanel(), "My Account");
 		//myTabPanel.add(new HorizontalPanel(), "Mijn Boekingen");
 		//myTabPanel.add(new HorizontalPanel(), "Contact");
 		
