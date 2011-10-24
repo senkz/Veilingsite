@@ -25,6 +25,8 @@ public class Entry implements EntryPoint {
 			public void onSelection(SelectionEvent<Integer> event) {
 				Panel p = (Panel) myTabPanel.getWidget(event.getSelectedItem());
 				p.clear();
+				RootPanel.get("containerLeft").clear();
+				RootPanel.get("containerRight").clear();
 				switch(event.getSelectedItem()) {
 				default:
 				case 0:
