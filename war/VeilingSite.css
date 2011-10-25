@@ -52,6 +52,10 @@
 	background: #f5f5f5;	
 }
 
+.gwt-TabBarItem-disabled {
+	display: none;	
+}
+
 /** Containers */
 
 #containerLeft {

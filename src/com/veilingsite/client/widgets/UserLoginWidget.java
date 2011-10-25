@@ -15,11 +15,22 @@ public class UserLoginWidget extends VerticalPanel {
 	private TextBox username = new TextBox();
 	private TextBox password = new TextBox();
 	private FlexTable table = new FlexTable();
+	private Label error = new Label();
+	private Label succes = new Label();
 		
 	public UserLoginWidget() {
 		
 		//add class for styling
 		this.addStyleName("widget");
+		error.addStyleName("error");
+		succes.addStyleName("succesfull");
+		
+		error.setVisible(false);
+		succes.setVisible(false);
+		
+		if(UC.getLoggedIn() != null) {
+			table.setVisible(false);
+		}
 		
 		add(systemStatus);
 		add(table);	
@@ -27,11 +38,16 @@ public class UserLoginWidget extends VerticalPanel {
 		table.setWidget(0, 1, username);
 		table.setWidget(1, 0, new Label("Password:"));
 		table.setWidget(1, 1, password);
-		table.setWidget(2, 0, login);		
+		
+		add(login);
+		add(error);
+		add(succes);
 		
 		login.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
+				error.setVisible(false);
+				succes.setVisible(false);
 				if(UC.getLoggedIn() == null) {
 					loginUser(new User(username.getText(), password.getText()));
 					systemStatus.setText("Login request processing...");
@@ -39,6 +55,7 @@ public class UserLoginWidget extends VerticalPanel {
 					systemStatus.setText("User logged out.");
 					login.setText("Login");
 					UC.setLoggedIn(null);
+					table.setVisible(true);
 					return;
 				}
 			}
@@ -47,7 +64,9 @@ public class UserLoginWidget extends VerticalPanel {
 	
 	private void setLogin(User u) {
 		if(u != null) {
-			systemStatus.setText("Welkom "+u.getUserName());
+			table.setVisible(false);
+			succes.setText("Welkom "+u.getUserName());
+			succes.setVisible(true);
 			login.setText("Logout");
 			UC.setLoggedIn(u);
 		} else {
@@ -59,7 +78,10 @@ public class UserLoginWidget extends VerticalPanel {
 		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
 		AsyncCallback<User> callback = new AsyncCallback<User>() {		
 			@Override
-			public void onFailure(Throwable caught) {}	
+			public void onFailure(Throwable caught) {
+				error.setText("User login failed, reason: " + caught.getMessage());
+				error.setVisible(true);
+			}	
 			
 			@Override
 			public void onSuccess(User result) {

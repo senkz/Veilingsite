@@ -7,6 +7,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
+import com.veilingsite.client.controllers.UC;
+import com.veilingsite.client.controllers.UserChangeListener;
 import com.veilingsite.client.pages.AdminAuctionPage;
 import com.veilingsite.client.pages.AuctionPage;
 import com.veilingsite.client.pages.HomePage;
@@ -55,6 +57,9 @@ public class Entry implements EntryPoint {
 		myTabPanel.add(new HorizontalPanel(), "My Account");
 		myTabPanel.add(new HorizontalPanel(), "Admin Auctions");
 		
+		myTabPanel.getTabBar().setTabEnabled(3, false);
+		myTabPanel.getTabBar().setTabEnabled(4, false);
+		
 		myTabPanel.selectTab(0);
 
 		//TabBar myTabBar = myTabPanel.getTabBar();
@@ -65,6 +70,20 @@ public class Entry implements EntryPoint {
 		//RootPanel.get("login").add(new InloggenPage(serviceImpl));
 		RootPanel.get("menubar").add(myTabPanel.getTabBar());
 		RootPanel.get("content").add(myTabPanel.getDeckPanel());
+		
+		UC.addUserChangeListener(new UserChangeListener() {
+			
+			@Override
+			public void fireListener() {
+				if(UC.getLoggedIn()==null) {
+					myTabPanel.getTabBar().setTabEnabled(3, false);
+					myTabPanel.getTabBar().setTabEnabled(4, false);
+				} else {
+					myTabPanel.getTabBar().setTabEnabled(3, true);
+					myTabPanel.getTabBar().setTabEnabled(4, true);
+				}
+			}
+		});
 	}
 	
 }
