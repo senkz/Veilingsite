@@ -25,6 +25,9 @@ public interface ServerServiceAsync {
 	 * @return Boolean
 	 */
 	void addUser(User u, AsyncCallback<User> callback);
+	
+	void removeUser(User u, AsyncCallback<Void> callback);
+	
 	void updateUser(User u, AsyncCallback<Void> callback);
 	
 	void addAuction(Auction a, AsyncCallback<Auction> callback);
@@ -44,4 +47,5 @@ public interface ServerServiceAsync {
 	void getChildrenOfCategory(Category u, AsyncCallback<ArrayList<Category>> callback);
 	void addCategory(Category c, AsyncCallback<Category> callback);
 	void getCategory(String s, AsyncCallback<Category> callback);
+	void deleteCategory(String s, AsyncCallback<Void> callback);
 }

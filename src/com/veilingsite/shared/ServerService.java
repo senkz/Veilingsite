@@ -26,6 +26,8 @@ public interface ServerService extends RemoteService {
 	 */
 	public User addUser(User u);
 	
+	public void removeUser(User u);
+	
 	public void updateUser(User u);
 	
 	public Auction addAuction(Auction a);
@@ -44,4 +46,5 @@ public interface ServerService extends RemoteService {
 	public ArrayList<Category> getChildrenOfCategory(Category c);
 	public Category addCategory(Category c);
 	public Category getCategory(String s);
+	public void deleteCategory(String s) throws Exception;
 }

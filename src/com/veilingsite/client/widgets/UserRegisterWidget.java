@@ -18,19 +18,22 @@ public class UserRegisterWidget extends VerticalPanel {
 	
 	private Label 			systemStatus 		   = new Label();					// The Status of the editing process will be displayed in this label
 	private TextBox			user_Username 		   = new TextBox(); 				// Contains username - editable
-	private Button			findButton		   	   = new Button("Find User");		// Button, onclick -> find user specified in user_Username Textbox and put data into Textfields. 
 	private TextBox			user_Firstname		   = new TextBox(); 				// A User's firstname - Editable
 	private TextBox			user_Surname		   = new TextBox(); 				// A User's surname - Editable
 	private TextBox 		user_Email			   = new TextBox(); 				// A User's Email - Editable
 	private TextBox 		user_MobilePhoneNumber = new TextBox(); 				// A User's mobile phone number - Editable
 	
-	private HorizontalPanel panel_Password		   = new HorizontalPanel();		    // Contains user_Password & user_Password_Status
+	private HorizontalPanel panel_Password	  	       = new HorizontalPanel();		    // Contains user_Password & user_Password_Status
 	private PasswordTextBox user_Password 		       = new PasswordTextBox(); 		// A User's password - Editable
-	private Label 			user_Password_Status       = new Label("Status"); 					// Password check - Uneditable
+	private Image 			user_Password_Status       = new Image(); 					// Password check - Uneditable
 	
-	private HorizontalPanel panel_Password_Check   = new HorizontalPanel();			// Contains user_Password & user_Password_Status	
+	private HorizontalPanel panel_Password_Check   	   = new HorizontalPanel();			// Contains user_Password & user_Password_Status	
 	private PasswordTextBox user_Password_Check    	   = new PasswordTextBox(); 		// A User's password check - Editable
-	private Label 			user_Password_Check_Status = new Label("Check_Status"); 					// Password check - Uneditable
+	private Image 			user_Password_Check_Status = new Image(); 					// Password check - Uneditable
+	
+	private Panel			password_Checks_StatusPanel= new HorizontalPanel();			// Panel that contains final result of password check
+	private Label 			password_Checks_StatusLab  = new Label("Passwords match: ");// Password check - Uneditable
+	private Image 			password_Checks_StatusImg  = new Image(); 					// Password check - Uneditable
 	
 	private Button 			confirmButton 		   = new Button("Register"); // The Button to confirm changes made to a user object
 	private User 			widgetUser 			   = new User();					// The Widget's User
@@ -48,8 +51,13 @@ public class UserRegisterWidget extends VerticalPanel {
 		
 		// Construct the widget layout
 		add(systemStatus);
-		
 		add(table);
+		user_Password_Status.setUrl("./images/cross.png");
+		user_Password_Check_Status.setUrl("./images/cross.png");
+		password_Checks_StatusImg.setUrl("./images/cross.png");
+		
+		password_Checks_StatusPanel.add(password_Checks_StatusLab);
+		password_Checks_StatusPanel.add(password_Checks_StatusImg);		
 		
 		table.setWidget(0, 0, new Label("Username:"));
 		table.setWidget(0, 1, user_Username);
@@ -61,13 +69,16 @@ public class UserRegisterWidget extends VerticalPanel {
 		table.setWidget(3, 1, user_Email);
 		table.setWidget(4, 0, new Label("Mobile Phone Number:"));
 		table.setWidget(4, 1, user_MobilePhoneNumber);
-		table.setWidget(5, 0, new Label("Password:"));
+		table.setWidget(5, 0, new Label("Password*:"));
 		table.setWidget(5, 1, user_Password);
 		table.setWidget(5, 2, user_Password_Status);
-		table.setWidget(6, 0, new Label("Repeat Password:"));
+		table.setWidget(6, 0, new Label("Repeat Password*:"));
 		table.setWidget(6, 1, user_Password_Check);
 		table.setWidget(6, 2, user_Password_Check_Status);
-		table.setWidget(7, 0, confirmButton);
+		table.setWidget(7, 1, password_Checks_StatusPanel);
+		table.setWidget(8, 0, confirmButton);
+		
+		add(new Label("* The given password needs to be at least 6 characters long and has to start and end with a letter."));
 		
 		// Fill TextBoxes and Labels with User/System Information 
 		systemStatus.setText("Register User");
@@ -89,16 +100,20 @@ public class UserRegisterWidget extends VerticalPanel {
 		confirmButton.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				String username = user_Username.getText();
-				String firstname = user_Firstname.getText();
-				String surname = user_Surname.getText();
-				String email = user_Email.getText();
-				String mobilephonenumber = user_MobilePhoneNumber.getText();
-				String password = user_Password.getText();
-				
-				User userx = new User(username,password,email,firstname,surname);
-				userx.setMobilePhoneNumber(mobilephonenumber);
-				addUser(userx);
+				if(passwordCheck() == true){
+					String username = user_Username.getText();
+					String firstname = user_Firstname.getText();
+					String surname = user_Surname.getText();
+					String email = user_Email.getText();
+					String mobilephonenumber = user_MobilePhoneNumber.getText();
+					String password = user_Password.getText();
+					
+					User userx = new User(username,password,email,firstname,surname);
+					userx.setMobilePhoneNumber(mobilephonenumber);
+					addUser(userx);
+				}else{
+					systemStatus.setText("Passwordcheck didn't pass, User not created.");
+				}
 			}
 		});
 		
@@ -111,26 +126,44 @@ public class UserRegisterWidget extends VerticalPanel {
 		Boolean checkOk = false;
 		
 		if(password == ""){
-			user_Password_Status.setText("Password field cannot be empty");
+			//user_Password_Status.setText("Password field cannot be empty");
+			user_Password_Status.setUrl("./images/cross.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}else if(password != "" && !password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
+			//user_Password_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
+			user_Password_Status.setUrl("./images/cross.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}else if(password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Status.setText("Password field matches criteria");
+			//user_Password_Status.setText("Password field matches criteria");
+			user_Password_Status.setUrl("./images/tick.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}
 		if(passwordcheck == ""){
-			user_Password_Check_Status.setText("Password check field cannot be empty");
+			//user_Password_Check_Status.setText("Password check field cannot be empty");
+			user_Password_Check_Status.setUrl("./images/cross.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}else if(passwordcheck != "" && !passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Check_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
+			//user_Password_Check_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
+			user_Password_Check_Status.setUrl("./images/cross.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}else if(passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Check_Status.setText("Password check field matches criteria");
+			//user_Password_Check_Status.setText("Password check field matches criteria");
+			user_Password_Check_Status.setUrl("./images/tick.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}
 		if(password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$") && passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Status.setText("Password field matches criteria but does not match with password check field");
-			user_Password_Check_Status.setText("Password check field matches criteria but does not match with password field");
+			//user_Password_Status.setText("Password field matches criteria but does not match with password check field");
+			//user_Password_Check_Status.setText("Password check field matches criteria but does not match with password field");
+			user_Password_Status.setUrl("./images/tick.png");
+			user_Password_Check_Status.setUrl("./images/tick.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}
 		if(password.equals(passwordcheck) && password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$") && passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Status.setText("Password field matches criteria and matches password check field");
-			user_Password_Check_Status.setText("Password check field matches criteria and matches password field");
+			//user_Password_Status.setText("Password field matches criteria and matches password check field");
+			//user_Password_Check_Status.setText("Password check field matches criteria and matches password field");
+			user_Password_Status.setUrl("./images/tick.png");
+			user_Password_Check_Status.setUrl("./images/tick.png");
+			password_Checks_StatusImg.setUrl("./images/tick.png");
 			checkOk = true;
 		}else{
 			checkOk = false;

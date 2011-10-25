@@ -15,8 +15,7 @@ public class User implements Serializable {
 	private String surName;
 	private String mobilePhoneNumber;
 	private String password;
-	
-	private int permission = 0;
+	private int permission;
 	
 	public User() {}
 	
@@ -29,6 +28,7 @@ public class User implements Serializable {
 	public User(String un, String pwd) {
 		this.userName = un;
 		this.password = pwd;
+		this.permission = 1;
 	}
 
 	/**
@@ -46,6 +46,7 @@ public class User implements Serializable {
 		this.email = email;
 		this.firstName = fn;
 		this.surName = sn;
+		this.permission = 1;
 	}
 
 	/**
