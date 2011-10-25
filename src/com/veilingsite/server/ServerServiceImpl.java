@@ -116,7 +116,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			query = "select from Auction";
 		}
 		else{
-			query = "select from Auction WHERE owner = " + limitUser.getUserName();
+			query = "select a from Auction a where a.owner = '" + limitUser.getUserName() + "'";
 		}
 		
 		try {

@@ -15,15 +15,15 @@ import com.veilingsite.client.widgets.UserProductWidget;
 public class UserAccountPage extends VerticalPanel {
 	private UserEditWidget uew = new UserEditWidget();
 	private UserProductWidget upw = new UserProductWidget();
-	private AuctionViewWidget avw = new AuctionViewWidget();
+	private AuctionViewWidget avc = new AuctionViewWidget();
 	private RootPanel containerLeft = RootPanel.get("containerLeft");
 	private RootPanel containerRight = RootPanel.get("containerRight");
 	
 	public UserAccountPage(){
 		containerLeft.add(uew);
-		avw.setLimitUser(UC.getLoggedIn());
-		containerRight.add(avw);
-		avw.loadAuctions();		
+		avc.setLimitUser(UC.getLoggedIn());
+		containerRight.add(avc);
+		avc.loadAuctions();
 	}
 
 }

@@ -1,40 +1,142 @@
 package com.veilingsite.client.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import com.veilingsite.shared.*;
+import com.veilingsite.client.controllers.UC;
+import com.veilingsite.shared.ServerService;
+import com.veilingsite.shared.ServerServiceAsync;
 import com.veilingsite.shared.domain.User;
 
 public class UserRegisterWidget extends VerticalPanel {
 	
+	private Label 			systemStatus 		   = new Label();					// The Status of the editing process will be displayed in this label
+	private TextBox			user_Username 		   = new TextBox(); 				// Contains username - editable
+	private Button			findButton		   	   = new Button("Find User");		// Button, onclick -> find user specified in user_Username Textbox and put data into Textfields. 
+	private TextBox			user_Firstname		   = new TextBox(); 				// A User's firstname - Editable
+	private TextBox			user_Surname		   = new TextBox(); 				// A User's surname - Editable
+	private TextBox 		user_Email			   = new TextBox(); 				// A User's Email - Editable
+	private TextBox 		user_MobilePhoneNumber = new TextBox(); 				// A User's mobile phone number - Editable
+	
+	private HorizontalPanel panel_Password		   = new HorizontalPanel();		    // Contains user_Password & user_Password_Status
+	private PasswordTextBox user_Password 		       = new PasswordTextBox(); 		// A User's password - Editable
+	private Label 			user_Password_Status       = new Label("Status"); 					// Password check - Uneditable
+	
+	private HorizontalPanel panel_Password_Check   = new HorizontalPanel();			// Contains user_Password & user_Password_Status	
+	private PasswordTextBox user_Password_Check    	   = new PasswordTextBox(); 		// A User's password check - Editable
+	private Label 			user_Password_Check_Status = new Label("Check_Status"); 					// Password check - Uneditable
+	
+	private Button 			confirmButton 		   = new Button("Register"); // The Button to confirm changes made to a user object
+	private User 			widgetUser 			   = new User();					// The Widget's User
+	
 	private FlexTable table = new FlexTable();
-	private Label systemStatus = new Label("Register User");
-	private TextBox name = new TextBox();
-	private Button login = new Button("Register");
-	private TextBox password = new TextBox();
+	
 	
 	public UserRegisterWidget() {
-
 		//add class for styling
+		this.addStyleName("adminWidget");
 		this.addStyleName("widget");
 		
-		add(systemStatus);
-		add(table);
-		table.setWidget(0, 0, new Label("Username: "));
-		table.setWidget(0, 1, name);
-		table.setWidget(1, 0, new Label("Password: "));
-		table.setWidget(1, 1, password);
-		table.setWidget(2, 0, login);
+		// Load logged User object into local variable widgetUser
+		widgetUser = (UC.getLoggedIn());
 		
-		login.addClickHandler(new ClickHandler(){
+		// Construct the widget layout
+		add(systemStatus);
+		
+		add(table);
+		
+		table.setWidget(0, 0, new Label("Username:"));
+		table.setWidget(0, 1, user_Username);
+		table.setWidget(1, 0, new Label("Firstname:"));
+		table.setWidget(1, 1, user_Firstname);
+		table.setWidget(2, 0, new Label("Surname:"));
+		table.setWidget(2, 1, user_Surname);
+		table.setWidget(3, 0, new Label("Email:"));
+		table.setWidget(3, 1, user_Email);
+		table.setWidget(4, 0, new Label("Mobile Phone Number:"));
+		table.setWidget(4, 1, user_MobilePhoneNumber);
+		table.setWidget(5, 0, new Label("Password:"));
+		table.setWidget(5, 1, user_Password);
+		table.setWidget(5, 2, user_Password_Status);
+		table.setWidget(6, 0, new Label("Repeat Password:"));
+		table.setWidget(6, 1, user_Password_Check);
+		table.setWidget(6, 2, user_Password_Check_Status);
+		table.setWidget(7, 0, confirmButton);
+		
+		// Fill TextBoxes and Labels with User/System Information 
+		systemStatus.setText("Register User");
+		
+		//Password Check KeyUpHandlers
+		user_Password.addKeyUpHandler(new KeyUpHandler() {
+		    @Override
+		    public void onKeyUp(KeyUpEvent event) {
+		    	passwordCheck();
+		    }
+		});
+		user_Password_Check.addKeyUpHandler(new KeyUpHandler() {
+		    @Override
+		    public void onKeyUp(KeyUpEvent event) {
+		    	passwordCheck();
+		    }
+		});
+		
+		confirmButton.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				addUser(new User(name.getText(), password.getText()));
-				systemStatus.setText("Register request processing...");
+				String username = user_Username.getText();
+				String firstname = user_Firstname.getText();
+				String surname = user_Surname.getText();
+				String email = user_Email.getText();
+				String mobilephonenumber = user_MobilePhoneNumber.getText();
+				String password = user_Password.getText();
+				
+				User userx = new User(username,password,email,firstname,surname);
+				userx.setMobilePhoneNumber(mobilephonenumber);
+				addUser(userx);
 			}
 		});
+		
+	}
+	
+	//PasswordCheck Function - Is called when KeyUp event is fired from user_Password or user_Password_Check
+	private boolean passwordCheck(){
+		final String password = user_Password.getText();
+		final String passwordcheck = user_Password_Check.getText();
+		Boolean checkOk = false;
+		
+		if(password == ""){
+			user_Password_Status.setText("Password field cannot be empty");
+		}else if(password != "" && !password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+			user_Password_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
+		}else if(password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+			user_Password_Status.setText("Password field matches criteria");
+		}
+		if(passwordcheck == ""){
+			user_Password_Check_Status.setText("Password check field cannot be empty");
+		}else if(passwordcheck != "" && !passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+			user_Password_Check_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
+		}else if(passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+			user_Password_Check_Status.setText("Password check field matches criteria");
+		}
+		if(password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$") && passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+			user_Password_Status.setText("Password field matches criteria but does not match with password check field");
+			user_Password_Check_Status.setText("Password check field matches criteria but does not match with password field");
+		}
+		if(password.equals(passwordcheck) && password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$") && passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+			user_Password_Status.setText("Password field matches criteria and matches password check field");
+			user_Password_Check_Status.setText("Password check field matches criteria and matches password field");
+			checkOk = true;
+		}else{
+			checkOk = false;
+		}
+		return checkOk;
+		
 	}
 	
 	private void setRegisterStatus(User u) {
@@ -58,4 +160,5 @@ public class UserRegisterWidget extends VerticalPanel {
 		};
 		myService.addUser(u, callback);
 	}
+	
 }
