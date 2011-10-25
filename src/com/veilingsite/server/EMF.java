@@ -5,7 +5,7 @@ import javax.persistence.Persistence;
 
 public class EMF {
 	private static final EntityManagerFactory emfInstance =
-	Persistence.createEntityManagerFactory("transactions-optional");
+	Persistence.createEntityManagerFactory("local");
 	
 	/**
 	 * to avoid multiple EntityManagerFactory objects, you cannot initialize one. use EMF.get() instead.
