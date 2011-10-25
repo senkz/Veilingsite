@@ -25,6 +25,9 @@ public interface ServerServiceAsync {
 	 * @return Boolean
 	 */
 	void addUser(User u, AsyncCallback<User> callback);
+	
+	void removeUser(User u, AsyncCallback<Void> callback);
+	
 	void updateUser(User u, AsyncCallback<Void> callback);
 	
 	void addAuction(Auction a, AsyncCallback<Auction> callback);

@@ -53,6 +53,17 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		}
 		return u;
 	}
+	
+	public void removeUser(User u) {
+		EntityManager em = EMF.get().createEntityManager();	
+		try {
+			User user = em.find(User.class, u.getUserName());
+			em.remove(user);
+		} finally {
+			em.close();
+		}
+	}
+	
 	public void updateUser(User user) {
 		EntityManager em = EMF.get().createEntityManager();
 		  try{
@@ -63,10 +74,12 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		    userx.setSurName(user.getSurName()); 
 		    userx.setMobilePhoneNumber(user.getMobilePhoneNumber()); 
 		    userx.setPassword(user.getPassword());
+		    userx.setPermission(user.getPermission());
+		    em.persist(userx);
 		  } finally {
 		    em.close();
 		  }
-		}
+	}
 	
 	public Auction addAuction(Auction a) {
 		EntityManager em = EMF.get().createEntityManager();
