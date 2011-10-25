@@ -41,5 +41,10 @@ public interface ServerService extends RemoteService {
 	public User loginUser(User u);
 
 	public ArrayList<Auction> getAuctionList(User limitUser, Category limitCat);
+	
 	public ArrayList<Category> getCategoryList();
+	public ArrayList<Category> getChildrenOfCategory(Category c);
+	public Category addCategory(Category c);
+	public Category getCategory(String s);
+	public void deleteCategory(String s) throws Exception;
 }

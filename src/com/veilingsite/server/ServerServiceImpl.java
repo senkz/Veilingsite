@@ -129,7 +129,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			query = "select from Auction";
 		}
 		else{
-			query = "select from Auction WHERE owner = " + limitUser.getUserName();
+			query = "select a from Auction a where a.owner = '" + limitUser.getUserName() + "'";
 		}
 		
 		try {
@@ -160,6 +160,9 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		
 		if(getCategory(c.getTitle())!=null)
 			return null;
+		if(getCategory(c.getParent())==null) {
+			c.setParent("");
+		}
 			
 		try {
 			em.persist(c);
@@ -182,6 +185,37 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			em.close();
 		}
 		return c;
+	}
+	
+	public ArrayList<Category> getChildrenOfCategory(Category c) {
+		EntityManager em = EMF.get().createEntityManager();
+		ArrayList<Category> l = new ArrayList<Category>();
+		
+		String query = "select from Category where parentCategory =" + c.getTitle();
+		
+		try {
+			l = new ArrayList<Category>(em.createQuery(query).getResultList());
+		} finally {
+			em.close();
+		}
+		return l;
+	}
+	
+	public void deleteCategory(String s) throws Exception {
+		EntityManager em = EMF.get().createEntityManager();
+		
+		Category cat = getCategory(s);
+		
+		if(cat == null) {
+			throw new Exception("Category was not found");
+		}
+		
+		try {
+			cat = em.getReference(Category.class, cat.getTitle());
+			em.remove(cat);
+		} finally {
+			em.close();
+		}
 	}
 }
 
