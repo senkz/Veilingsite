@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.veilingsite.client.controllers.UC;
@@ -14,23 +15,31 @@ import com.veilingsite.shared.domain.User;
 
 public class UserEditWidget extends VerticalPanel {
 	
-	private Label 			systemStatus 		   = new Label();					// The Status of the editing process will be displayed in this label
-	private Label 			user_Username 		   = new Label(); 					// Contains username and userID - Uneditable
-	private Label 			user_Firstname		   = new Label(); 					// A User's firstname - Uneditable
-	private Label 			user_Surname		   = new Label(); 					// A User's surname - Uneditable
-	private TextBox 		user_Email			   = new TextBox(); 				// A User's Email - Editable
-	private TextBox 		user_MobilePhoneNumber = new TextBox(); 				// A User's mobile phone number - Editable
+	private Label 			systemStatus 		   	   = new Label();						// The Status of the editing process will be displayed in this label
+	private Label 			user_Username 		   	   = new Label(); 						// Contains username and userID - Uneditable
+	private Label 			user_Active_Status 		   = new Label("User Status: -"); 		// Password check - Uneditable
+	private Label 			user_Firstname		   	   = new Label(); 						// A User's firstname - Uneditable
+	private Label 			user_Surname		   	   = new Label(); 						// A User's surname - Uneditable
+	private TextBox 		user_Email			   	   = new TextBox(); 					// A User's Email - Editable
+	private TextBox 		user_MobilePhoneNumber 	   = new TextBox(); 					// A User's mobile phone number - Editable
 	
-	private HorizontalPanel panel_Password		   = new HorizontalPanel();		    // Contains user_Password & user_Password_Status
-	private PasswordTextBox user_Password 		       = new PasswordTextBox(); 		// A User's password - Editable
-	private Label 			user_Password_Status       = new Label("Status"); 					// Password check - Uneditable
+	private HorizontalPanel panel_Password	  	       = new HorizontalPanel();		    	// Contains user_Password & user_Password_Status
+	private PasswordTextBox user_Password 		       = new PasswordTextBox(); 			// A User's password - Editable
+	private Image 			user_Password_Status       = new Image(); 						// Password check - Uneditable
 	
-	private HorizontalPanel panel_Password_Check   = new HorizontalPanel();			// Contains user_Password & user_Password_Status	
-	private PasswordTextBox user_Password_Check    	   = new PasswordTextBox(); 		// A User's password check - Editable
-	private Label 			user_Password_Check_Status = new Label("Check_Status"); 					// Password check - Uneditable
+	private HorizontalPanel panel_Password_Check   	   = new HorizontalPanel();				// Contains user_Password & user_Password_Status	
+	private PasswordTextBox user_Password_Check    	   = new PasswordTextBox(); 			// A User's password check - Editable
+	private Image 			user_Password_Check_Status = new Image(); 						// Password check - Uneditable
 	
-	private Button 			confirmButton 		   = new Button("Confirm changes"); // The Button to confirm changes made to a user object
-	private User 			widgetUser 			   = new User();					// The Widget's User
+	private Panel			password_Checks_StatusPanel= new HorizontalPanel();				// Panel that contains final result of password check
+	private Label 			password_Checks_StatusLab  = new Label("Passwords match: ");	// Password check - Uneditable
+	private Image 			password_Checks_StatusImg  = new Image(); 						// Password check - Uneditable
+	
+	private Panel 			buttonPanel			   	   = new HorizontalPanel();				// Panel that contains the form's buttons
+	private Button 			confirmButton 		   	   = new Button("Confirm changes"); 	// The Button to confirm changes made to the found
+	private Button 			deleteButton 		   	   = new Button("Delete My Account");	// The Button to delete the found user
+	
+	private User 			widgetUser 			   	   = new User();						// The Widget's User
 	
 	private FlexTable table = new FlexTable();
 	
@@ -45,8 +54,16 @@ public class UserEditWidget extends VerticalPanel {
 		
 		// Construct the widget layout
 		add(systemStatus);
-		
 		add(table);
+		user_Password_Status.setUrl("./images/cross.png");
+		user_Password_Check_Status.setUrl("./images/cross.png");
+		password_Checks_StatusImg.setUrl("./images/cross.png");
+		
+		password_Checks_StatusPanel.add(password_Checks_StatusLab);
+		password_Checks_StatusPanel.add(password_Checks_StatusImg);
+		
+		buttonPanel.add(confirmButton);
+		buttonPanel.add(deleteButton);
 		
 		table.setWidget(0, 0, new Label("Username:"));
 		table.setWidget(0, 1, user_Username);
@@ -58,13 +75,14 @@ public class UserEditWidget extends VerticalPanel {
 		table.setWidget(3, 1, user_Email);
 		table.setWidget(4, 0, new Label("Mobile Phone Number:"));
 		table.setWidget(4, 1, user_MobilePhoneNumber);
-		table.setWidget(5, 0, new Label("Password:"));
+		table.setWidget(5, 0, new Label("Password*:"));
 		table.setWidget(5, 1, user_Password);
 		table.setWidget(5, 2, user_Password_Status);
-		table.setWidget(6, 0, new Label("Repeat Password:"));
+		table.setWidget(6, 0, new Label("Repeat Password*:"));
 		table.setWidget(6, 1, user_Password_Check);
 		table.setWidget(6, 2, user_Password_Check_Status);
-		table.setWidget(7, 0, confirmButton);
+		table.setWidget(7, 1, password_Checks_StatusPanel);
+		table.setWidget(8, 0, buttonPanel);
 		
 		// Fill TextBoxes and Labels with User/System Information 
 		systemStatus.setText("Edit Your Account Page");
@@ -100,16 +118,27 @@ public class UserEditWidget extends VerticalPanel {
 		confirmButton.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
+				if(passwordCheck() == true){
+					String username = user_Username.getText();
+					String firstname = user_Firstname.getText();
+					String surname = user_Surname.getText();
+					String email = user_Email.getText();
+					String mobilephonenumber = user_MobilePhoneNumber.getText();
+					String password = user_Password.getText();
+					
+					User userx = new User(username,password,email,firstname,surname);
+					userx.setMobilePhoneNumber(mobilephonenumber);
+					updateUser(userx);
+				}else{
+					systemStatus.setText("Passwordcheck didn't pass, User not edited.");
+				}
+			}
+		});
+		deleteButton.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
 				String username = user_Username.getText();
-				String firstname = user_Firstname.getText();
-				String surname = user_Surname.getText();
-				String email = user_Email.getText();
-				String mobilephonenumber = user_MobilePhoneNumber.getText();
-				String password = user_Password.getText();
-				
-				User userx = new User(username,password,email,firstname,surname);
-				userx.setMobilePhoneNumber(mobilephonenumber);
-				updateUser(userx);
+				deleteUser(username);
 			}
 		});
 	}
@@ -121,26 +150,44 @@ public class UserEditWidget extends VerticalPanel {
 		Boolean checkOk = false;
 		
 		if(password == ""){
-			user_Password_Status.setText("Password field cannot be empty");
+			//user_Password_Status.setText("Password field cannot be empty");
+			user_Password_Status.setUrl("./images/cross.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}else if(password != "" && !password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
+			//user_Password_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
+			user_Password_Status.setUrl("./images/cross.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}else if(password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Status.setText("Password field matches criteria");
+			//user_Password_Status.setText("Password field matches criteria");
+			user_Password_Status.setUrl("./images/tick.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}
 		if(passwordcheck == ""){
-			user_Password_Check_Status.setText("Password check field cannot be empty");
+			//user_Password_Check_Status.setText("Password check field cannot be empty");
+			user_Password_Check_Status.setUrl("./images/cross.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}else if(passwordcheck != "" && !passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Check_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
+			//user_Password_Check_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
+			user_Password_Check_Status.setUrl("./images/cross.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}else if(passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Check_Status.setText("Password check field matches criteria");
+			//user_Password_Check_Status.setText("Password check field matches criteria");
+			user_Password_Check_Status.setUrl("./images/tick.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}
 		if(password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$") && passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Status.setText("Password field matches criteria but does not match with password check field");
-			user_Password_Check_Status.setText("Password check field matches criteria but does not match with password field");
+			//user_Password_Status.setText("Password field matches criteria but does not match with password check field");
+			//user_Password_Check_Status.setText("Password check field matches criteria but does not match with password field");
+			user_Password_Status.setUrl("./images/tick.png");
+			user_Password_Check_Status.setUrl("./images/tick.png");
+			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}
 		if(password.equals(passwordcheck) && password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$") && passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
-			user_Password_Status.setText("Password field matches criteria and matches password check field");
-			user_Password_Check_Status.setText("Password check field matches criteria and matches password field");
+			//user_Password_Status.setText("Password field matches criteria and matches password check field");
+			//user_Password_Check_Status.setText("Password check field matches criteria and matches password field");
+			user_Password_Status.setUrl("./images/tick.png");
+			user_Password_Check_Status.setUrl("./images/tick.png");
+			password_Checks_StatusImg.setUrl("./images/tick.png");
 			checkOk = true;
 		}else{
 			checkOk = false;
@@ -161,5 +208,68 @@ public class UserEditWidget extends VerticalPanel {
 			}
 		};
 		myService.updateUser(u, callback);
+	}
+	public void removeUser(User u){
+		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {		
+			@Override
+			public void onFailure(Throwable caught) {
+				systemStatus.setText("Error: Something went wrong, no User removed");
+			}
+			@Override
+			public void onSuccess(Void result) {
+				systemStatus.setText("User removed");
+			}
+		};
+		myService.removeUser(u, callback);
+	}
+	public void findUserData(String u){
+		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
+		AsyncCallback<User> callback = new AsyncCallback<User>() {		
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("no user found!");
+			}
+			@Override
+			public void onSuccess(User result) {
+				if(result != null){
+					String userStatus;
+					if(result.getPermission() == 0){
+						userStatus = "Blocked";
+					}else{
+						userStatus = "Active";
+					}
+					systemStatus.setText("User Data fetched: " + result.getUserName());				
+					user_Username.setText(result.getUserName());
+					user_Active_Status.setText("User Status: " + userStatus);
+					user_Firstname.setText(result.getFirstName());
+					user_Surname.setText(result.getSurName());
+					user_Email.setText(result.getEmail());
+					user_MobilePhoneNumber.setText(result.getMobilePhoneNumber());
+					user_Password.setText("");
+					user_Password_Check.setText("");
+				}else{
+					systemStatus.setText("No user found");
+					Window.alert("No user found");
+				}
+			}
+		};
+		myService.getUser(u, callback);
+	}
+	public void deleteUser(String u){
+		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
+		AsyncCallback<User> callback = new AsyncCallback<User>() {		
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("no user found!");
+				systemStatus.setText("No user found");
+			}
+			@Override
+			public void onSuccess(User result) {
+				User tmpResultUser = result;
+				removeUser(tmpResultUser);
+			}
+		};
+		myService.getUser(u, callback);
 	}
 }
