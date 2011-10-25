@@ -187,5 +187,22 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		}
 		return l;
 	}
+	
+	public void deleteCategory(String s) throws Exception {
+		EntityManager em = EMF.get().createEntityManager();
+		
+		Category cat = getCategory(s);
+		
+		if(cat == null) {
+			throw new Exception("Category was not found");
+		}
+		
+		try {
+			cat = em.getReference(Category.class, cat.getTitle());
+			em.remove(cat);
+		} finally {
+			em.close();
+		}
+	}
 }
 

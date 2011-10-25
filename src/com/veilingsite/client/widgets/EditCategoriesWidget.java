@@ -23,66 +23,77 @@ import com.veilingsite.shared.domain.User;
 
 public class EditCategoriesWidget extends VerticalPanel {
 
-		ArrayList<Category> categories;
-		private ListBox lcat = new ListBox(false);
-		private ListBox lpar = new ListBox(false);
+		private ListBox listParents = new ListBox(false);
+		private ListBox listCategories = new ListBox(false);
 		private FlexTable table = new FlexTable();
 		
 		private Label info = new Label("Add/Modify Category");
 		private Label parent = new Label();
 		private Label error = new Label();
+		private Label succes = new Label();
+		
 		private TextBox name = new TextBox();
 		private Button toggleModify = new Button("Toggle add/delete mode");
-		private Button modify = new Button("Add/Delete Category");
+		private Button submitData = new Button("Add/Delete Category");
 	
 		public EditCategoriesWidget() {
 			
 			//add class for styling
 			this.addStyleName("widget");
 			error.addStyleName("error");
+			succes.addStyleName("succesfull");
+			
+			error.setVisible(false);
+			succes.setVisible(false);
 			
 			loadCategories();
 			
-			lcat.addItem("Categories are being loaded.....");
+			listParents.addItem("Categories are being loaded.....");
 			
 			add(info);
 			add(toggleModify);
 			add(table);
 			table.setWidget(0, 0, new Label("Category: "));			table.setWidget(0, 1, name);
-			table.setWidget(1, 0, new Label("Parent: "));			table.setWidget(1, 1, lcat);
-			table.setWidget(2, 0, modify);
+			table.setWidget(1, 0, new Label("Parent: "));			table.setWidget(1, 1, listParents);
+			table.setWidget(2, 0, submitData);
 			
-			error.setVisible(false);
+			add(succes);
 			add(error);
 			
-			modify.addClickHandler(new ClickHandler(){
+			submitData.addClickHandler(new ClickHandler(){
 				@Override
 				public void onClick(ClickEvent event) {
 					error.setVisible(false);
-					addCategory(new Category(name.getText(),lcat.getItemText(lcat.getSelectedIndex())));
+					succes.setVisible(false);
+					if(table.getWidget(0, 1).equals(name)) {
+						addCategory(new Category(name.getText(),listParents.getItemText(listParents.getSelectedIndex())));
+					} else {
+						deleteCategory(listCategories.getItemText(listCategories.getSelectedIndex()));
+					}
 				}
 			});
 			
 			toggleModify.addClickHandler(new ClickHandler(){
 				@Override
 				public void onClick(ClickEvent event) {
+					error.setVisible(false);
+					succes.setVisible(false);
 					if(table.getWidget(0, 1).equals(name)) {
-						getCategory(lpar.getItemText(lpar.getSelectedIndex()));
-						table.setWidget(0, 1, lpar);
+						getCategory(listCategories.getItemText(listCategories.getSelectedIndex()));
+						table.setWidget(0, 1, listCategories);
 						table.setWidget(1, 1, parent);
 					} else {
 						table.setWidget(0, 1, name);	
-						table.setWidget(1, 1, lcat);
+						table.setWidget(1, 1, listParents);
 					}
 				}
 			});
 			
-			lpar.addChangeHandler(new ChangeHandler() {
-				
+			listCategories.addChangeHandler(new ChangeHandler() {
 				@Override
 				public void onChange(ChangeEvent event) {
 					error.setVisible(false);
-					getCategory(lpar.getItemText(lpar.getSelectedIndex()));
+					getCategory(listCategories.getItemText(listCategories.getSelectedIndex()));
 				}
 			});
 		}
@@ -95,20 +106,15 @@ public class EditCategoriesWidget extends VerticalPanel {
 				
 				@Override
 				public void onSuccess(ArrayList<Category> result) {
-					categories = result;
-					fillCatList();
+					listParents.removeItem(0);
+					listParents.addItem("No sub category");
+					for(Category c : result) {
+						listParents.addItem(c.getTitle());
+						listCategories.addItem(c.getTitle());
+					}
 				}
 			};
 			myService.getCategoryList(callback);
-		}
-		
-		private void fillCatList() {
-			lcat.removeItem(0);
-			lcat.addItem("No sub category");
-			for(Category c : categories) {
-				lcat.addItem(c.getTitle());
-				lpar.addItem(c.getTitle());
-			}
 		}
 
 		private void addCategory(Category c) {		
@@ -120,8 +126,10 @@ public class EditCategoriesWidget extends VerticalPanel {
 				@Override
 				public void onSuccess(Category result) {
 					if(result != null) {
-						lcat.addItem(result.getTitle());
-						lpar.addItem(result.getTitle());
+						loadCategories();
+						name.setText("");
+						succes.setText(result.getTitle() + " succesfull created");
+						succes.setVisible(true);
 					} else {
 						error.setText("Add category failed, this category probably already exists.");
 						error.setVisible(true);
@@ -154,25 +162,22 @@ public class EditCategoriesWidget extends VerticalPanel {
 			myService.getCategory(s, callback);
 		}
 		
-		/* moet delete Category worden
-		private void modifyCategory(Category c) {		
+		private void deleteCategory(String s) {		
 			ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
-			AsyncCallback<Category> callback = new AsyncCallback<Category>() {		
+			AsyncCallback<Void> callback = new AsyncCallback<Void>() {		
 				@Override
-				public void onFailure(Throwable caught) {}	
+				public void onFailure(Throwable caught) {
+					error.setText("Category deletion unsuccesfull, reason: "+ caught.getMessage());
+					error.setVisible(true);
+				}
 				
 				@Override
-				public void onSuccess(Category result) {
-					if(result != null) {
-						lcat.addItem(result.getTitle());
-						lpar.addItem(result.getTitle());
-					} else {
-						error.setText("Add category failed, this category probably already exists.");
-						error.setVisible(true);
-					}
+				public void onSuccess(Void result) {
+					loadCategories();
+					succes.setText("Category succesfull deleted");
+					succes.setVisible(true);
 				}
 			};
-			myService.addCategory(c, callback);
+			myService.deleteCategory(s, callback);
 		}
-		*/
 }

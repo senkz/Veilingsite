@@ -44,4 +44,5 @@ public interface ServerServiceAsync {
 	void getChildrenOfCategory(Category u, AsyncCallback<ArrayList<Category>> callback);
 	void addCategory(Category c, AsyncCallback<Category> callback);
 	void getCategory(String s, AsyncCallback<Category> callback);
+	void deleteCategory(String s, AsyncCallback<Void> callback);
 }

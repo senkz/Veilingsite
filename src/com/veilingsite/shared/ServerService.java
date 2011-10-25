@@ -44,4 +44,5 @@ public interface ServerService extends RemoteService {
 	public ArrayList<Category> getChildrenOfCategory(Category c);
 	public Category addCategory(Category c);
 	public Category getCategory(String s);
+	public void deleteCategory(String s) throws Exception;
 }

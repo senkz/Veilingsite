@@ -10,8 +10,8 @@ import javax.persistence.Id;
 public class Category implements Serializable{
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int categoryId;
-	@Id
+    public Long categoryId;
+    @Id
     public String title;
     public String parentCategory;
 
@@ -23,7 +23,7 @@ public class Category implements Serializable{
     	this.parentCategory = parentId;
     }
 
-    public int getCategoryId() {
+    public Long getCategoryId() {
     	return categoryId;
     }
 
