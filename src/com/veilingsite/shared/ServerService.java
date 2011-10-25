@@ -26,6 +26,8 @@ public interface ServerService extends RemoteService {
 	 */
 	public User addUser(User u);
 	
+	public void removeUser(User u);
+	
 	public void updateUser(User u);
 	
 	public Auction addAuction(Auction a);
