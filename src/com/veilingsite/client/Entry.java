@@ -13,8 +13,11 @@ import com.veilingsite.client.pages.AdminAuctionPage;
 import com.veilingsite.client.pages.AuctionPage;
 import com.veilingsite.client.pages.HomePage;
 import com.veilingsite.client.pages.UserAccountPage;
+import com.veilingsite.client.widgets.UserLoginWidget;
 
 public class Entry implements EntryPoint {
+	
+	private UserLoginWidget lw = new UserLoginWidget();
 
 	@Override
 	public void onModuleLoad() {
@@ -22,7 +25,7 @@ public class Entry implements EntryPoint {
 		final TabPanel myTabPanel = new TabPanel();
 
 		myTabPanel.setSize("960px", "100px");
-		myTabPanel.setAnimationEnabled(true);
+		myTabPanel.setAnimationEnabled(false);
 
 		myTabPanel.addSelectionHandler(new SelectionHandler<Integer>() {
 			@Override
@@ -62,12 +65,9 @@ public class Entry implements EntryPoint {
 		
 		myTabPanel.selectTab(0);
 
-		//TabBar myTabBar = myTabPanel.getTabBar();
-		//myTabBar.setTabEnabled(3, false);
-
 		myTabPanel.getTabBar().setStyleName("menu");
 		myTabPanel.getDeckPanel().setStyleName("page");
-		//RootPanel.get("login").add(new InloggenPage(serviceImpl));
+		RootPanel.get("login").add(lw);
 		RootPanel.get("menubar").add(myTabPanel.getTabBar());
 		RootPanel.get("content").add(myTabPanel.getDeckPanel());
 		
@@ -78,9 +78,11 @@ public class Entry implements EntryPoint {
 				if(UC.getLoggedIn()==null) {
 					myTabPanel.getTabBar().setTabEnabled(3, false);
 					myTabPanel.getTabBar().setTabEnabled(4, false);
+					myTabPanel.selectTab(0);
 				} else {
 					myTabPanel.getTabBar().setTabEnabled(3, true);
 					myTabPanel.getTabBar().setTabEnabled(4, true);
+					myTabPanel.selectTab(3);
 				}
 			}
 		});
