@@ -113,6 +113,10 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			return null;
 		
 		User user = getUser(u.getUserName());
+		
+		if(user==null)
+			return null;
+		
 		if(user.getPassword().equals(u.getPassword())) {
 			return user;
 		} else {
@@ -134,7 +138,10 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		
 		try {
 			l = new ArrayList<Auction>(em.createQuery(query).getResultList());
-		} finally {
+		} catch(Exception e) {
+			return null;
+		}
+		finally {
 			em.close();
 		}
 		return l;

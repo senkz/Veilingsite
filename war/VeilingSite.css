@@ -7,16 +7,33 @@
 	position: relative;
 }
 
+#login {
+	position: absolute;
+	right: 0;	
+	top: 12px;
+}
+
+#login .widget {
+	border: 1px solid #767676;
+	background: #f5f5f5;
+	background: rgb(245, 245, 245);
+	background: rgba(245, 245, 245, 0.7);
+	padding: 7px;
+	margin: 0;
+}
+	
 #menuContainer {
 	width: 100%;
 	margin: 0 auto;
-	border-bottom: 1px solid black;
+	border-bottom: 1px solid #767676;
+	border-top: 1px solid #767676;
+	background: url(veilingsite/gwt/standard/images/menubg.png) repeat-x; 
 }
 
 #menubar {
 	width: 960px;
 	margin: 0 auto;
-	border-left: 1px solid black;
+	/*border-left: 1px solid black;*/
 	position: relative;
 }
 
@@ -39,17 +56,20 @@
 
 .menu .gwt-Label {
 	padding: 7px;
-	background: white;
-	border: 1px solid black;
-	border-left: none;
-	border-bottom: none;
 	font-size:16px;
 	text-transform: uppercase;
 	cursor: pointer;	
 }
 
-.menu .gwt-Label:hover {
-	background: #f5f5f5;	
+.menu .gwt-TabBarItem .gwt-Label:hover {
+	padding: 7px 6px;
+	background: url(veilingsite/gwt/standard/images/menuHover.png) repeat-x;
+	border-left: 1px solid #767676;
+	border-right: 1px solid #767676;
+}
+
+.menu .gwt-TabBarItem-wrapper-selected .gwt-Label {
+	background: url(veilingsite/gwt/standard/images/menuCurrent.png) repeat-x;
 }
 
 .gwt-TabBarItem-disabled {
@@ -88,6 +108,14 @@
 .succesfull {
 	border: 1px solid #61F865;
 	background: #D6FFCA;
+	padding: 5px;
+	text-align: center;
+	margin: 5px 0;
+}
+
+.status {
+	border: 1px solid #CACACA;
+	background: #ECECEC;
 	padding: 5px;
 	text-align: center;
 	margin: 5px 0;

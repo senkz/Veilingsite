@@ -10,52 +10,44 @@ import com.veilingsite.shared.domain.User;
 
 public class UserLoginWidget extends VerticalPanel {
 
-	private Label systemStatus = new Label("Login User");
+	private Label systemStatus = new Label();
 	private Button login = new Button("Login");
 	private TextBox username = new TextBox();
 	private TextBox password = new TextBox();
 	private FlexTable table = new FlexTable();
-	private Label error = new Label();
-	private Label succes = new Label();
 		
 	public UserLoginWidget() {
 		
 		//add class for styling
 		this.addStyleName("widget");
-		error.addStyleName("error");
-		succes.addStyleName("succesfull");
-		
-		error.setVisible(false);
-		succes.setVisible(false);
 		
 		if(UC.getLoggedIn() != null) {
 			table.setVisible(false);
 		}
 		
-		add(systemStatus);
+		systemStatus.setVisible(false);
 		add(table);	
-		table.setWidget(0, 0, new Label("Username:"));
-		table.setWidget(0, 1, username);
-		table.setWidget(1, 0, new Label("Password:"));
-		table.setWidget(1, 1, password);
-		
-		add(login);
-		add(error);
-		add(succes);
+		table.setWidget(0, 0, new Label("Username:"));		table.setWidget(0, 1, new Label("Password:"));
+		table.setWidget(1, 0, username);					table.setWidget(1, 1, password);		table.setWidget(1, 2, login);
+		table.setWidget(2, 0, systemStatus);
+		table.getFlexCellFormatter().setColSpan(2, 0, 3);
 		
 		login.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				error.setVisible(false);
-				succes.setVisible(false);
+				systemStatus.setVisible(false);
 				if(UC.getLoggedIn() == null) {
 					loginUser(new User(username.getText(), password.getText()));
 					systemStatus.setText("Login request processing...");
 				} else {
-					systemStatus.setText("User logged out.");
+					table.getRowFormatter().setVisible(0, true);
+					table.getCellFormatter().setVisible(1, 0, true);
+					table.getCellFormatter().setVisible(1, 1, true);
+					systemStatus.setText("User logged out");			
+					systemStatus.setStyleName("succesfull");
+					systemStatus.setVisible(true);
 					login.setText("Login");
 					UC.setLoggedIn(null);
-					table.setVisible(true);
 					return;
 				}
 			}
@@ -64,13 +56,18 @@ public class UserLoginWidget extends VerticalPanel {
 	
 	private void setLogin(User u) {
 		if(u != null) {
-			table.setVisible(false);
-			succes.setText("Welkom "+u.getUserName());
-			succes.setVisible(true);
+			table.getRowFormatter().setVisible(0, false);
+			table.getCellFormatter().setVisible(1, 0, false);
+			table.getCellFormatter().setVisible(1, 1, false);
+			systemStatus.setText("Welcome "+u.getUserName());
+			systemStatus.setStyleName("succesfull");
+			systemStatus.setVisible(true);
 			login.setText("Logout");
 			UC.setLoggedIn(u);
 		} else {
 			systemStatus.setText("User was not found or submitted data was incorrect.");
+			systemStatus.setStyleName("error");
+			systemStatus.setVisible(true);
 		}
 	}
 	
@@ -79,8 +76,9 @@ public class UserLoginWidget extends VerticalPanel {
 		AsyncCallback<User> callback = new AsyncCallback<User>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				error.setText("User login failed, reason: " + caught.getMessage());
-				error.setVisible(true);
+				systemStatus.setText("User login failed, reason: " + caught.getMessage());
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
 			}	
 			
 			@Override
