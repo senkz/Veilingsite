@@ -9,8 +9,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.veilingsite.client.controllers.UC;
-import com.veilingsite.client.controllers.UserChangeListener;
 import com.veilingsite.client.exceptions.UserException;
+import com.veilingsite.client.listeners.PageChangeListener;
+import com.veilingsite.client.listeners.UserChangeListener;
 import com.veilingsite.client.widgets.AdminUserEditWidget;
 import com.veilingsite.client.widgets.AuctionViewWidget;
 import com.veilingsite.client.widgets.UserEditWidget;
@@ -63,6 +64,15 @@ public class UserAccountPage extends VerticalPanel {
 		add(myTabPanel.getTabBar());
 		add(myTabPanel.getDeckPanel());
 		
+		avc.addPageChangeListener(new PageChangeListener<String>() {
+
+			@Override
+			public void fireListener(String s) {
+				addAuctionView(s);
+				clearPage();
+			}
+		});
+		
 		refreshPage();
 	}
 	
@@ -71,5 +81,13 @@ public class UserAccountPage extends VerticalPanel {
 		containerRight.add(avc);
 		avc.loadAuctions();
 	}
-
+	
+	private void clearPage() {
+		containerLeft.clear();
+		containerRight.clear();
+	}
+	
+	private void addAuctionView(String s) {
+		add(new AuctionViewPage(s));
+	}
 }
