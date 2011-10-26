@@ -2,6 +2,7 @@ package com.veilingsite.client.controllers;
 
 import java.util.ArrayList;
 
+import com.veilingsite.client.listeners.UserChangeListener;
 import com.veilingsite.shared.domain.User;
 
 public class UC {

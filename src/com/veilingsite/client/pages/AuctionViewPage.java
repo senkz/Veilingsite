@@ -13,7 +13,7 @@ import com.veilingsite.shared.domain.Auction;
 public class AuctionViewPage extends VerticalPanel{
 	
 	//private RootPanel containerLeft = RootPanel.get("container43");
-	private RootPanel containerRight = RootPanel.get("container14");
+	//private RootPanel containerRight = RootPanel.get("container14");
 	private VerticalPanel auction = new VerticalPanel();
 	private FlexTable ft = new FlexTable();
 	private Label title = new Label();

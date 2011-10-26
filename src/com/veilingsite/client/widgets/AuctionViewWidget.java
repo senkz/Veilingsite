@@ -5,14 +5,13 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.veilingsite.client.controllers.UC;
+import com.veilingsite.client.listeners.PageChangeListener;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.ServerServiceAsync;
 import com.veilingsite.shared.domain.Auction;
@@ -24,6 +23,7 @@ public class AuctionViewWidget extends VerticalPanel {
 	private User limitUser = null;
 	private Category limitCat = null;
 	private FlexTable table = new FlexTable();
+	private static ArrayList<PageChangeListener<String>> listeners = new ArrayList<PageChangeListener<String>>();
 	
 	public AuctionViewWidget() {
 		
@@ -90,8 +90,7 @@ public class AuctionViewWidget extends VerticalPanel {
 		table.setWidget(0, 4, new Label("Current Bid"));
 		
 		for(final Auction a : al) {
-			final TextBox t_bid = new TextBox();
-			Button b_bid = new Button("View");
+			Button viewAuction = new Button("View");
 			Button e_bid = new Button("Edit");
 			int rown = table.getRowCount();
 			
@@ -107,28 +106,32 @@ public class AuctionViewWidget extends VerticalPanel {
 				s = a.getStartAmount().toString();
 			table.setWidget(rown, 4, new Label(s));
 			
+			table.setWidget(rown, 5, viewAuction);
 			if(UC.getLoggedIn() != null) {
-				table.setWidget(rown, 5, b_bid);
 				if(UC.getLoggedIn().getUserName().equals(a.getOwner())){
 					table.setWidget(rown, 6, e_bid);
 				}
-				
-				b_bid.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						try {
-							double bid = Double.parseDouble(t_bid.getText());
-							saveBid(a, new Bid(UC.getLoggedIn(), bid, a));
-						} catch(Exception e) {
-							Window.alert("We only accept numberical values for bids.");
-						}
-					}
-				});
 			}
+			
+			viewAuction.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					for(PageChangeListener<String> pcl : listeners)
+						pcl.fireListener(a.getTitle());
+				}
+			});
 		}
 	}
 	
 	public void saveBid(Auction a, Bid b) {
 		System.out.println("com.veilingsite.client.widgets.AuctionViewWidget -> 124, save bid is not completed yet");
+	}
+	
+	public void addPageChangeListener(PageChangeListener<String> pcl) {
+		listeners.add(pcl);
+	}
+	
+	public static void removeUserPageListener(PageChangeListener<String> pcl) {
+		listeners.remove(pcl);
 	}
 }

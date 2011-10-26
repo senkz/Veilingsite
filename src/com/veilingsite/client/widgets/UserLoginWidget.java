@@ -79,8 +79,8 @@ public class UserLoginWidget extends VerticalPanel {
 			public void onClick(ClickEvent event) {
 				systemStatusTimer.cancel();
 				if(UC.getLoggedIn() == null) {
-					loginUser(new User(username.getText(), password.getText()));
 					systemStatus.setText("Login request processing...");
+					loginUser(new User(username.getText(), password.getText()));
 					systemStatus.setStyleName("status");
 					systemStatus.setVisible(true);
 				} else {

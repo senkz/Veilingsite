@@ -52,6 +52,14 @@
 	margin: 15px auto;
 }
 
+#contaent .page {
+	border: 1px solid black;
+	background: #f5f5f5;
+	padding: 15px;
+	width: 610px;
+	margin: 15px auto;
+}
+
 /** menu	*/
 
 .menu .gwt-Label {
@@ -66,10 +74,13 @@
 	background: url(veilingsite/gwt/standard/images/menuHover.png) repeat-x;
 	border-left: 1px solid #767676;
 	border-right: 1px solid #767676;
+	border-bottom: none;
 }
 
 .menu .gwt-TabBarItem-wrapper-selected .gwt-Label {
 	background: url(veilingsite/gwt/standard/images/menuCurrent.png) repeat-x;
+	border-bottom: 3px solid #fa9090;
+	padding-bottom: 4px;
 }
 
 .gwt-TabBarItem-disabled {
@@ -88,6 +99,18 @@
 	position: absolute;
 	right: 0;
 	width: 470px;	
+}
+
+#container43 {
+	width: 640px;	
+	position: absolute;
+	right: 0;
+}
+
+#container14 {
+	position: absolute;
+	left: 0;
+	width: 300px;	
 }
 
 /** irritante padding weghalen! */
