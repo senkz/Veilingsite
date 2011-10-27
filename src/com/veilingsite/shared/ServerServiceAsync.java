@@ -31,7 +31,7 @@ public interface ServerServiceAsync {
 	void updateUser(User u, AsyncCallback<Void> callback);
 	
 	void addAuction(Auction a, AsyncCallback<Auction> callback);
-	void getAuction(String s, AsyncCallback<Auction> callback);
+	void getAuction(Long id, AsyncCallback<Auction> callback);
 	
 	/**
 	 * Gets an ArrayList of all users currently in the DataStore.

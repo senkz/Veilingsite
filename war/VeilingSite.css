@@ -37,6 +37,13 @@
 	position: relative;
 }
 
+#subMenu {
+	width: 960px;
+	margin: 0 auto;
+	padding: 0;
+	position: relative;
+}
+
 #content {
 	width: 960px;
 	margin: 0 auto;
@@ -52,14 +59,13 @@
 	margin: 15px auto;
 }
 
-#contaent .page {
+#content .page {
 	border: 1px solid black;
 	background: #f5f5f5;
 	padding: 15px;
 	width: 610px;
 	margin: 15px auto;
 }
-
 /** menu	*/
 
 .menu .gwt-Label {
@@ -101,15 +107,15 @@
 	width: 470px;	
 }
 
-#container43 {
+#container34 {
 	width: 640px;	
 	position: absolute;
-	right: 0;
+	left: 0;
 }
 
 #container14 {
 	position: absolute;
-	left: 0;
+	right: 0;
 	width: 300px;	
 }
 
@@ -120,6 +126,12 @@
 
 /* Some stuff */
 
+#content .heading {
+		font-size: 16px;
+		font-weight: bold;
+		text-align: center;
+}
+	
 .error {
 	border: 1px solid #FF4D4D;
 	background: #FBBEBE;
