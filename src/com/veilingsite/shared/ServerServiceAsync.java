@@ -29,6 +29,7 @@ public interface ServerServiceAsync {
 	void removeUser(User u, AsyncCallback<Void> callback);
 	
 	void updateUser(User u, AsyncCallback<Void> callback);
+	void doesUserExist(String userName, AsyncCallback<Boolean> callback);
 	
 	void addAuction(Auction a, AsyncCallback<Auction> callback);
 	void getAuction(Long id, AsyncCallback<Auction> callback);

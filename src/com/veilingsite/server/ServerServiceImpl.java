@@ -81,6 +81,21 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		  }
 	}
 	
+	public boolean doesUserExist(String userName){
+		EntityManager em = EMF.get().createEntityManager();
+		boolean checkResult = true;
+		try{
+			User findResult = em.find(User.class, userName);
+			if(findResult == null){
+				checkResult = false;
+			}else{
+				checkResult = true;
+			}
+		}catch(Exception e){
+		}
+		return checkResult;
+	}
+	
 	public Auction addAuction(Auction a) {
 		EntityManager em = EMF.get().createEntityManager();
 		try {

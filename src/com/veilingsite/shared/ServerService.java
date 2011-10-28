@@ -29,6 +29,7 @@ public interface ServerService extends RemoteService {
 	public void removeUser(User u);
 	
 	public void updateUser(User u);
+	public boolean doesUserExist(String userName);
 	
 	public Auction addAuction(Auction a);
 	public Auction getAuction(Long id);
