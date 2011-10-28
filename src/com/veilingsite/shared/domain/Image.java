@@ -17,11 +17,14 @@ public class Image implements Serializable{
 
   public Auction auction;
 
-  public Boolean Image(String s) {
-	  return null;
+  public Image(){};
+  
+  public Image(String s, Auction a) {
+	  this.imageUrl = s;
+	  this.auction = a;
   }
 
   public String getImageUrl() {
-	  return null;
+	  return imageUrl;
   }
 }

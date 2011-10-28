@@ -7,6 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Bid implements Serializable{
@@ -14,9 +18,16 @@ public class Bid implements Serializable{
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int bidId;
   private Double amount;
+
+  @Temporal(TemporalType.DATE)
   private Date date;
+  
+  @OneToOne
   private User myUser;
+
   private Auction myAuction;
+  
+  public Bid() {}
   
   public Bid(User u, Double b, Auction a) {
 	  this.myUser = u;

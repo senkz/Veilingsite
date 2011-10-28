@@ -42,13 +42,14 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	 */
 	public User addUser(User u) {
 		EntityManager em = EMF.get().createEntityManager();
-		
+		em.getTransaction().begin();
 		if(getUser(u.getUserName())!=null)
 			return null;
 			
 		try {
 			em.persist(u);
 		} finally {
+			em.getTransaction().commit();
 			em.close();
 		}
 		return u;

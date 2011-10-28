@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Address implements Serializable {
@@ -20,6 +21,8 @@ public class Address implements Serializable {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int adressId;
+	
+	@ManyToOne
     public User myUser;
 
     public Address() {

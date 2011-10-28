@@ -3,12 +3,17 @@ package com.veilingsite.shared.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import javax.jdo.annotations.NotPersistent;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Auction implements Serializable {
@@ -19,7 +24,9 @@ public class Auction implements Serializable {
 
 	private String title;
 	private String description;
+	@Temporal(TemporalType.DATE)
 	private Date startDate;
+	@Temporal(TemporalType.DATE)
 	private Date closeDate;
 	private Double startAmount;
 	private String owner;
@@ -29,9 +36,9 @@ public class Auction implements Serializable {
      * @element-type Image
      */
     public Image Image;
-    
-    @NotPersistent
-    public ArrayList<Bid> bidList = new ArrayList<Bid>();
+
+    @OneToMany
+    public List<Bid> bidList = new ArrayList<Bid>();
 
 	public Auction() {
     }
@@ -127,7 +134,7 @@ public class Auction implements Serializable {
 	 * @return the bidList
 	 */
 	public ArrayList<Bid> getBidList() {
-		return bidList;
+		return (new ArrayList<Bid> (bidList));
 	}
 
 	/**
