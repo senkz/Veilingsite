@@ -30,12 +30,9 @@ public class Auction implements Serializable {
 	private Date closeDate;
 	private Double startAmount;
 	private String owner;
+
 	private Category category;
-    /**
-     * 
-     * @element-type Image
-     */
-    public Image Image;
+   	 public Image image;
 
     @OneToMany
     public List<Bid> bidList = new ArrayList<Bid>();
@@ -105,8 +102,16 @@ public class Auction implements Serializable {
     	return category;
     }
     
-    public void setCategory(Category category) {
-    	this.category = category;
+    public void setCategory(Category cat) {
+    	this.category = cat;
+    }
+    
+    public Image getImage() {
+    	return image;
+    }
+    
+    public void setImage(Image i) {
+    	image = i;
     }
     
     public Bid getHighestBid() {
@@ -119,8 +124,13 @@ public class Auction implements Serializable {
     	return bid;
     }
 
-	public void addBid(Bid bid) {
-		bidList.add(bid);
+	public boolean addBid(Bid bid) {
+		if(bidList.get(bidList.size()-1).getAmount() < bid.getAmount()) {
+			bidList.add(bid);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
@@ -142,5 +152,9 @@ public class Auction implements Serializable {
 	 */
 	public void setBidList(ArrayList<Bid> bidList) {
 		this.bidList = bidList;
+	}
+	
+	public long getId() {
+		return auctionId;
 	}
 }

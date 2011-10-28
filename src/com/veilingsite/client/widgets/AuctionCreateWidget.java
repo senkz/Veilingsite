@@ -1,5 +1,7 @@
 package com.veilingsite.client.widgets;
 
+import java.util.ArrayList;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -8,6 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
@@ -16,10 +19,12 @@ import com.veilingsite.client.exceptions.UserException;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.ServerServiceAsync;
 import com.veilingsite.shared.domain.Auction;
+import com.veilingsite.shared.domain.Category;
 
 
 public class AuctionCreateWidget extends VerticalPanel{
 		
+	private ListBox listCategories = new ListBox(false);
 	private Button newauct = new Button("New Auction");
 	private TextBox title = new TextBox();
 	private TextBox description = new TextBox();
@@ -33,17 +38,24 @@ public class AuctionCreateWidget extends VerticalPanel{
 			//add class for styling
 			this.addStyleName("widget");
 			
+			loadCategories();
+			
 			if(UC.getLoggedIn() == null)
 				throw new UserException("ERROR: User must be logged in.");
+			
+			listCategories.addItem("Categories are being loaded.....");
 			
 			table.setWidget(0, 0, new Label("Title: "));
 			table.setWidget(0, 1, title);
 			table.setWidget(1, 0, new Label("Description: "));
 			table.setWidget(1, 1, description);
-			table.setWidget(2, 1, auctionclosedate);
-			table.setWidget(3, 0, new Label("Start amount: "));
-			table.setWidget(3, 1, startamount);
-			table.setWidget(4, 0, addAuction);
+			table.setWidget(2, 0, new Label("Category: "));
+			table.setWidget(2, 1, listCategories);
+			table.setWidget(3, 0, new Label("Auction close date: "));
+			table.setWidget(3, 1, auctionclosedate);
+			table.setWidget(4, 0, new Label("Start amount: "));
+			table.setWidget(4, 1, startamount);
+			table.setWidget(5, 0, addAuction);
 			
 			add(newauct);
 			
@@ -67,7 +79,8 @@ public class AuctionCreateWidget extends VerticalPanel{
 					}
 					if(UC.getLoggedIn() == null)
 						return;
-					addAuction(new Auction(title.getText(), description.getText(), d, UC.getLoggedIn().getUserName(), null, auctionclosedate.getValue()));
+					addAuction(new Auction(title.getText(), description.getText(), d, UC.getLoggedIn().getUserName(),
+							listCategories.getItemText(listCategories.getSelectedIndex()), auctionclosedate.getValue()));
 				}
 			});
 			
@@ -86,5 +99,22 @@ public class AuctionCreateWidget extends VerticalPanel{
 				}
 			};
 			myService.addAuction(a, callback);
+		}
+		
+		public void loadCategories() {
+			ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
+			AsyncCallback<ArrayList<Category>> callback = new AsyncCallback<ArrayList<Category>>() {		
+				@Override
+				public void onFailure(Throwable caught) {}	
+				
+				@Override
+				public void onSuccess(ArrayList<Category> result) {
+					listCategories.removeItem(0);
+					for(Category c : result) {
+						listCategories.addItem(c.getTitle());
+					}
+				}
+			};
+			myService.getCategoryList(callback);
 		}
 }

@@ -32,8 +32,7 @@ public class Entry implements EntryPoint {
 			public void onSelection(SelectionEvent<Integer> event) {
 				Panel p = (Panel) myTabPanel.getWidget(event.getSelectedItem());
 				p.clear();
-				RootPanel.get("containerLeft").clear();
-				RootPanel.get("containerRight").clear();
+				clearPages();
 				switch(event.getSelectedItem()) {
 				default:
 				case 0:
@@ -69,7 +68,7 @@ public class Entry implements EntryPoint {
 		myTabPanel.getDeckPanel().setStyleName("page");
 		RootPanel.get("login").add(lw);
 		RootPanel.get("menubar").add(myTabPanel.getTabBar());
-		RootPanel.get("content").add(myTabPanel.getDeckPanel());
+		//RootPanel.get("content").add(myTabPanel.getDeckPanel());
 		
 		UC.addUserChangeListener(new UserChangeListener() {
 			
@@ -88,4 +87,9 @@ public class Entry implements EntryPoint {
 		});
 	}
 	
+	private void clearPages() {
+		RootPanel.get("containerLeft").clear();
+		RootPanel.get("containerRight").clear();
+		RootPanel.get("subMenu").clear();		
+	}
 }

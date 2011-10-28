@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.logging.client.ConsoleLogHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -23,7 +24,7 @@ public class AuctionViewWidget extends VerticalPanel {
 	private User limitUser = null;
 	private Category limitCat = null;
 	private FlexTable table = new FlexTable();
-	private static ArrayList<PageChangeListener<String>> listeners = new ArrayList<PageChangeListener<String>>();
+	private static ArrayList<PageChangeListener<Auction>> listeners = new ArrayList<PageChangeListener<Auction>>();
 	
 	public AuctionViewWidget() {
 		
@@ -84,10 +85,9 @@ public class AuctionViewWidget extends VerticalPanel {
 			return;
 		}
 		table.setWidget(0, 0, new Label("Title"));
-		table.setWidget(0, 1, new Label("Description"));
-		table.setWidget(0, 2, new Label("Owner"));
-		table.setWidget(0, 3, new Label("Closing Date"));
-		table.setWidget(0, 4, new Label("Current Bid"));
+		table.setWidget(0, 1, new Label("Owner"));
+		table.setWidget(0, 2, new Label("Closing Date"));
+		table.setWidget(0, 3, new Label("Current Bid"));
 		
 		for(final Auction a : al) {
 			Button viewAuction = new Button("View");
@@ -95,18 +95,17 @@ public class AuctionViewWidget extends VerticalPanel {
 			int rown = table.getRowCount();
 			
 			table.setWidget(rown, 0, new Label(a.getTitle()));
-			table.setWidget(rown, 1, new Label(a.getDescription()));
-			table.setWidget(rown, 2, new Label(a.getOwner()));
-			table.setWidget(rown, 3, new Label(a.getCloseDate() + ""));
+			table.setWidget(rown, 1, new Label(a.getOwner()));
+			table.setWidget(rown, 2, new Label(a.getCloseDate() + ""));
 			
 			String s;
 			if(a.getHighestBid() != null)
 				s = a.getHighestBid().getAmount().toString();
 			else
 				s = a.getStartAmount().toString();
-			table.setWidget(rown, 4, new Label(s));
+			table.setWidget(rown, 3, new Label(s));
 			
-			table.setWidget(rown, 5, viewAuction);
+			table.setWidget(rown, 4, viewAuction);
 			if(UC.getLoggedIn() != null) {
 				if(UC.getLoggedIn().getUserName().equals(a.getOwner())){
 					table.setWidget(rown, 6, e_bid);
@@ -116,22 +115,18 @@ public class AuctionViewWidget extends VerticalPanel {
 			viewAuction.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					for(PageChangeListener<String> pcl : listeners)
-						pcl.fireListener(a.getTitle());
+					for(PageChangeListener<Auction> pcl : listeners)
+						pcl.fireListener(a);
 				}
 			});
 		}
 	}
 	
-	public void saveBid(Auction a, Bid b) {
-		System.out.println("com.veilingsite.client.widgets.AuctionViewWidget -> 124, save bid is not completed yet");
-	}
-	
-	public void addPageChangeListener(PageChangeListener<String> pcl) {
+	public void addPageChangeListener(PageChangeListener<Auction> pcl) {
 		listeners.add(pcl);
 	}
 	
-	public static void removeUserPageListener(PageChangeListener<String> pcl) {
+	public static void removeUserPageListener(PageChangeListener<Auction> pcl) {
 		listeners.remove(pcl);
 	}
 }

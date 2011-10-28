@@ -82,6 +82,21 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		  }
 	}
 	
+	public boolean doesUserExist(String userName){
+		EntityManager em = EMF.get().createEntityManager();
+		boolean checkResult = true;
+		try{
+			User findResult = em.find(User.class, userName);
+			if(findResult == null){
+				checkResult = false;
+			}else{
+				checkResult = true;
+			}
+		}catch(Exception e){
+		}
+		return checkResult;
+	}
+	
 	public Auction addAuction(Auction a) {
 		EntityManager em = EMF.get().createEntityManager();
 		try {
@@ -148,13 +163,13 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		return l;
 	}
 	
-	public Auction getAuction(String s) {
+	public Auction getAuction(Long id) {
 		EntityManager em = EMF.get().createEntityManager();
 		Auction a = null;
 		System.out.println("test1");
 		try {
 			System.out.println("test2");
-			Query q = em.createQuery("select from Auction where title = '?1'").setParameter(1, s);
+			Query q = em.createQuery("select from Auction where auctionId = ?1").setParameter(1, id);
 			a = (Auction) q.getSingleResult();
 		} catch (NoResultException nre){
 			System.out.println("test3");
