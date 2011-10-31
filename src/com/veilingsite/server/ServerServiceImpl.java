@@ -57,16 +57,19 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	
 	public void removeUser(User u) {
 		EntityManager em = EMF.get().createEntityManager();	
+		em.getTransaction().begin();
 		try {
 			User user = em.find(User.class, u.getUserName());
 			em.remove(user);
 		} finally {
+			em.getTransaction().commit();
 			em.close();
 		}
 	}
 	
 	public void updateUser(User user) {
 		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
 		  try{
 		    User userx = em.find(User.class, user.getUserName());
 		    userx.setUserName(user.getUserName()); 
@@ -78,6 +81,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		    userx.setPermission(user.getPermission());
 		    em.persist(userx);
 		  } finally {
+			em.getTransaction().commit();
 		    em.close();
 		  }
 	}
@@ -99,9 +103,11 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	
 	public Auction addAuction(Auction a) {
 		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
 		try {
 			em.persist(a);
 		} finally {
+			em.getTransaction().commit();
 			em.close();
 		}
 		return a;
@@ -113,10 +119,12 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	 */
 	public ArrayList<User> getUserList() {
 		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
 		ArrayList<User> l = new ArrayList<User>();
 		try {
 			l = new ArrayList<User>(em.createQuery("select from User").getResultList());
 		} finally {
+			em.getTransaction().commit();
 			em.close();
 		}
 		
@@ -143,6 +151,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	@Override
 	public ArrayList<Auction> getAuctionList(User limitUser, Category limitCat) {
 		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
 		ArrayList<Auction> l = new ArrayList<Auction>();
 		String query;
 		if(limitUser == null){
@@ -158,6 +167,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			return null;
 		}
 		finally {
+			em.getTransaction().commit();
 			em.close();
 		}
 		return l;
@@ -165,6 +175,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	
 	public Auction getAuction(Long id) {
 		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
 		Auction a = null;
 		System.out.println("test1");
 		try {
@@ -176,6 +187,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			return null;
 		}
 		finally {
+			em.getTransaction().commit();
 			em.close();
 		}
 		System.out.println("test4");
@@ -185,6 +197,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	@Override
 	public ArrayList<Category> getCategoryList() {
 		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
 		ArrayList<Category> l = new ArrayList<Category>();
 		
 		String query = "select from Category";
@@ -192,6 +205,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		try {
 			l = new ArrayList<Category>(em.createQuery(query).getResultList());
 		} finally {
+			em.getTransaction().commit();
 			em.close();
 		}
 		return l;
@@ -199,7 +213,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	
 	public Category addCategory(Category c) {
 		EntityManager em = EMF.get().createEntityManager();
-		
+		em.getTransaction().begin();
 		if(getCategory(c.getTitle())!=null)
 			return null;
 		if(getCategory(c.getParent())==null) {
@@ -209,6 +223,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		try {
 			em.persist(c);
 		} finally {
+			em.getTransaction().commit();
 			em.close();
 		}
 		return c;
@@ -216,6 +231,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	
 	public Category getCategory(String s) {		
 		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
 		Category c = null;
 		try {
 			Query q = em.createQuery("select from Category where title = ?1").setParameter(1, s);
@@ -224,6 +240,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			return null;
 		}
 		finally {
+			em.getTransaction().commit();
 			em.close();
 		}
 		return c;
@@ -231,6 +248,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	
 	public ArrayList<Category> getChildrenOfCategory(Category c) {
 		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
 		ArrayList<Category> l = new ArrayList<Category>();
 		
 		String query = "select from Category where parentCategory =" + c.getTitle();
@@ -238,6 +256,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		try {
 			l = new ArrayList<Category>(em.createQuery(query).getResultList());
 		} finally {
+			em.getTransaction().commit();
 			em.close();
 		}
 		return l;
@@ -245,7 +264,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	
 	public void deleteCategory(String s) throws Exception {
 		EntityManager em = EMF.get().createEntityManager();
-		
+		em.getTransaction().begin();		
 		Category cat = getCategory(s);
 		
 		if(cat == null) {
@@ -256,6 +275,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			cat = em.getReference(Category.class, cat.getTitle());
 			em.remove(cat);
 		} finally {
+			em.getTransaction().commit();
 			em.close();
 		}
 	}
