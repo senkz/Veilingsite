@@ -27,8 +27,7 @@ public class AuctionViewPage extends VerticalPanel{
 	private void loadPage() {
 		title.setText(auction.getTitle());
 		title.setStyleName("heading");
-		
-		Label owner = new Label(auction.getOwner());
+		Label owner = new Label(auction.getOwner().getUserName());
 		Label category = new Label(auction.getCategory().getTitle());
 		Label startDate = new Label(auction.getStartDate().toString());
 		Label closeDate = new Label(auction.getCloseDate().toString());

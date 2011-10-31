@@ -15,7 +15,7 @@ public class Address implements Serializable {
     public String postalCode;
     public String city;
     public String country;
-  	public String number;
+  	public String housenumber;
   	public String phoneNumber;
   	public String adressType;
 	@Id
@@ -68,11 +68,11 @@ public class Address implements Serializable {
     }
 
     public String getNumber() {
-    	return number;
+    	return housenumber;
     }
     
     public void setNumber(String number) {
-    	this.number = number;
+    	this.housenumber = number;
     }
 
     public String getPhoneNumber() {

@@ -24,12 +24,15 @@ public class Auction implements Serializable {
 
 	private String title;
 	private String description;
-	@Temporal(TemporalType.DATE)
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;
-	@Temporal(TemporalType.DATE)
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date closeDate;
+	
 	private Double startAmount;
-	private String owner;
+	private User owner;
 
 	private Category category;
    	public Image image;
@@ -40,7 +43,7 @@ public class Auction implements Serializable {
 	public Auction() {
     }
     
-    public Auction(String title, String desc, Double amount, String owner, Category cat, Date date) {
+    public Auction(String title, String desc, Double amount, User owner, Category cat, Date date) {
     	setTitle(title);
     	setDescription(desc);
     	setStartAmount(amount);
@@ -90,11 +93,11 @@ public class Auction implements Serializable {
     	startAmount = d;
     }
     
-    public String getOwner() {
+    public User getOwner() {
     	return owner;
     }
     
-    private void setOwner(String owner) {
+    private void setOwner(User owner) {
     	this.owner = owner;
     }
     
@@ -125,12 +128,14 @@ public class Auction implements Serializable {
     }
 
 	public boolean addBid(Bid bid) {
-		if(bidList.get(bidList.size()-1).getAmount() < bid.getAmount()) {
+		if(bidList.size() > 0 && bidList.get(bidList.size()-1).getAmount() < bid.getAmount()) {
 			bidList.add(bid);
 			return true;
-		} else {
+		} else if(bidList.size() == 0 && bid.getAmount() > this.getStartAmount()) {
+			bidList.add(bid);
+			return true;
+		} else
 			return false;
-		}
 	}
 	
 	/**

@@ -136,7 +136,6 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	public User loginUser(User u) {
 		if(u==null)
 			return null;
-		
 		User user = getUser(u.getUserName());
 		
 		if(user==null)
