@@ -11,6 +11,7 @@ import com.veilingsite.client.controllers.UC;
 import com.veilingsite.client.listeners.UserChangeListener;
 import com.veilingsite.client.pages.AdminPage;
 import com.veilingsite.client.pages.AuctionPage;
+import com.veilingsite.client.pages.FindAuctionPage;
 import com.veilingsite.client.pages.HomePage;
 import com.veilingsite.client.pages.UserAccountPage;
 import com.veilingsite.client.widgets.UserLoginWidget;
@@ -42,7 +43,7 @@ public class Entry implements EntryPoint {
 					p.add(new AuctionPage());
 					break;
 				case 2:
-					//p.add(new UserAccountPage());
+					p.add(new FindAuctionPage());
 					break;
 				case 3:
 					p.add(new UserAccountPage());
