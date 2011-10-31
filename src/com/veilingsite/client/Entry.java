@@ -90,6 +90,8 @@ public class Entry implements EntryPoint {
 	private void clearPages() {
 		RootPanel.get("containerLeft").clear();
 		RootPanel.get("containerRight").clear();
+		RootPanel.get("container34").clear();
+		RootPanel.get("container14").clear();
 		RootPanel.get("subMenu").clear();		
 	}
 }

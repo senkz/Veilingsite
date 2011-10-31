@@ -154,10 +154,10 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		ArrayList<Auction> l = new ArrayList<Auction>();
 		String query;
 		if(limitUser == null){
-			query = "select a from Auction a";
+			query = "select from Auction";
 		}
 		else{
-			query = "select a from Auction a where a.owner = '" + limitUser.getUserName() + "'";
+			query = "select a from Auction a where a.owner = '" + limitUser + "'";
 		}
 		
 		try {

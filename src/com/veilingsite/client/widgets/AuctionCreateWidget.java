@@ -80,7 +80,7 @@ public class AuctionCreateWidget extends VerticalPanel{
 					}
 					if(UC.getLoggedIn() == null)
 						return;
-					addAuction(new Auction(title.getText(), description.getText(), d, UC.getLoggedIn().getUserName(),
+					addAuction(new Auction(title.getText(), description.getText(), d, UC.getLoggedIn(),
 							categories.get(listCategories.getSelectedIndex()), auctionclosedate.getValue()));
 				}
 			});
