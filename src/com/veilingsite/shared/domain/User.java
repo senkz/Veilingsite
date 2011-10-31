@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="tbl_user")
 public class User implements Serializable {
-	@Id
+	@Id	
 	private String userName;
 	private String email;
 	private String firstName;

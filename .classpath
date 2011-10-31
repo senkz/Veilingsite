@@ -3,12 +3,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="test-classes" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/toplink/eclipselink.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/toplink/javax.persistence_2.0.3.v201010191057.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-visualization.jar"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
