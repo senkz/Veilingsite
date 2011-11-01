@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -86,15 +87,14 @@ public class AuctionViewWidget extends VerticalPanel {
 		table.setWidget(0, 1, new Label("Owner"));
 		table.setWidget(0, 2, new Label("Closing Date"));
 		table.setWidget(0, 3, new Label("Current Bid"));
-		
+		int i = 1;
 		for(final Auction a : al) {
 			Button viewAuction = new Button("View");
 			Button e_bid = new Button("Edit");
-			int rown = table.getRowCount();
 			
-			table.setWidget(rown, 0, new Label(a.getTitle()));
-			table.setWidget(rown, 1, new Label(a.getOwner().getUserName()));
-			table.setWidget(rown, 2, new Label(a.getCloseDate() + ""));
+			table.setWidget(i, 0, new Label(a.getTitle()));
+			table.setWidget(i, 1, new Label(a.getOwner().getUserName()));
+			table.setWidget(i, 2, new Label(DateTimeFormat.getShortDateFormat().format(a.getCloseDate())));
 			
 			String s;
             NumberFormat format = NumberFormat.getFormat( "#.##" );
@@ -102,12 +102,12 @@ public class AuctionViewWidget extends VerticalPanel {
 				s =  format.format(a.getHighestBid().getAmount());
 			else
 				s =  format.format(a.getStartAmount());
-			table.setWidget(rown, 3, new Label(s));
+			table.setWidget(i, 3, new Label(s));
 			
-			table.setWidget(rown, 4, viewAuction);
+			table.setWidget(i, 4, viewAuction);
 			if(UC.getLoggedIn() != null) {
 				if(UC.getLoggedIn().getUserName().equals(a.getOwner())){
-					table.setWidget(rown, 6, e_bid);
+					table.setWidget(i, 6, e_bid);
 				}
 			}
 			
@@ -119,6 +119,7 @@ public class AuctionViewWidget extends VerticalPanel {
 						System.out.println("Listener added "+a.getTitle());
 				}
 			});
+			i++;
 		}
 	}
 	
