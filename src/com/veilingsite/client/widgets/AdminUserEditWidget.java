@@ -119,38 +119,19 @@ public class AdminUserEditWidget extends VerticalPanel {
 		user_Username.addBlurHandler(new BlurHandler() {
 		    @Override
 		    public void onBlur(BlurEvent event) {
-		    	if(!user_Username.getText().equals("")){
-			    	String username = user_Username.getText();
-					try{
-						findUserData(username);
-					}catch(NullPointerException e){
-						systemStatus.setText("Error: Something went wrong, no User Data found.");
-					}
-		    	}else{
-		    		systemStatus.setText("Error: Fill in Username to find a user.");
-		    	}
+		    	namesCheck();
 		    }
 		});
 		user_Firstname.addKeyUpHandler(new KeyUpHandler() {
 		    @Override
 		    public void onKeyUp(KeyUpEvent event) {
-		    	String Firstname = user_Firstname.getText();
-		    	if(Firstname.equals("")){
-		    		user_Firstname_Status.setUrl("./images/cross.png");
-		    	}else{
-		    		user_Firstname_Status.setUrl("./images/tick.png");
-		    	}
+		    	namesCheck();
 		    }
 		});
 		user_Surname.addKeyUpHandler(new KeyUpHandler() {
 		    @Override
 		    public void onKeyUp(KeyUpEvent event) {
-		    	String Surname = user_Surname.getText();
-		    	if(Surname.equals("")){
-		    		user_Surname_Status.setUrl("./images/cross.png");
-		    	}else{
-		    		user_Surname_Status.setUrl("./images/tick.png");
-		    	}
+		    	namesCheck();
 		    }
 		});
 		user_Email.addKeyUpHandler(new KeyUpHandler() {
@@ -188,6 +169,10 @@ public class AdminUserEditWidget extends VerticalPanel {
 				}catch(NullPointerException e){
 					systemStatus.setText("Error: Something went wrong, no User Data found.");
 				}
+				namesCheck();
+				emailCheck();
+				phoneCheck();
+				passwordCheck();
 			}
 		});
 		
@@ -251,7 +236,49 @@ public class AdminUserEditWidget extends VerticalPanel {
 			}
 		});
 	}
+	private boolean namesCheck(){
+		Boolean checkFirstName = false;
+		Boolean checkSurName = false;
+		Boolean checkOk = false;
+		String Firstname = user_Firstname.getText();
+		String Username = user_Username.getText();
+		String Surname = user_Surname.getText();
 		
+		//Usernamecheck
+		if(!Username.equals("")){
+			try{
+				findUserData(Username);
+			}catch(NullPointerException e){
+				systemStatus.setText("Error: Something went wrong, no User Data found.");
+			}
+    	}else{
+    		systemStatus.setText("Error: Fill in Username to find a user.");
+    	}
+		//Firstnamecheck
+    	if(Firstname.equals("")){
+    		user_Firstname_Status.setUrl("./images/cross.png");
+    		checkFirstName = false;
+    	}else{
+    		user_Firstname_Status.setUrl("./images/tick.png");
+    		checkFirstName = true;
+    	}
+		//Surnamecheck
+    	if(Surname.equals("")){
+    		user_Surname_Status.setUrl("./images/cross.png");
+    		checkSurName = false;
+    	}else{
+    		user_Surname_Status.setUrl("./images/tick.png");
+    		checkSurName = true;
+    	}
+    	
+		if(checkFirstName && checkSurName){
+			checkOk = true;
+		}else{
+			checkOk = false;
+		}
+		return checkOk;
+		
+	}
 	private boolean emailCheck(){
 		final String email = user_Email.getText().toLowerCase();	//needs to be transformed to lowercase to validate correctly using the regular expression
 		Boolean checkOk = false;
@@ -411,6 +438,10 @@ public class AdminUserEditWidget extends VerticalPanel {
 					systemStatus.setText("No user found");
 					Window.alert("No user found");
 				}
+			namesCheck();
+			emailCheck();
+			phoneCheck();
+			passwordCheck();
 			}
 		};
 		myService.getUser(u, callback);
