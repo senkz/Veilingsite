@@ -45,11 +45,11 @@ public class Entry implements EntryPoint {
 					p.add(new AuctionPage());
 					break;
 				case 2:
-					uap.menu.selectTab(0);
-					p.add(uap);
+					p.add(new FindAuctionPage());
 					break;
 				case 3:
-					p.add(new UserAccountPage());
+					uap.menu.selectTab(0);
+					p.add(uap);
 					break;
 				case 4:
 					p.add(new AdminPage());
