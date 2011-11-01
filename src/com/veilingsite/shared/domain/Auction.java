@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -39,6 +40,12 @@ public class Auction implements Serializable {
 
     @OneToMany
     public List<Bid> bidList = new ArrayList<Bid>();
+    
+    @PostLoad
+    public void fix(){
+        List<Bid> bidList = new ArrayList<Bid>(this.bidList);
+        this.bidList = bidList;
+    }
 
 	public Auction() {
     }

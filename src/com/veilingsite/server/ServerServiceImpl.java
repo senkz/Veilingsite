@@ -165,7 +165,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		try {
 			l = new ArrayList<Auction>(qry.getResultList());
 		} catch(Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			return null;
 		}
 		finally {
