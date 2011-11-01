@@ -27,4 +27,8 @@ public class Image implements Serializable{
   public String getImageUrl() {
 	  return imageUrl;
   }
+  
+  public int getImageId() {
+	  return imageId;
+  }
 }

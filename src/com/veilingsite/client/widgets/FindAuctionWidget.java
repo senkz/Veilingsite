@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.veilingsite.client.controllers.UC;
 import com.veilingsite.client.exceptions.UserException;
+import com.veilingsite.client.listeners.PageChangeListener;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.ServerServiceAsync;
 import com.veilingsite.shared.domain.Auction;
@@ -40,6 +41,7 @@ public class FindAuctionWidget extends VerticalPanel{
 		public ArrayList<Category> blablabla;
 		private ArrayList<Category> subcats = new ArrayList<Category>();
 		private ArrayList<Category> subcats2;
+		private static ArrayList<PageChangeListener<ArrayList<Auction>>> listeners = new ArrayList<PageChangeListener<ArrayList<Auction>>>();
 		
 		public FindAuctionWidget()  {
 			//add class for styling
@@ -57,7 +59,6 @@ public class FindAuctionWidget extends VerticalPanel{
 			olist.addItem("Auction Close Date");
 			olist.addItem("Price");
 			olist.addItem("Title");
-			olist.addItem("Owner");
 			ltable.setWidget(0, 1, olist);
 			olist2.addItem("Ascending");
 			olist2.addItem("Descending");
@@ -74,7 +75,13 @@ public class FindAuctionWidget extends VerticalPanel{
 					ctable.clear();
 					for(final Category a : categories){
 						if(a.getParent() != null){
+							for(Category s : categories){
+								if(s.getTitle().equals(a.getParent())){
+									getSub(s);
+								}
+							}
 							if(a.getParent().equals(lcat.getItemText(lcat.getSelectedIndex()))){
+								
 								if(choosetest == false){
 									table.setWidget(2, 0, new Label("Choose sub categories: "));
 									choosetest = true;
@@ -87,11 +94,9 @@ public class FindAuctionWidget extends VerticalPanel{
 									public void onClick(ClickEvent event) {
 										if(subcats.contains(a)) {
 											subcats.remove(a);
-											Window.alert(a.getTitle() + "is gedeselecteerd");
 										}
 										else {
 											subcats.add(a);
-											Window.alert(a.getTitle() + "is geselecteerd");
 										}
 									}
 								});
@@ -102,17 +107,20 @@ public class FindAuctionWidget extends VerticalPanel{
 				}
 			});
 			
-		
 		searchb.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				if(checkFields() == true){ // All fields meet the required values...
 					Window.alert("GOEDZO");
-					
+					Category category = null;
 					String orderBy = olist.getItemText(olist.getSelectedIndex());
 					String ascDesc = olist2.getItemText(olist2.getSelectedIndex());
 					String searchWord = lsearch.getText();
-					String category = lcat.getItemText(lcat.getSelectedIndex());
+					for(Category c : categories){
+						if(lcat.getItemText(lcat.getSelectedIndex()).equals(c.getTitle())){
+							category = c;
+						}
+					}
 					
 					//Listbox strings in database fields veranderen....
 					
@@ -131,23 +139,23 @@ public class FindAuctionWidget extends VerticalPanel{
 						orderBy = "title";
 					}
 					
-					if(orderBy.equals("Owner")){
-						orderBy = "owner_username";
-					}
-					
 					if(orderBy.equals("Auction Close Date")){
-						orderBy = "closedate";
+						orderBy = "closeDate";
 					}
 					
-					startSearch(searchWord, category, subcats, orderBy, ascDesc);
-					
+					if(subcats.isEmpty()){
+						startSearch(searchWord, category, subcats2, orderBy, ascDesc);
+					}
+					else{
+						startSearch(searchWord, category, subcats, orderBy, ascDesc);
+					}
 					
 				}
 			}
 		});
 	}
 		
-		public void startSearch(String sw, String ct, ArrayList<Category> c, String or, String asc) {
+		public void startSearch(String sw, Category ct, ArrayList<Category> c, String or, String asc) {
 			ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
 			AsyncCallback<ArrayList<Auction>> callback = new AsyncCallback<ArrayList<Auction>>() {		
 				@Override
@@ -155,10 +163,12 @@ public class FindAuctionWidget extends VerticalPanel{
 				
 				@Override
 				public void onSuccess(ArrayList<Auction> result){
-					ArrayList<Auction> c2 = new ArrayList<Auction>();
 					try{
-						c2 = result;
-						Window.alert(c2.size() + " resultaten gevonden");
+						
+						for(PageChangeListener<ArrayList<Auction>> pcl : listeners){
+							pcl.fireListener(result);
+						}
+						
 					}
 					catch(NullPointerException e){
 						Window.alert("No results found.");
@@ -224,5 +234,49 @@ public class FindAuctionWidget extends VerticalPanel{
 			for(Category c : sub) {
 				subcats2.add(c);				
 			}
+		}
+		
+		private void showResults(ArrayList<Auction> au) {
+			for(Auction a : au) {
+				table.clear();
+				System.out.println(au);
+				if(au == null) {
+					table.setWidget(0, 0, new Label("No auctions found."));
+					return;
+				}
+				table.setWidget(0, 0, new Label("Title"));
+				table.setWidget(0, 1, new Label("Owner"));
+				table.setWidget(0, 2, new Label("Closing Date"));
+				table.setWidget(0, 3, new Label("Current Bid"));
+				
+				for(final Auction a2 : au) {
+					Button viewAuction = new Button("View");
+					Button e_bid = new Button("Edit");
+					int rown = table.getRowCount();
+					
+					table.setWidget(rown, 0, new Label(a2.getTitle()));
+					table.setWidget(rown, 1, new Label(a2.getOwner().getUserName()));
+					table.setWidget(rown, 2, new Label(a2.getCloseDate() + ""));
+					
+					String s;
+					if(a2.getHighestBid() != null)
+						s = a2.getHighestBid().getAmount().toString();
+					else
+						s = a2.getStartAmount().toString();
+					table.setWidget(rown, 3, new Label(s));
+					
+					table.setWidget(rown, 4, viewAuction);
+					if(UC.getLoggedIn() != null) {
+						if(UC.getLoggedIn().getUserName().equals(a2.getOwner())){
+							table.setWidget(rown, 6, e_bid);
+						}
+					}
+				}			
+			}
+		}
+
+		public void addPageChangeListener(
+				PageChangeListener<ArrayList<Auction>> pageChangeListener) {
+			// TODO Auto-generated method stub
 		}
 	}

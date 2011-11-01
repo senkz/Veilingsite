@@ -32,6 +32,7 @@ public interface ServerService extends RemoteService {
 	public boolean doesUserExist(String userName);
 	
 	public Auction addAuction(Auction a);
+	public void updateAuction(Auction a);
 	public Auction getAuction(Long id);
 	
 	/**
@@ -39,10 +40,12 @@ public interface ServerService extends RemoteService {
 	 * @return ArrayList<User> ArrayList of users.
 	 */
 	public ArrayList<User> getUserList();
-	public ArrayList<Auction> findAuction(String sw, String ct, ArrayList<Category> c, String or, String ad);
+	public ArrayList<Auction> findAuction(String sw, Category ct, ArrayList<Category> c, String or, String ad);
 	public User loginUser(User u);
 
 	public ArrayList<Auction> getAuctionList(User limitUser, Category limitCat);
+	
+	public Bid addBid(Bid b);
 	
 	public ArrayList<Category> getCategoryList();
 	public ArrayList<Category> getChildrenOfCategory(Category c);

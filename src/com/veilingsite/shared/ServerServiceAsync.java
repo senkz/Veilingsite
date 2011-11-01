@@ -32,15 +32,17 @@ public interface ServerServiceAsync {
 	void doesUserExist(String userName, AsyncCallback<Boolean> callback);
 	
 	void addAuction(Auction a, AsyncCallback<Auction> callback);
+	void updateAuction(Auction a, AsyncCallback<Void> callback);
 	void getAuction(Long id, AsyncCallback<Auction> callback);
 	
+	void addBid(Bid b, AsyncCallback<Bid> callback);
 	/**
 	 * Gets an ArrayList of all users currently in the DataStore.
 	 * @return ArrayList<User> ArrayList of users.
 	 * @param callback AsyncCallback<ArrayList<User>> AsyncCallback with the result.
 	 */
 	void getUserList(AsyncCallback<ArrayList<User>> callback);
-	void findAuction(String sw, String ct, ArrayList<Category> c, String or, String ad, AsyncCallback<ArrayList<Auction>> callback);
+	void findAuction(String sw, Category ct, ArrayList<Category> c, String or, String ad, AsyncCallback<ArrayList<Auction>> callback);
 	void loginUser(User u, AsyncCallback<User> callback);
 
 	void getAuctionList(User limitUser, Category limitCat, AsyncCallback<ArrayList<Auction>> callback);
