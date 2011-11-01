@@ -58,6 +58,12 @@ public class AdminUserEditWidget extends VerticalPanel {
 	private FlexTable table = new FlexTable();
 	
 	public AdminUserEditWidget() {
+		
+		Label title = new Label();
+		title.setText("Edit your account");
+		title.setStyleName("heading");
+		add(title);
+		
 		//add class for styling
 		this.addStyleName("adminWidget");
 		this.addStyleName("widget");

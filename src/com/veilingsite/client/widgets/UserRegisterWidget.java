@@ -53,6 +53,11 @@ public class UserRegisterWidget extends VerticalPanel {
 	
 	
 	public UserRegisterWidget() {
+		
+		Label title = new Label();
+		title.setText("Create an account on The Auction House");
+		title.setStyleName("heading");
+		add(title);
 		//add class for styling
 		this.addStyleName("adminWidget");
 		this.addStyleName("widget");

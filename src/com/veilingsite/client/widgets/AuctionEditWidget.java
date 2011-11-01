@@ -45,6 +45,11 @@ public class AuctionEditWidget extends VerticalPanel {
 	public AuctionEditWidget(Auction a) {
 		widgetAuction = a;
 		
+		Label title = new Label();
+		title.setText("Edit this Auction");
+		title.setStyleName("heading");
+		add(title);
+		
 		//add class for styling
 		this.addStyleName("widget");
 		

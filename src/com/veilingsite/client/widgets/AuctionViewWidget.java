@@ -27,10 +27,13 @@ public class AuctionViewWidget extends VerticalPanel {
 	private static ArrayList<PageChangeListener<Auction>> listeners = new ArrayList<PageChangeListener<Auction>>();
 	
 	public AuctionViewWidget() {
-		
+		Label title = new Label();
+		title.setText("Overview of Auctions");
+		title.setStyleName("heading");
+		add(title);
 		//add class for styling
 		this.addStyleName("widget");
-		
+		table.addStyleName("auctionlist");
 		add(table);
 		table.setWidth("100%");
 	}
@@ -79,6 +82,7 @@ public class AuctionViewWidget extends VerticalPanel {
 	
 	public void showList(ArrayList<Auction> al) {
 		table.clear();
+		table.removeAllRows();
 		if(al == null) {
 			table.setWidget(0, 0, new Label("No auctions found."));
 			return;
@@ -88,7 +92,9 @@ public class AuctionViewWidget extends VerticalPanel {
 		table.setWidget(0, 2, new Label("Closing Date"));
 		table.setWidget(0, 3, new Label("Current Bid"));
 		int i = 1;
+		System.out.println("al size: "+al.size());
 		for(final Auction a : al) {
+			System.out.println("Times looped: "+i);
 			Button viewAuction = new Button("View");
 			Button e_bid = new Button("Edit");
 			
@@ -116,9 +122,10 @@ public class AuctionViewWidget extends VerticalPanel {
 				public void onClick(ClickEvent event) {
 					for(PageChangeListener<Auction> pcl : listeners)
 						pcl.fireListener(a);
-						System.out.println("Listener added "+a.getTitle());
 				}
 			});
+			
+			table.getRowFormatter().getElement(i).addClassName("row"+i%2);
 			i++;
 		}
 	}
