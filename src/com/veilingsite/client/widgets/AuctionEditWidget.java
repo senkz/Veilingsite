@@ -45,6 +45,10 @@ public class AuctionEditWidget extends VerticalPanel {
 	public AuctionEditWidget(Auction a) {
 		widgetAuction = a;
 		
+		auctionTitle.setText(widgetAuction.getTitle());
+		auctionOwner.setText(widgetAuction.getOwner().getUserName());
+		auctionDescription.setText(widgetAuction.getDescription());
+		auctionStartAmount.setText(widgetAuction.getStartAmount().toString());
 		//add class for styling
 		this.addStyleName("widget");
 		
@@ -98,8 +102,16 @@ public class AuctionEditWidget extends VerticalPanel {
 				if(UC.getLoggedIn() == null){
 					return;
 				}
-				updateAuction(new Auction(auctionTitle.getText(), auctionDescription.getText(), d, UC.getLoggedIn(),
-						categoriesList.get(auctionCategories.getSelectedIndex()), auctionCloseDatePicker.getValue()));
+				widgetAuction.setTitle(auctionTitle.getText());
+				widgetAuction.setDescription(auctionDescription.getText());
+				widgetAuction.setStartAmount(d);
+				if(widgetAuction.getCategory() != categoriesList.get(auctionCategories.getSelectedIndex())){
+					widgetAuction.setCategory(categoriesList.get(auctionCategories.getSelectedIndex()));
+				}
+				if(widgetAuction.getCloseDate() != auctionCloseDatePicker.getValue()){
+					widgetAuction.setCloseDate(auctionCloseDatePicker.getValue());
+				}
+				updateAuction(widgetAuction);
 			}
 		});
 //		deleteButton.addClickHandler(new ClickHandler(){
