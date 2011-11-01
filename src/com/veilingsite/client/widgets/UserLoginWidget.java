@@ -139,7 +139,7 @@ public class UserLoginWidget extends VerticalPanel {
 			
 			@Override
 			public void onSuccess(User result) {
-				if(result.getPermission() == 0){
+				if(result != null && result.getPermission() == 0){
 					systemStatus.setText("User Access Denied, reason: User is BLOCKED");
 					systemStatus.setStyleName("error");
 					systemStatus.setVisible(true);
