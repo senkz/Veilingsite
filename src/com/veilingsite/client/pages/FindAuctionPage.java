@@ -28,10 +28,12 @@ public class FindAuctionPage extends VerticalPanel {
 			public void fireListener(ArrayList<Auction> a) {
 				results = a;
 				avc.showList(a);
+				clearPage();
 				refreshPage();
 			}
 
 		});
+		
 	}
 	
 	private void refreshPage() {
@@ -41,20 +43,9 @@ public class FindAuctionPage extends VerticalPanel {
 	}
 	
 	private void clearPage() {
-		containerLeft.clear();
 		containerRight.clear();
 		for(AuctionViewPage a: avw) {
 			a.close();
-		}
-	}
-	
-	private void addAuctionView(Auction a) {
-		AuctionViewPage page = new AuctionViewPage(a);
-		if(avw.contains(page)) {
-			add(avw.get(avw.indexOf(page)));
-		} else {
-			avw.add(page);
-			add(page);
 		}
 	}
 	

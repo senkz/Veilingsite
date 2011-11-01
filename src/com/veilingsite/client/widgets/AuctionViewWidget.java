@@ -116,6 +116,7 @@ public class AuctionViewWidget extends VerticalPanel {
 				public void onClick(ClickEvent event) {
 					for(PageChangeListener<Auction> pcl : listeners)
 						pcl.fireListener(a);
+						System.out.println("Listener added "+a.getTitle());
 				}
 			});
 		}

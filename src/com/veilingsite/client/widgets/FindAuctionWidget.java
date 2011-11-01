@@ -36,7 +36,6 @@ public class FindAuctionWidget extends VerticalPanel{
 		private ListBox olist2 = new ListBox();
 		private TextBox lsearch = new TextBox();
 		private Button searchb = new Button("Search");
-		private Category selCat;
 		private ArrayList<Category> categories;
 		public ArrayList<Category> blablabla;
 		private ArrayList<Category> subcats = new ArrayList<Category>();
@@ -163,10 +162,16 @@ public class FindAuctionWidget extends VerticalPanel{
 				
 				@Override
 				public void onSuccess(ArrayList<Auction> result){
+					int count = 1; 
 					try{
 						
 						for(PageChangeListener<ArrayList<Auction>> pcl : listeners){
-							pcl.fireListener(result);
+							if(count < 10){
+								pcl.fireListener(result);
+							}
+							else{
+								break;
+							}
 						}
 						
 					}
@@ -275,8 +280,8 @@ public class FindAuctionWidget extends VerticalPanel{
 			}
 		}
 
-		public void addPageChangeListener(
-				PageChangeListener<ArrayList<Auction>> pageChangeListener) {
+		public void addPageChangeListener(PageChangeListener<ArrayList<Auction>> pcl) {
 			// TODO Auto-generated method stub
+			listeners.add(pcl);
 		}
 	}
