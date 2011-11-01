@@ -38,6 +38,11 @@ public class EditCategoriesWidget extends VerticalPanel {
 	
 		public EditCategoriesWidget() {
 			
+			Label title = new Label();
+			title.setText("Edit a Category");
+			title.setStyleName("heading");
+			add(title);
+			
 			//add class for styling
 			this.addStyleName("widget");
 			error.addStyleName("error");

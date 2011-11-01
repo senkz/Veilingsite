@@ -253,6 +253,23 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		  }
 	}
 	
+	public void removeAuction(Auction a) {
+		EntityManager em = EMF.get().createEntityManager();	
+		em.getTransaction().begin();
+		try {
+			Auction auction = em.find(Auction.class, a.getAuctionId());
+			ArrayList<Bid> auctionBidList= auction.getBidList();
+			for(Bid b : auctionBidList){
+				Bid bid = em.find(Bid.class, b.getBidId());
+				em.remove(bid);
+			}
+			em.remove(auction);
+		} finally {
+			em.getTransaction().commit();
+			em.close();
+		}
+	}
+	
 	public Bid addBid(Bid b) {
 		EntityManager em = EMF.get().createEntityManager();
 		em.getTransaction().begin();

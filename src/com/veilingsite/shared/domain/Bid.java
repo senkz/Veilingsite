@@ -12,7 +12,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class Bid implements Serializable{
+public class Bid implements Serializable,Comparable<Bid>{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int bidId;
@@ -96,6 +96,11 @@ public void setAmount(Double amount) {
  */
 public void setDate(Date date) {
 	this.placementDate = date;
+}
+
+@Override
+public int compareTo(Bid o) {
+	return amount.compareTo(o.getAmount());
 }
 
 }

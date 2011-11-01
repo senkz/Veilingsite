@@ -93,6 +93,17 @@
 	display: none;	
 }
 
+.auctionlist {
+	border-spacing: 0;	
+}
+
+.auctionlist .row1 {
+	background: #D4DEFF;	
+}
+
+.auctionlist .row0 {
+	background: #E8EDFF;
+}
 /** Containers */
 
 #containerLeft {

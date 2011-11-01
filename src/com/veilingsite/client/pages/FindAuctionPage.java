@@ -22,7 +22,10 @@ public class FindAuctionPage extends VerticalPanel {
 	public FindAuctionPage(){
 		containerLeft.add(fa);	
 		containerRight.add(avc);
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 8a615bc53c10df56c1212745bf7adff4f0f6d28b
 		fa.addPageChangeListener(new PageChangeListener<ArrayList<Auction>>() {
 			@Override
 			public void fireListener(ArrayList<Auction> a) {
@@ -33,7 +36,10 @@ public class FindAuctionPage extends VerticalPanel {
 			}
 
 		});
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 8a615bc53c10df56c1212745bf7adff4f0f6d28b
 	}
 	
 	private void refreshPage() {
