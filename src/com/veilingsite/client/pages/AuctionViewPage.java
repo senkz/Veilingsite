@@ -1,10 +1,12 @@
 package com.veilingsite.client.pages;
 
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.veilingsite.client.controllers.UC;
 import com.veilingsite.client.widgets.AuctionBidWidget;
 import com.veilingsite.shared.domain.Auction;
 
@@ -23,7 +25,7 @@ public class AuctionViewPage extends VerticalPanel{
 		bidWidget = new AuctionBidWidget(a);
 		
 		page.setStyleName("page");
-		containerRight.add(bidWidget);
+		containerRight.add(bidWidget);		
 		
 		loadPage();
 		open();

@@ -7,6 +7,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -39,12 +40,25 @@ public class AuctionBidWidget extends VerticalPanel {
 			      }
 			 };
 			
-			if(UC.getLoggedIn() == null)
+			if(UC.getLoggedIn() == null){
+				HorizontalPanel ymbliec = new HorizontalPanel();
+				Label ymblie = new Label("You must be logged in to bid on auctions.");
+				ymblie.setStyleName("error");
+				ymbliec.add(ymblie);			
+				
 				bidamount.setReadOnly(true);
+				addBid.setEnabled(false);
+				
+				table.setWidget(0, 1, ymbliec);
+				table.setWidget(1, 0, new Label("Amount: "));
+				table.setWidget(1, 1, bidamount);
+				table.setWidget(2, 1, addBid);
+			}else{
+				table.setWidget(0, 0, new Label("Amount: "));
+				table.setWidget(0, 1, bidamount);
+				table.setWidget(1, 1, addBid);
+			}
 			
-			table.setWidget(0, 0, new Label("Amount: "));
-			table.setWidget(0, 1, bidamount);
-			table.setWidget(1, 1, addBid);
 			
 			int i=1;
 			tableBids.setWidget(0, 0, new Label("User"));
