@@ -1,13 +1,19 @@
 package com.veilingsite.server;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.domain.Auction;
@@ -313,6 +319,36 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			em.getTransaction().commit();
 			em.close();
 		}
+	}
+
+	@Override
+	public Map<String, Integer> getDayStatistics() {
+		EntityManager em = EMF.get().createEntityManager();
+		List<Object[]> l = em.createQuery("SELECT b.placementDate, count(b.bidId) FROM Bid b GROUP BY b.placementDate ORDER BY b.placementDate asc").getResultList();
+		em.close();
+		
+		Map<String, Integer> x = new HashMap<String, Integer>();
+		for(Object[] o : l) {
+			Date day = (Date) o[0];
+			SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+			String s = df.format(day);
+			
+			x.put(s, Integer.parseInt(o[1].toString()));
+		}
+		return x;
+	}
+	
+	@Override
+	public Map<Integer, Integer> getDayOfWeekStatistics() {
+		EntityManager em = EMF.get().createEntityManager();
+		List<Object[]> l = em.createQuery("SELECT FUNC('TO_DAYOFWEEK', b.placementDate), count(b.bidId) FROM Bid b GROUP BY FUNC('TO_DAYOFWEEK', b.placementDate) ORDER BY FUNC('TO_DAYOFWEEK', b.placementDate) asc").getResultList();
+		em.close();
+		
+		Map<Integer, Integer> x = new HashMap<Integer, Integer>();
+		for(Object[] o : l) {
+			x.put(Integer.parseInt(o[0].toString()), Integer.parseInt(o[1].toString()));
+		}
+		return x;
 	}
 }
 

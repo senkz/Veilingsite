@@ -18,7 +18,7 @@ public class Bid implements Serializable{
   private int bidId;
   private Double amount;
 
-  @Temporal(TemporalType.TIMESTAMP)
+  @Temporal(TemporalType.DATE)
   private Date placementDate;
   
   @OneToOne

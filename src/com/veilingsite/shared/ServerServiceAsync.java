@@ -1,8 +1,12 @@
 package com.veilingsite.shared;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.visualization.client.AbstractDataTable;
 import com.veilingsite.shared.domain.Auction;
 import com.veilingsite.shared.domain.Bid;
 import com.veilingsite.shared.domain.Category;
@@ -50,4 +54,7 @@ public interface ServerServiceAsync {
 	void addCategory(Category c, AsyncCallback<Category> callback);
 	void getCategory(String s, AsyncCallback<Category> callback);
 	void deleteCategory(String s, AsyncCallback<Void> callback);
+
+	void getDayStatistics(AsyncCallback<Map<String, Integer>> callback);
+	void getDayOfWeekStatistics(AsyncCallback<Map<Integer, Integer>> callback);
 }
