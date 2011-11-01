@@ -56,6 +56,7 @@ public class UserAccountPage extends VerticalPanel {
 		avc.addPageChangeListener(new PageChangeListener<Auction>() {
 			@Override
 			public void fireListener(Auction a) {
+				System.out.println("Auction laden: "+a.getTitle());
 				clearPage();
 				addAuctionView(a);
 			}
@@ -63,6 +64,7 @@ public class UserAccountPage extends VerticalPanel {
 	}
 	
 	private void refreshPage() {
+		subMenu.add(menu);
 		avc.setLimitUser(UC.getLoggedIn());
 		avc.loadAuctions();
 		containerRight.add(avc);

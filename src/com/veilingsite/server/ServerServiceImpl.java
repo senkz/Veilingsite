@@ -183,6 +183,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		String query;
 		int q = 0;
 		query = "select a from Auction a where UPPER(a.description) like UPPER('%" + sw + "%') or UPPER(a.title) like UPPER('%" + sw + "%') ";
+
 		if(c != null && c.isEmpty() != true){
 			for(Category b : c){
 				if(q == 0){
@@ -195,10 +196,11 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			}
 		}
 		else{
-			query = query + "and a.category = '" + ct + "' ";
+			//query = query + "and a.category = '" + ct + "' ";
 		}
-		
+				
 		query = query + "order by a." + or + " " + ad;
+		
 		System.out.println(query);
 		try {
 			l = new ArrayList<Auction>(em.createQuery(query).getResultList());

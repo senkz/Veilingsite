@@ -32,6 +32,7 @@ public class Bid implements Serializable{
 	  this.owner = u;
 	  this.amount = b;
 	  this.auction = a;
+	  placementDate = new Date();
   }
 
   public Double getAmount() {
