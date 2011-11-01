@@ -1,5 +1,6 @@
 package com.veilingsite.client.pages;
 
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -19,6 +20,7 @@ public class AuctionViewPage extends VerticalPanel{
 	private FlexTable ft = new FlexTable();
 	private Label title = new Label();
 	private Auction auction;
+    private NumberFormat format = NumberFormat.getFormat( "#.##" );
 	
 	AuctionViewPage(Auction a) {
 		auction = a;
@@ -39,7 +41,7 @@ public class AuctionViewPage extends VerticalPanel{
 		Label category = new Label(auction.getCategory().getTitle());
 		Label startDate = new Label(auction.getStartDate().toString());
 		Label closeDate = new Label(auction.getCloseDate().toString());
-		Label startAmount = new Label(auction.getStartAmount().toString());
+		Label startAmount = new Label(format.format(auction.getStartAmount()));
 		
 		ft.setWidget(0, 0, new Label("Owner:"));			ft.setWidget(0, 1, owner);		
 		ft.setWidget(1, 0, new Label("Category:"));			ft.setWidget(1, 1, category);

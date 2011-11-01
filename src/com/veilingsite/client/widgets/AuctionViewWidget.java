@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.logging.client.ConsoleLogHandler;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -16,7 +16,6 @@ import com.veilingsite.client.listeners.PageChangeListener;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.ServerServiceAsync;
 import com.veilingsite.shared.domain.Auction;
-import com.veilingsite.shared.domain.Bid;
 import com.veilingsite.shared.domain.Category;
 import com.veilingsite.shared.domain.User;
 
@@ -98,10 +97,11 @@ public class AuctionViewWidget extends VerticalPanel {
 			table.setWidget(rown, 2, new Label(a.getCloseDate() + ""));
 			
 			String s;
+            NumberFormat format = NumberFormat.getFormat( "#.##" );
 			if(a.getHighestBid() != null)
-				s = a.getHighestBid().getAmount().toString();
+				s =  format.format(a.getHighestBid().getAmount());
 			else
-				s = a.getStartAmount().toString();
+				s =  format.format(a.getStartAmount());
 			table.setWidget(rown, 3, new Label(s));
 			
 			table.setWidget(rown, 4, viewAuction);
