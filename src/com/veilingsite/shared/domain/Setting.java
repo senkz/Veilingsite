@@ -17,8 +17,12 @@ public class Setting implements Serializable{
 
   public User myUser;
 
-  public Boolean Setting(String nm, String va) {
-	  return null;
+  public Setting() {}
+  
+  public Setting(String nm, String va, User owner) {
+	  this.name = nm;
+	  this.value = va;
+	  this.myUser = owner;
   }
 
   public String getValue() {

@@ -95,7 +95,7 @@ public class AuctionViewWidget extends VerticalPanel {
 			int rown = table.getRowCount();
 			
 			table.setWidget(rown, 0, new Label(a.getTitle()));
-			table.setWidget(rown, 1, new Label(a.getOwner()));
+			table.setWidget(rown, 1, new Label(a.getOwner().getUserName()));
 			table.setWidget(rown, 2, new Label(a.getCloseDate() + ""));
 			
 			String s;

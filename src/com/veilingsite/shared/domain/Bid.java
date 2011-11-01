@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Bid implements Serializable{
@@ -14,14 +17,21 @@ public class Bid implements Serializable{
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int bidId;
   private Double amount;
-  private Date date;
-  private User myUser;
-  private Auction myAuction;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date placementDate;
+  
+  @OneToOne
+  private User owner;
+
+  private Auction auction;
+  
+  public Bid() {}
   
   public Bid(User u, Double b, Auction a) {
-	  this.myUser = u;
+	  this.owner = u;
 	  this.amount = b;
-	  this.myAuction = a;
+	  this.auction = a;
   }
 
   public Double getAmount() {
@@ -29,7 +39,7 @@ public class Bid implements Serializable{
   }
 
   public Date getDate() {
-	  return date;
+	  return placementDate;
   }
   /**
  * @return the bidId
@@ -49,28 +59,28 @@ public void setBidId(int bidId) {
  * @return the myUser
  */
 public User getMyUser() {
-	return myUser;
+	return owner;
 }
 
 /**
  * @param myUser the myUser to set
  */
 public void setMyUser(User myUser) {
-	this.myUser = myUser;
+	this.owner = myUser;
 }
 
 /**
  * @return the myAuction
  */
 public Auction getMyAuction() {
-	return myAuction;
+	return auction;
 }
 
 /**
  * @param myAuction the myAuction to set
  */
 public void setMyAuction(Auction myAuction) {
-	this.myAuction = myAuction;
+	this.auction = myAuction;
 }
 
 /**
@@ -84,7 +94,7 @@ public void setAmount(Double amount) {
  * @param date the date to set
  */
 public void setDate(Date date) {
-	this.date = date;
+	this.placementDate = date;
 }
 
 }

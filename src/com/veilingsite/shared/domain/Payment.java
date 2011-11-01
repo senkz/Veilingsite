@@ -18,9 +18,14 @@ public class Payment implements Serializable{
 
   public String accountidentifier;
   
-  public User User;
+  public User user;
+  
+  public Payment() {};
 
-  public void Payment(int id) {
+  public Payment(String pt, String ai, User u) {
+	  this.paymentType = pt;
+	  this.accountidentifier = ai;
+	  this.user = u;
   }
 
   public String getPaymentType() {

@@ -3,12 +3,18 @@ package com.veilingsite.shared.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import javax.jdo.annotations.NotPersistent;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Auction implements Serializable {
@@ -19,18 +25,32 @@ public class Auction implements Serializable {
 
 	private String title;
 	private String description;
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date closeDate;
+	
 	private Double startAmount;
-	private String owner;
-	private String category;
-    public String image;
-    public ArrayList<Bid> bidList = new ArrayList<Bid>();
+	private User owner;
+
+	private Category category;
+   	public Image image;
+
+    @OneToMany
+    public List<Bid> bidList = new ArrayList<Bid>();
+    
+    @PostLoad
+    public void fix(){
+        List<Bid> bidList = new ArrayList<Bid>(this.bidList);
+        this.bidList = bidList;
+    }
 
 	public Auction() {
     }
     
-    public Auction(String title, String desc, Double amount, String owner, String cat, Date date) {
+    public Auction(String title, String desc, Double amount, User owner, Category cat, Date date) {
     	setTitle(title);
     	setDescription(desc);
     	setStartAmount(amount);
@@ -80,27 +100,27 @@ public class Auction implements Serializable {
     	startAmount = d;
     }
     
-    public String getOwner() {
+    public User getOwner() {
     	return owner;
     }
     
-    private void setOwner(String owner) {
+    private void setOwner(User owner) {
     	this.owner = owner;
     }
     
-    public String getCategory() {
+    public Category getCategory() {
     	return category;
     }
     
-    public void setCategory(String category) {
-    	this.category = category;
+    public void setCategory(Category cat) {
+    	this.category = cat;
     }
     
-    public String getImage() {
+    public Image getImage() {
     	return image;
     }
     
-    public void setImage(String i) {
+    public void setImage(Image i) {
     	image = i;
     }
     
@@ -115,12 +135,14 @@ public class Auction implements Serializable {
     }
 
 	public boolean addBid(Bid bid) {
-		if(bidList.get(bidList.size()-1).getAmount() < bid.getAmount()) {
+		if(bidList.size() > 0 && bidList.get(bidList.size()-1).getAmount() < bid.getAmount()) {
 			bidList.add(bid);
 			return true;
-		} else {
+		} else if(bidList.size() == 0 && bid.getAmount() > this.getStartAmount()) {
+			bidList.add(bid);
+			return true;
+		} else
 			return false;
-		}
 	}
 	
 	/**
@@ -134,7 +156,7 @@ public class Auction implements Serializable {
 	 * @return the bidList
 	 */
 	public ArrayList<Bid> getBidList() {
-		return bidList;
+		return (new ArrayList<Bid> (bidList));
 	}
 
 	/**

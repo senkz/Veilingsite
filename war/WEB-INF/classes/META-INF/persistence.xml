@@ -3,24 +3,31 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
 	http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" version="1.0">
-		
-	<persistence-unit name="local">
-		<provider>org.datanucleus.store.appengine.jpa.DatastorePersistenceProvider</provider>
-		<properties>
-			<property name="datanucleus.NontransactionalRead" value="true"/>
-			<property name="datanucleus.NontransactionalWrite" value="true"/>
-			<property name="datanucleus.ConnectionURL" value="appengine"/>
-		</properties>
-	</persistence-unit>
-	
 	
 	<persistence-unit name="online">
-		<provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
-			<property name="datanucleus.ConnectionDriverName" value="oracle.jdbc.driver.OracleDriver"/>
-			<property name="datanucleus.ConnectionURL" value="jdbc:oracle:thin@ondora01.hu.nl:8521:cursus01"/>
-			<property name="datanucleus.ConnectionUserName" value="stud1593882"/>
-			<property name="datanucleus.ConnectionPassword" value="stud1593882"/>
+			<property name="eclipselink.logging.level" value="FINE"/>
+			<property name="eclipselink.logging.thread" value="false"/>
+			<property name="eclipselink.logging.session" value="false"/>
+			<property name="eclipselink.logging.timestamp" value="false"/>
+			<property name="eclipselink.logging.exceptions" value="false"/>
+			
+	        <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@ondora01.hu.nl:8521:cursus01"/>
+	        <property name="javax.persistence.jdbc.user" value="stud1593882"/>
+	        <property name="javax.persistence.jdbc.password" value="stud1593882"/>
+	        
+			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+			
+			<property name="eclipselink.jdbc.read-connections.min" value="1"/>
+			<property name="eclipselink.jdbc.write-connections.min" value="1"/>
+			<property name="eclipselink.target-database" value="Oracle"/>
+
+	<!-- enable next line if one of the domainclasses changes, and then after a run disable it again -->
+	<!-- it uses alot of java memory, and traffic -->
+			<!--<property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>-->
+			<!--<property name="eclipselink.ddl-generation.output-mode" value="both"/>-->
 		</properties>
 	</persistence-unit>
 </persistence>

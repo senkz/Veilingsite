@@ -25,6 +25,7 @@ import com.veilingsite.shared.domain.Category;
 public class AuctionCreateWidget extends VerticalPanel{
 		
 	private ListBox listCategories = new ListBox(false);
+	private ArrayList<Category> categories = new ArrayList<Category>();
 	private Button newauct = new Button("New Auction");
 	private TextBox title = new TextBox();
 	private TextBox description = new TextBox();
@@ -79,8 +80,8 @@ public class AuctionCreateWidget extends VerticalPanel{
 					}
 					if(UC.getLoggedIn() == null)
 						return;
-					addAuction(new Auction(title.getText(), description.getText(), d, UC.getLoggedIn().getUserName(),
-							listCategories.getItemText(listCategories.getSelectedIndex()), auctionclosedate.getValue()));
+					addAuction(new Auction(title.getText(), description.getText(), d, UC.getLoggedIn(),
+							categories.get(listCategories.getSelectedIndex()), auctionclosedate.getValue()));
 				}
 			});
 			
@@ -110,6 +111,7 @@ public class AuctionCreateWidget extends VerticalPanel{
 				@Override
 				public void onSuccess(ArrayList<Category> result) {
 					listCategories.removeItem(0);
+					categories = result;
 					for(Category c : result) {
 						listCategories.addItem(c.getTitle());
 					}
