@@ -196,11 +196,11 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			}
 		}
 
-		query = query + "order by a." + or + " " + ad + "LIMIT 10";
+		query = query + "order by a." + or + " " + ad;
 		
 		System.out.println(query);
 		try {
-			l = new ArrayList<Auction>(em.createQuery(query).getResultList());
+			l = new ArrayList<Auction>(em.createQuery(query).setMaxResults(10).getResultList());
 		} catch(Exception e) {
 			e.printStackTrace();
 			System.out.println("JAMMER");

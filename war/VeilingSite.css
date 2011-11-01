@@ -101,6 +101,10 @@
 	background: #D4DEFF;	
 }
 
+.auctionlist td {
+	padding: 2px 5px;
+}
+
 .auctionlist .row0 {
 	background: #E8EDFF;
 }
