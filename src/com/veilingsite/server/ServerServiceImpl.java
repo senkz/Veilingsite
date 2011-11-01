@@ -194,9 +194,6 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 				}
 			}
 		}
-		else{
-			query = query + "and a.category = '" + ct + "' ";
-		}
 		
 		query = query + "order by a." + or + " " + ad;
 		System.out.println(query);
