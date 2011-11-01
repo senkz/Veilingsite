@@ -27,6 +27,8 @@ public class Entry implements EntryPoint {
 
 		myTabPanel.setSize("960px", "100px");
 		myTabPanel.setAnimationEnabled(false);
+		
+		final UserAccountPage uap = new UserAccountPage();
 
 		myTabPanel.addSelectionHandler(new SelectionHandler<Integer>() {
 			@Override
@@ -43,7 +45,8 @@ public class Entry implements EntryPoint {
 					p.add(new AuctionPage());
 					break;
 				case 2:
-					p.add(new FindAuctionPage());
+					uap.menu.selectTab(0);
+					p.add(uap);
 					break;
 				case 3:
 					p.add(new UserAccountPage());
@@ -79,9 +82,13 @@ public class Entry implements EntryPoint {
 					myTabPanel.getTabBar().setTabEnabled(3, false);
 					myTabPanel.getTabBar().setTabEnabled(4, false);
 					myTabPanel.selectTab(0);
-				} else {
+				}else if(UC.getLoggedIn() != null && UC.getLoggedIn().getPermission() == 2){
 					myTabPanel.getTabBar().setTabEnabled(3, true);
 					myTabPanel.getTabBar().setTabEnabled(4, true);
+					myTabPanel.selectTab(3);
+				}else{
+					myTabPanel.getTabBar().setTabEnabled(3, true);
+					myTabPanel.getTabBar().setTabEnabled(4, false);
 					myTabPanel.selectTab(3);
 				}
 			}

@@ -1,6 +1,8 @@
 package com.veilingsite.client.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -48,8 +50,10 @@ public class AdminUserEditWidget extends VerticalPanel {
 	private Button 			confirmButton 		   	   	  = new Button("Confirm changes"); // The Button to confirm changes made to the found
 	private Button 			blockButton 		   	   	  = new Button("Block user"); 		// The Button to block the found user
 	private Button 			deleteButton 		   	   	  = new Button("Delete user"); 	// The Button to delete the found user
+	private Button 			makeAdminButton 		   	   	  = new Button("Delete user"); 	// The Button to delete the found user
 	
 	private User 			widgetUser;												// The Widget's User
+	private User 			findResult;												// The Widget's User
 	
 	private FlexTable table = new FlexTable();
 	
@@ -79,6 +83,7 @@ public class AdminUserEditWidget extends VerticalPanel {
 		buttonPanel.add(confirmButton);
 		buttonPanel.add(blockButton);
 		buttonPanel.add(deleteButton);
+		buttonPanel.add(makeAdminButton);
 		
 		table.setWidget(0, 0, new Label("Username:"));
 		table.setWidget(0, 1, user_Username);
@@ -110,26 +115,23 @@ public class AdminUserEditWidget extends VerticalPanel {
 		// Fill TextBoxes and Labels with User/System Information 
 		systemStatus.setText("Edit User Account Page");
 		
+		//Form Check KeyUpHandlers
+		user_Username.addBlurHandler(new BlurHandler() {
+		    @Override
+		    public void onBlur(BlurEvent event) {
+		    	namesCheck();
+		    }
+		});
 		user_Firstname.addKeyUpHandler(new KeyUpHandler() {
 		    @Override
 		    public void onKeyUp(KeyUpEvent event) {
-		    	String Firstname = user_Firstname.getText();
-		    	if(Firstname.equals("")){
-		    		user_Firstname_Status.setUrl("./images/cross.png");
-		    	}else{
-		    		user_Firstname_Status.setUrl("./images/tick.png");
-		    	}
+		    	namesCheck();
 		    }
 		});
 		user_Surname.addKeyUpHandler(new KeyUpHandler() {
 		    @Override
 		    public void onKeyUp(KeyUpEvent event) {
-		    	String Surname = user_Surname.getText();
-		    	if(Surname.equals("")){
-		    		user_Surname_Status.setUrl("./images/cross.png");
-		    	}else{
-		    		user_Surname_Status.setUrl("./images/tick.png");
-		    	}
+		    	namesCheck();
 		    }
 		});
 		user_Email.addKeyUpHandler(new KeyUpHandler() {
@@ -167,6 +169,10 @@ public class AdminUserEditWidget extends VerticalPanel {
 				}catch(NullPointerException e){
 					systemStatus.setText("Error: Something went wrong, no User Data found.");
 				}
+				namesCheck();
+				emailCheck();
+				phoneCheck();
+				passwordCheck();
 			}
 		});
 		
@@ -197,9 +203,16 @@ public class AdminUserEditWidget extends VerticalPanel {
 		blockButton.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				String username = user_Username.getText();
-				blockUser(username);
-				
+				if(findResult != null){
+					if(findResult.getPermission() != 2){
+						String username = user_Username.getText();
+						blockUser(username);
+					}else{
+						systemStatus.setText("Found user is a admin and can not be blocked");
+					}
+				}else{
+					systemStatus.setText("ERROR: FindResult not set.");	
+				}				
 			}
 		});
 		
@@ -210,8 +223,62 @@ public class AdminUserEditWidget extends VerticalPanel {
 				deleteUser(username);
 			}
 		});
-	}
 		
+		makeAdminButton.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				if(findResult != null){
+						String username = user_Username.getText();
+						makeUserAdmin(username);
+				}else{
+					systemStatus.setText("findResult not set.");	
+				}				
+			}
+		});
+	}
+	private boolean namesCheck(){
+		Boolean checkFirstName = false;
+		Boolean checkSurName = false;
+		Boolean checkOk = false;
+		String Firstname = user_Firstname.getText();
+		String Username = user_Username.getText();
+		String Surname = user_Surname.getText();
+		
+		//Usernamecheck
+		if(!Username.equals("")){
+			try{
+				findUserData(Username);
+			}catch(NullPointerException e){
+				systemStatus.setText("Error: Something went wrong, no User Data found.");
+			}
+    	}else{
+    		systemStatus.setText("Error: Fill in Username to find a user.");
+    	}
+		//Firstnamecheck
+    	if(Firstname.equals("")){
+    		user_Firstname_Status.setUrl("./images/cross.png");
+    		checkFirstName = false;
+    	}else{
+    		user_Firstname_Status.setUrl("./images/tick.png");
+    		checkFirstName = true;
+    	}
+		//Surnamecheck
+    	if(Surname.equals("")){
+    		user_Surname_Status.setUrl("./images/cross.png");
+    		checkSurName = false;
+    	}else{
+    		user_Surname_Status.setUrl("./images/tick.png");
+    		checkSurName = true;
+    	}
+    	
+		if(checkFirstName && checkSurName){
+			checkOk = true;
+		}else{
+			checkOk = false;
+		}
+		return checkOk;
+		
+	}
 	private boolean emailCheck(){
 		final String email = user_Email.getText().toLowerCase();	//needs to be transformed to lowercase to validate correctly using the regular expression
 		Boolean checkOk = false;
@@ -338,11 +405,25 @@ public class AdminUserEditWidget extends VerticalPanel {
 			@Override
 			public void onSuccess(User result) {
 				if(result != null){
+					findResult = result;
 					String userStatus;
 					if(result.getPermission() == 0){
 						userStatus = "Blocked";
+						blockButton.setText("Unblock user");
 					}else{
-						userStatus = "Active";
+						String rights = "";
+						if(result.getPermission() == 2){
+							rights = "Admin";
+						}else{
+							rights = "User";
+						}
+						userStatus = "Active " + rights;
+						blockButton.setText("Block user");
+					}
+					if(result.getPermission() == 2){
+						makeAdminButton.setText("Make User");
+					}else{
+						makeAdminButton.setText("Make Admin");
 					}
 					systemStatus.setText("User Data fetched: " + result.getUserName());				
 					user_Username.setText(result.getUserName());
@@ -351,12 +432,16 @@ public class AdminUserEditWidget extends VerticalPanel {
 					user_Surname.setText(result.getSurName());
 					user_Email.setText(result.getEmail());
 					user_MobilePhoneNumber.setText(result.getMobilePhoneNumber());
-					user_Password.setText("");
-					user_Password_Check.setText("");
+					user_Password.setText(result.getPassword());
+					user_Password_Check.setText(result.getPassword());
 				}else{
 					systemStatus.setText("No user found");
 					Window.alert("No user found");
 				}
+			namesCheck();
+			emailCheck();
+			phoneCheck();
+			passwordCheck();
 			}
 		};
 		myService.getUser(u, callback);
@@ -372,7 +457,33 @@ public class AdminUserEditWidget extends VerticalPanel {
 			@Override
 			public void onSuccess(User result) {
 				User tmpResultUser = result;
-				tmpResultUser.setPermission(0);
+				if(result.getPermission() != 0){
+					tmpResultUser.setPermission(0);
+				}else if(result.getPermission() != 2){
+					tmpResultUser.setPermission(1);
+				}
+				updateUser(tmpResultUser);
+				findUserData(tmpResultUser.getUserName());
+			}
+		};
+		myService.getUser(u, callback);
+	}
+	public void makeUserAdmin(String u){
+		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
+		AsyncCallback<User> callback = new AsyncCallback<User>() {		
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("no user found!");
+				systemStatus.setText("No user found");
+			}
+			@Override
+			public void onSuccess(User result) {
+				User tmpResultUser = result;
+				if(result.getPermission() != 2){
+					tmpResultUser.setPermission(2);
+				}else if(result.getPermission() == 2){
+					tmpResultUser.setPermission(1);
+				}
 				updateUser(tmpResultUser);
 				findUserData(tmpResultUser.getUserName());
 			}

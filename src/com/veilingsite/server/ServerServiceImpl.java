@@ -7,11 +7,12 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.domain.Auction;
+import com.veilingsite.shared.domain.Bid;
 import com.veilingsite.shared.domain.Category;
+import com.veilingsite.shared.domain.Image;
 import com.veilingsite.shared.domain.User;
 
 public class ServerServiceImpl extends RemoteServiceServlet implements ServerService {
@@ -156,10 +157,10 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		ArrayList<Auction> l = new ArrayList<Auction>();
 		Query qry;
 		if(limitUser == null){
-			qry = em.createQuery("select a from Auction a").setMaxResults(30);
+			qry = em.createQuery("select a from Auction a").setMaxResults(10);
 		}
 		else{
-			qry = em.createQuery("select a from Auction a where a.owner = ?1").setParameter(1, limitUser).setMaxResults(30);
+			qry = em.createQuery("select a from Auction a where a.owner = ?1").setParameter(1, limitUser).setMaxResults(10);
 		}
 		
 		try {
@@ -229,6 +230,40 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		}
 		System.out.println("test4");
 		return a;
+	}
+	
+	public void updateAuction(Auction a) {
+		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
+		  try{
+		    Auction a2 = em.find(Auction.class, a.getAuctionId());
+		    a2.setBidList(a.getBidList());
+		    a2.setCategory(em.find(Category.class, a.getCategory().getTitle()));
+		    a2.setCloseDate(a.getCloseDate());
+		    a2.setDescription(a.getDescription());
+		    a2.setImage(em.find(Image.class, a.getImage().getImageId()));
+		    a2.setStartAmount(a.getStartAmount());
+		    a2.setStartDate(a.getStartDate());
+		    a2.setTitle(a.getTitle());
+		    em.persist(a2);
+		  } catch(Exception e) {
+			  System.out.println(e.getMessage());
+		  } finally {
+			em.getTransaction().commit();
+		    em.close();
+		  }
+	}
+	
+	public Bid addBid(Bid b) {
+		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
+		try {
+			em.persist(b);
+		} finally {
+			em.getTransaction().commit();
+			em.close();
+		}
+		return b;
 	}
 	
 	@Override

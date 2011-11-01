@@ -32,6 +32,7 @@ public interface ServerService extends RemoteService {
 	public boolean doesUserExist(String userName);
 	
 	public Auction addAuction(Auction a);
+	public void updateAuction(Auction a);
 	public Auction getAuction(Long id);
 	
 	/**
@@ -43,6 +44,8 @@ public interface ServerService extends RemoteService {
 	public User loginUser(User u);
 
 	public ArrayList<Auction> getAuctionList(User limitUser, Category limitCat);
+	
+	public Bid addBid(Bid b);
 	
 	public ArrayList<Category> getCategoryList();
 	public ArrayList<Category> getChildrenOfCategory(Category c);
