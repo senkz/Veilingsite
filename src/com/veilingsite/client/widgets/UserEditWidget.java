@@ -14,32 +14,36 @@ import com.veilingsite.shared.ServerServiceAsync;
 import com.veilingsite.shared.domain.User;
 
 public class UserEditWidget extends VerticalPanel {
+	private String			regExpEmail				   	  = new String("^[a-z0-9._%-]+@[a-z0-9.-]+[.][a-z.]{2,4}$");
+	private String			regExpPassword			   	  = new String("^[A-Za-z]\\w{4,}[A-Za-z]$");
+	private String			regExpMobilePhone		   	  = new String("^06+[0-9]{8}$");
 	
-	private Label 			systemStatus 		   	   = new Label();						// The Status of the editing process will be displayed in this label
-	private Label 			user_Username 		   	   = new Label(); 						// Contains username and userID - Uneditable
-	private Label 			user_Active_Status 		   = new Label("User Status: -"); 		// Password check - Uneditable
-	private Label 			user_Firstname		   	   = new Label(); 						// A User's firstname - Uneditable
-	private Label 			user_Surname		   	   = new Label(); 						// A User's surname - Uneditable
-	private TextBox 		user_Email			   	   = new TextBox(); 					// A User's Email - Editable
-	private TextBox 		user_MobilePhoneNumber 	   = new TextBox(); 					// A User's mobile phone number - Editable
+	private Label 			systemStatus 		   	   	  = new Label();					// The Status of the editing process will be displayed in this label
+	private TextBox			user_Username 		  	   	  = new TextBox(); 				// Contains username - editable
+	private TextBox			user_Firstname		   		  = new TextBox(); 				// A User's firstname - Editable
+	private TextBox			user_Surname		   		  = new TextBox(); 				// A User's surname - Editable
+	private TextBox 		user_Email			       	  = new TextBox(); 				// A User's Email - Editable
+	private Image 			user_Email_Status          	  = new Image(); 					// Email check - Uneditable
+	private TextBox 		user_MobilePhoneNumber     	  = new TextBox(); 				// A User's mobile phone number - Editable
+	private Image 			user_MobilePhoneNumber_Status = new Image(); 					// Email check - Uneditable
 	
-	private HorizontalPanel panel_Password	  	       = new HorizontalPanel();		    	// Contains user_Password & user_Password_Status
-	private PasswordTextBox user_Password 		       = new PasswordTextBox(); 			// A User's password - Editable
-	private Image 			user_Password_Status       = new Image(); 						// Password check - Uneditable
+	private HorizontalPanel panel_Password	  	       	  = new HorizontalPanel();		    	// Contains user_Password & user_Password_Status
+	private PasswordTextBox user_Password 		       	  = new PasswordTextBox(); 			// A User's password - Editable
+	private Image 			user_Password_Status       	  = new Image(); 						// Password check - Uneditable
 	
-	private HorizontalPanel panel_Password_Check   	   = new HorizontalPanel();				// Contains user_Password & user_Password_Status	
-	private PasswordTextBox user_Password_Check    	   = new PasswordTextBox(); 			// A User's password check - Editable
-	private Image 			user_Password_Check_Status = new Image(); 						// Password check - Uneditable
+	private HorizontalPanel panel_Password_Check   	   	  = new HorizontalPanel();				// Contains user_Password & user_Password_Status	
+	private PasswordTextBox user_Password_Check    	   	  = new PasswordTextBox(); 			// A User's password check - Editable
+	private Image 			user_Password_Check_Status	  = new Image(); 						// Password check - Uneditable
 	
-	private Panel			password_Checks_StatusPanel= new HorizontalPanel();				// Panel that contains final result of password check
-	private Label 			password_Checks_StatusLab  = new Label("Passwords match: ");	// Password check - Uneditable
-	private Image 			password_Checks_StatusImg  = new Image(); 						// Password check - Uneditable
+	private Panel			password_Checks_StatusPanel	  = new HorizontalPanel();				// Panel that contains final result of password check
+	private Label 			password_Checks_StatusLab  	  = new Label("Passwords match: ");	// Password check - Uneditable
+	private Image 			password_Checks_StatusImg  	  = new Image(); 						// Password check - Uneditable
 	
-	private Panel 			buttonPanel			   	   = new HorizontalPanel();				// Panel that contains the form's buttons
-	private Button 			confirmButton 		   	   = new Button("Confirm changes"); 	// The Button to confirm changes made to the found
-	private Button 			deleteButton 		   	   = new Button("Delete My Account");	// The Button to delete the found user
+	private Panel 			buttonPanel			   	   	  = new HorizontalPanel();				// Panel that contains the form's buttons
+	private Button 			confirmButton 		   	   	  = new Button("Confirm changes"); 	// The Button to confirm changes made to the found
+	private Button 			deleteButton 		   	   	  = new Button("Delete My Account");	// The Button to delete the found user
 	
-	private User 			widgetUser 			   	   = new User();						// The Widget's User
+	private User 			widgetUser 			   	   	  = (UC.getLoggedIn());						// The Widget's User
 	
 	private FlexTable table = new FlexTable();
 	
@@ -49,12 +53,11 @@ public class UserEditWidget extends VerticalPanel {
 		//add class for styling
 		this.addStyleName("widget");
 		
-		// Load logged User object into local variable widgetUser
-		widgetUser = (UC.getLoggedIn());
-		
 		// Construct the widget layout
 		add(systemStatus);
 		add(table);
+		user_Email_Status.setUrl("./images/cross.png");
+		user_MobilePhoneNumber_Status.setUrl("./images/cross.png");
 		user_Password_Status.setUrl("./images/cross.png");
 		user_Password_Check_Status.setUrl("./images/cross.png");
 		password_Checks_StatusImg.setUrl("./images/cross.png");
@@ -73,8 +76,10 @@ public class UserEditWidget extends VerticalPanel {
 		table.setWidget(2, 1, user_Surname);
 		table.setWidget(3, 0, new Label("Email:"));
 		table.setWidget(3, 1, user_Email);
+		table.setWidget(3, 2, user_Email_Status);
 		table.setWidget(4, 0, new Label("Mobile Phone Number:"));
 		table.setWidget(4, 1, user_MobilePhoneNumber);
+		table.setWidget(4, 2, user_MobilePhoneNumber_Status);
 		table.setWidget(5, 0, new Label("Password*:"));
 		table.setWidget(5, 1, user_Password);
 		table.setWidget(5, 2, user_Password_Status);
@@ -86,22 +91,35 @@ public class UserEditWidget extends VerticalPanel {
 		
 		// Fill TextBoxes and Labels with User/System Information 
 		systemStatus.setText("Edit Your Account Page");
-		if(UC.getLoggedIn()==null){
-			user_Username.setText("TEST USERNAME");
-			user_Firstname.setText("TEST FIRSTNAME");
-			user_Surname.setText("TEST SURNAME");
-			user_Email.setText("TEST EMAIL");
-			user_MobilePhoneNumber.setText("TEST MOBILEPHONENUMBER");
-			user_Password.setText("TEST PASSWORD");
-			user_Password_Check.setText("TEST PASSWORD");
+		if(UC.getLoggedIn() != null){													//if a user is logged in, get his data and fill the form
+			user_Username.setText(widgetUser.getUserName());
+			user_Firstname.setText(widgetUser.getFirstName());
+			user_Surname.setText(widgetUser.getSurName());
+			user_Email.setText(widgetUser.getEmail());
+			user_MobilePhoneNumber.setText(widgetUser.getMobilePhoneNumber());
+			user_Password.setText(widgetUser.getPassword());
+			user_Password_Check.setText(widgetUser.getPassword());
+			
+			emailCheck();
+			phoneCheck();																//do checks to edit the check status for fetched data
+			passwordCheck();
 		}else{
-			user_Username.setText("" + widgetUser.getUserName());
-			user_Firstname.setText("" + widgetUser.getFirstName());
-			user_Surname.setText("" + widgetUser.getSurName());
-			user_Email.setText("" + widgetUser.getEmail());
-			user_MobilePhoneNumber.setText("" + widgetUser.getMobilePhoneNumber());
+			//if there is no user logged in do nothing with form filling - quite useless because user wont see this page when he is not logged but what the Hell :)
 		}
-		//Password Check KeyUpHandlers
+		
+		//Form Check KeyUpHandlers
+		user_Email.addKeyUpHandler(new KeyUpHandler() {
+		    @Override
+		    public void onKeyUp(KeyUpEvent event) {
+		    	emailCheck();
+		    }
+		});
+		user_MobilePhoneNumber.addKeyUpHandler(new KeyUpHandler() {
+		    @Override
+		    public void onKeyUp(KeyUpEvent event) {
+		    	phoneCheck();
+		    }
+		});
 		user_Password.addKeyUpHandler(new KeyUpHandler() {
 		    @Override
 		    public void onKeyUp(KeyUpEvent event) {
@@ -118,7 +136,7 @@ public class UserEditWidget extends VerticalPanel {
 		confirmButton.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				if(passwordCheck() == true){
+				if(emailCheck() && phoneCheck() && passwordCheck()){
 					String username = user_Username.getText();
 					String firstname = user_Firstname.getText();
 					String surname = user_Surname.getText();
@@ -130,7 +148,36 @@ public class UserEditWidget extends VerticalPanel {
 					userx.setMobilePhoneNumber(mobilephonenumber);
 					updateUser(userx);
 				}else{
-					systemStatus.setText("Passwordcheck didn't pass, User not edited.");
+					String failMessage = new String("User Editing Failed: ");
+					if(!emailCheck()){
+						failMessage += "Email";
+					}
+					if(emailCheck() && !phoneCheck()){
+						failMessage += "Mobile Phone ";
+					}
+					if(!emailCheck() && !phoneCheck()){
+						failMessage += ", Mobile Phone ";
+					}
+					if(emailCheck() && !passwordCheck()){
+						failMessage += "Password ";
+					}
+					if(emailCheck() && !passwordCheck()){
+						
+					}else if(phoneCheck() && !passwordCheck()){
+						failMessage += "Password ";
+					}
+					if(!emailCheck() && !passwordCheck()){
+						failMessage += " and Password ";
+					}
+					if(!emailCheck() && !passwordCheck()){
+						
+					}else if(!phoneCheck() && !passwordCheck()){
+						failMessage += "and Password ";
+					}
+					if(!emailCheck() || !phoneCheck() || !passwordCheck()){
+						failMessage += "check didn't pass, account is not edited!";
+						systemStatus.setText(failMessage);
+					}
 				}
 			}
 		});
@@ -143,17 +190,52 @@ public class UserEditWidget extends VerticalPanel {
 		});
 	}
 	
-	//PasswordCheck Function - Is called when KeyUp event is fired from user_Password or user_Password_Check
+	private boolean emailCheck(){
+		final String email = user_Email.getText().toLowerCase();	//needs to be transformed to lowercase to validate correctly using the regular expression
+		Boolean checkOk = false;
+		
+		if(email.equals("")){											//email can not be empty
+			user_Email_Status.setUrl("./images/cross.png");
+		}else if(!email.equals("") && !email.matches(regExpEmail)){		//if email is filled but does not match regular expression - check FAIL
+			user_Email_Status.setUrl("./images/cross.png");
+		}else if(email.matches(regExpEmail)){						//if email is filled and matches regular expression - check is passed and change cross to tick image
+			user_Email_Status.setUrl("./images/tick.png");
+			checkOk = true;
+		}
+		else{
+			checkOk = false;
+		}
+		return checkOk;
+		
+	}
+	private boolean phoneCheck(){
+		final String phone = user_MobilePhoneNumber.getText();
+		Boolean checkOk = false;
+		
+		if(phone.equals("")){												//phone can not be empty
+			user_MobilePhoneNumber_Status.setUrl("./images/cross.png");
+		}else if(!phone.equals("") && !phone.matches(regExpMobilePhone)){		//if phone is filled but does not match regular expression - check FAIL
+			user_MobilePhoneNumber_Status.setUrl("./images/cross.png");
+		}else if(phone.matches(regExpMobilePhone)){						//if phone is filled and matches regular expression - check is passed and change cross to tick image
+			user_MobilePhoneNumber_Status.setUrl("./images/tick.png");
+			checkOk = true;
+		}
+		else{
+			checkOk = false;
+		}
+		return checkOk;
+		
+	}
 	private boolean passwordCheck(){
 		final String password = user_Password.getText();
 		final String passwordcheck = user_Password_Check.getText();
 		Boolean checkOk = false;
 		
-		if(password == ""){
+		if(password.equals("")){
 			//user_Password_Status.setText("Password field cannot be empty");
 			user_Password_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
-		}else if(password != "" && !password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		}else if(!password.equals("") && !password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
 			//user_Password_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
 			user_Password_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
@@ -162,11 +244,11 @@ public class UserEditWidget extends VerticalPanel {
 			user_Password_Status.setUrl("./images/tick.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}
-		if(passwordcheck == ""){
+		if(passwordcheck.equals("")){
 			//user_Password_Check_Status.setText("Password check field cannot be empty");
 			user_Password_Check_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
-		}else if(passwordcheck != "" && !passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		}else if(!passwordcheck.equals("") && !passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
 			//user_Password_Check_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
 			user_Password_Check_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
@@ -222,39 +304,6 @@ public class UserEditWidget extends VerticalPanel {
 			}
 		};
 		myService.removeUser(u, callback);
-	}
-	public void findUserData(String u){
-		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
-		AsyncCallback<User> callback = new AsyncCallback<User>() {		
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("no user found!");
-			}
-			@Override
-			public void onSuccess(User result) {
-				if(result != null){
-					String userStatus;
-					if(result.getPermission() == 0){
-						userStatus = "Blocked";
-					}else{
-						userStatus = "Active";
-					}
-					systemStatus.setText("User Data fetched: " + result.getUserName());				
-					user_Username.setText(result.getUserName());
-					user_Active_Status.setText("User Status: " + userStatus);
-					user_Firstname.setText(result.getFirstName());
-					user_Surname.setText(result.getSurName());
-					user_Email.setText(result.getEmail());
-					user_MobilePhoneNumber.setText(result.getMobilePhoneNumber());
-					user_Password.setText("");
-					user_Password_Check.setText("");
-				}else{
-					systemStatus.setText("No user found");
-					Window.alert("No user found");
-				}
-			}
-		};
-		myService.getUser(u, callback);
 	}
 	public void deleteUser(String u){
 		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);

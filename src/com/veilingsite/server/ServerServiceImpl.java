@@ -17,7 +17,9 @@ import javax.persistence.RollbackException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.domain.Auction;
+import com.veilingsite.shared.domain.Bid;
 import com.veilingsite.shared.domain.Category;
+import com.veilingsite.shared.domain.Image;
 import com.veilingsite.shared.domain.User;
 
 public class ServerServiceImpl extends RemoteServiceServlet implements ServerService {
@@ -162,10 +164,10 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		ArrayList<Auction> l = new ArrayList<Auction>();
 		Query qry;
 		if(limitUser == null){
-			qry = em.createQuery("select a from Auction a").setMaxResults(30);
+			qry = em.createQuery("select a from Auction a").setMaxResults(10);
 		}
 		else{
-			qry = em.createQuery("select a from Auction a where a.owner = ?1").setParameter(1, limitUser).setMaxResults(30);
+			qry = em.createQuery("select a from Auction a where a.owner = ?1").setParameter(1, limitUser).setMaxResults(10);
 		}
 		
 		try {
@@ -182,32 +184,32 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	
 	
 	@Override
-	public ArrayList<Auction> findAuction(String sw, String ct, ArrayList<Category> c, String or, String ad) {
+	public ArrayList<Auction> findAuction(String sw, Category ct, ArrayList<Category> c, String or, String ad) {
 		EntityManager em = EMF.get().createEntityManager();
 		ArrayList<Auction> l = new ArrayList<Auction>();
 		String query;
 		int q = 0;
-		query = "select * from Auction where description like '%" + sw + "%' or title like '%" + sw + "%' ";
-		if(c.isEmpty() != true){
+		query = "select a from Auction a where UPPER(a.description) like UPPER('%" + sw + "%') or UPPER(a.title) like UPPER('%" + sw + "%') ";
+
+		if(c != null && c.isEmpty() != true){
 			for(Category b : c){
 				if(q == 0){
-					query = query + "and category_title = ' " + b.getTitle() + "' ";
+					query = query + "and a.category = '" + b + "' ";
 					q++;
 				}
 				else{
-					query = query + "or category_title = '" + b.getTitle() + "' ";
+					query = query + "or a.category = '" + b + "' ";
 				}
 			}
 		}
-		else{
-			query = query + "and category_title = '" + ct + "' ";
-		}
+
+		query = query + "order by a." + or + " " + ad;
 		
-		query = query + "order by " + or + " " + ad;
 		System.out.println(query);
 		try {
-			l = new ArrayList<Auction>(em.createQuery(query).getResultList());
+			l = new ArrayList<Auction>(em.createQuery(query).setMaxResults(10).getResultList());
 		} catch(Exception e) {
+			e.printStackTrace();
 			System.out.println("JAMMER");
 			return null;
 		}
@@ -234,6 +236,57 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		}
 		System.out.println("test4");
 		return a;
+	}
+	
+	public void updateAuction(Auction a) {
+		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
+		  try{
+		    Auction a2 = em.find(Auction.class, a.getAuctionId());
+		    a2.setBidList(a.getBidList());
+		    a2.setCategory(em.find(Category.class, a.getCategory().getTitle()));
+		    a2.setCloseDate(a.getCloseDate());
+		    a2.setDescription(a.getDescription());
+		    a2.setImage(em.find(Image.class, a.getImage().getImageId()));
+		    a2.setStartAmount(a.getStartAmount());
+		    a2.setStartDate(a.getStartDate());
+		    a2.setTitle(a.getTitle());
+		    em.persist(a2);
+		  } catch(Exception e) {
+			  System.out.println(e.getMessage());
+		  } finally {
+			em.getTransaction().commit();
+		    em.close();
+		  }
+	}
+	
+	public void removeAuction(Auction a) {
+		EntityManager em = EMF.get().createEntityManager();	
+		em.getTransaction().begin();
+		try {
+			Auction auction = em.find(Auction.class, a.getAuctionId());
+			ArrayList<Bid> auctionBidList= auction.getBidList();
+			for(Bid b : auctionBidList){
+				Bid bid = em.find(Bid.class, b.getBidId());
+				em.remove(bid);
+			}
+			em.remove(auction);
+		} finally {
+			em.getTransaction().commit();
+			em.close();
+		}
+	}
+	
+	public Bid addBid(Bid b) {
+		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
+		try {
+			em.persist(b);
+		} finally {
+			em.getTransaction().commit();
+			em.close();
+		}
+		return b;
 	}
 	
 	@Override

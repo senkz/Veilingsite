@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -26,19 +27,30 @@ public class AuctionCreateWidget extends VerticalPanel{
 		
 	private ListBox listCategories = new ListBox(false);
 	private ArrayList<Category> categories = new ArrayList<Category>();
-	private Button newauct = new Button("New Auction");
 	private TextBox title = new TextBox();
 	private TextBox description = new TextBox();
 	private Button addAuction = new Button("Add Auction");
 	private DatePicker auctionclosedate = new DatePicker();
 	private TextBox startamount = new TextBox();
 	private FlexTable table = new FlexTable();
+	private Label systemStatus = new Label();
+	private Timer systemStatusTimer;
 		
 		public AuctionCreateWidget() throws UserException  {
+			
+			Label title2 = new Label();
+			title2.setText("Create an Auction");
+			title2.setStyleName("heading");
+			add(title2);
 			
 			//add class for styling
 			this.addStyleName("widget");
 			
+			systemStatusTimer = new Timer() {
+			      public void run() {
+						systemStatus.setVisible(false);
+			      }
+			 };
 			loadCategories();
 			
 			if(UC.getLoggedIn() == null)
@@ -58,24 +70,22 @@ public class AuctionCreateWidget extends VerticalPanel{
 			table.setWidget(4, 1, startamount);
 			table.setWidget(5, 0, addAuction);
 			
-			add(newauct);
+			add(table);
+			add(systemStatus);
 			
-			
-			newauct.addClickHandler(new ClickHandler(){
-				@Override
-				public void onClick(ClickEvent event) {
-					add(table);
-				}
-			});
 			
 			addAuction.addClickHandler(new ClickHandler(){
 				@Override
 				public void onClick(ClickEvent event) {
+					systemStatusTimer.cancel();
 					double d;
 					try {
 						d = Double.parseDouble(startamount.getText());
 					} catch(NumberFormatException nfe) {
-						Window.alert("Start amount must be a numerical value");
+						systemStatus.setText("Start amount must be a numerical value");			
+						systemStatus.setStyleName("error");
+						systemStatus.setVisible(true);
+						systemStatusTimer.schedule(3000);
 						return;
 					}
 					if(UC.getLoggedIn() == null)
@@ -96,7 +106,11 @@ public class AuctionCreateWidget extends VerticalPanel{
 				
 				@Override
 				public void onSuccess(Auction result) {
-					Window.alert("Auction has been added succesfully");
+					systemStatus.setText("Auction has been added succesfully");			
+					systemStatus.setStyleName("succesfull");
+					systemStatus.setVisible(true);
+					systemStatusTimer.schedule(3000);
+					refreshInput();
 				}
 			};
 			myService.addAuction(a, callback);
@@ -118,5 +132,12 @@ public class AuctionCreateWidget extends VerticalPanel{
 				}
 			};
 			myService.getCategoryList(callback);
+		}
+		
+		private void refreshInput() {
+			title.setText("");
+			description.setText("");
+			startamount.setText("");
+			
 		}
 }
