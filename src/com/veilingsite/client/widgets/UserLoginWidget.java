@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.veilingsite.client.controllers.UC;
@@ -21,12 +22,13 @@ public class UserLoginWidget extends VerticalPanel {
 	private Button login = new Button("Login");
 	private Button logout = new Button("Logout");
 	private TextBox username = new TextBox();
-	private TextBox password = new TextBox();
+	private PasswordTextBox password = new PasswordTextBox();
 	private FlexTable table = new FlexTable();
 	private Timer systemStatusTimer;
 		
 	public UserLoginWidget() {
-		
+		username.setText("test");
+		password.setText("testtest");
 		systemStatusTimer = new Timer() {
 		      public void run() {
 					systemStatus.setVisible(false);

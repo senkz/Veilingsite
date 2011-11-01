@@ -35,7 +35,7 @@ public class Auction implements Serializable {
 	private User owner;
 
 	private Category category;
-   	 public Image image;
+   	public Image image;
 
     @OneToMany
     public List<Bid> bidList = new ArrayList<Bid>();
