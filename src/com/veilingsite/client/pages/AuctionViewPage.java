@@ -20,11 +20,15 @@ public class AuctionViewPage extends VerticalPanel{
 	AuctionViewPage(Auction a) {
 		auction = a;
 		bidWidget = new AuctionBidWidget(a);
-		auctionEditWidget = new AuctionEditWidget();
+		auctionEditWidget = new AuctionEditWidget(a);
 		
 		page.setStyleName("page");
+		
 		containerRight.add(bidWidget);	
-		containerRight.add(auctionEditWidget);
+		
+		if(auction.getOwner().getUserName().equals(UC.getLoggedIn().getUserName())){
+			containerRight.add(auctionEditWidget);
+		}
 		
 		loadPage();
 		open();

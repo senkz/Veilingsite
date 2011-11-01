@@ -39,14 +39,26 @@ public class AuctionBidWidget extends VerticalPanel {
 						systemStatus.setVisible(false);
 			      }
 			 };
-			
-			if(UC.getLoggedIn() == null){
+			if(UC.getLoggedIn().getUserName().equals(a.getOwner().getUserName())){
+				HorizontalPanel ymboutbec = new HorizontalPanel();
+				Label ymboutbe = new Label("You cannot bid on your own auctions.");
+				ymboutbe.setStyleName("error");
+				ymboutbec.add(ymboutbe);			
+				
+				bidamount.setEnabled(false);
+				addBid.setEnabled(false);
+				
+				table.setWidget(0, 1, ymboutbec);
+				table.setWidget(1, 0, new Label("Amount: "));
+				table.setWidget(1, 1, bidamount);
+				table.setWidget(2, 1, addBid);
+			}else if(UC.getLoggedIn() == null){
 				HorizontalPanel ymbliec = new HorizontalPanel();
 				Label ymblie = new Label("You must be logged in to bid on auctions.");
 				ymblie.setStyleName("error");
 				ymbliec.add(ymblie);			
 				
-				bidamount.setReadOnly(true);
+				bidamount.setEnabled(false);
 				addBid.setEnabled(false);
 				
 				table.setWidget(0, 1, ymbliec);

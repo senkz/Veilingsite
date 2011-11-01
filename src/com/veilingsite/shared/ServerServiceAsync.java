@@ -33,6 +33,7 @@ public interface ServerServiceAsync {
 	
 	void addAuction(Auction a, AsyncCallback<Auction> callback);
 	void updateAuction(Auction a, AsyncCallback<Void> callback);
+	void removeAuction(Auction a, AsyncCallback<Void> callback);
 	void getAuction(Long id, AsyncCallback<Auction> callback);
 	
 	void addBid(Bid b, AsyncCallback<Bid> callback);

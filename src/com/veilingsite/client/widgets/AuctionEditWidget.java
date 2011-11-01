@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
@@ -17,9 +18,10 @@ import com.veilingsite.shared.domain.*;
 public class AuctionEditWidget extends VerticalPanel {
 	
 	//System Components - invisible
-	private Label				auctionID 		  	   	  	  = new Label("");
 	private User 				widgetUser 			   	   	  = (UC.getLoggedIn());
 	private ArrayList<Category> categoriesList 				  = new ArrayList<Category>();
+	private Auction				widgetAuction;
+	private Timer 				systemStatusTimer;
 	
 	//Graphical Components - visible (DUH)
 	private Label 				systemStatus 		   	   	  = new Label("Edit This Auction");	
@@ -40,17 +42,22 @@ public class AuctionEditWidget extends VerticalPanel {
 	private Button 				deleteButton 		   	   	  = new Button("Delete Auction");
 	private FlexTable 			table 						  = new FlexTable();
 	
-	
-	public AuctionEditWidget() {
+	public AuctionEditWidget(Auction a) {
+		widgetAuction = a;
 		
 		//add class for styling
 		this.addStyleName("widget");
 		
 		// Load information from database
 		loadCategories();
-				
 		auctionCategories.addItem("Categories are being loaded.....");
 		
+		// Init SystemStatus Timer
+		systemStatusTimer = new Timer() {
+		      public void run() {
+					systemStatus.setVisible(false);
+		      }
+		 };
 		// Construct the widget layout
 		add(systemStatus);
 		
@@ -77,18 +84,38 @@ public class AuctionEditWidget extends VerticalPanel {
 		confirmButton.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
+				systemStatusTimer.cancel();
+				double d;
+				try {
+					d = Double.parseDouble(auctionStartAmount.getText());
+				} catch(NumberFormatException nfe) {
+					systemStatus.setText("Start amount must be a numerical value");			
+					systemStatus.setStyleName("error");
+					systemStatus.setVisible(true);
+					systemStatusTimer.schedule(3000);
+					return;
+				}
+				if(UC.getLoggedIn() == null){
+					return;
+				}
+				updateAuction(new Auction(auctionTitle.getText(), auctionDescription.getText(), d, UC.getLoggedIn(),
+						categoriesList.get(auctionCategories.getSelectedIndex()), auctionCloseDatePicker.getValue()));
 			}
 		});
-		deleteButton.addClickHandler(new ClickHandler(){
-			@Override
-			public void onClick(ClickEvent event) {
-			}
-		});
+//		deleteButton.addClickHandler(new ClickHandler(){
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				deleteAuction();
+//			}
+//		});
 	}
-	
-	private boolean emailCheck(){
-		return false;
-	}
+//	
+//	private boolean filledInCheck(){
+//		return false;
+//	}
+//	private boolean filledInCheck(){
+//		return false;
+//	}
 	
 	public void loadCategories() {
 		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
@@ -108,48 +135,32 @@ public class AuctionEditWidget extends VerticalPanel {
 		myService.getCategoryList(callback);
 	}
 	
-	public void updateUser(User u){
+	public void updateAuction(Auction a){
 		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				systemStatus.setText("Error: Something went wrong, no User Data Updated.");
+				systemStatus.setText("Error: Something went wrong, no Auction Data Updated.");
 			}
 			@Override
 			public void onSuccess(Void result) {
-				systemStatus.setText("User Data Updated.");
+				systemStatus.setText("Auction Updated.");
 			}
 		};
-		myService.updateUser(u, callback);
+		myService.updateAuction(a, callback);
 	}
-	public void removeUser(User u){
+	public void deleteAuction(Auction a){
 		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				systemStatus.setText("Error: Something went wrong, no User removed");
+				systemStatus.setText("Error: Something went wrong, no Auction removed");
 			}
 			@Override
 			public void onSuccess(Void result) {
-				systemStatus.setText("User removed");
+				systemStatus.setText("Auction removed");
 			}
 		};
-		myService.removeUser(u, callback);
-	}
-	public void deleteUser(String u){
-		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
-		AsyncCallback<User> callback = new AsyncCallback<User>() {		
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("no user found!");
-				systemStatus.setText("No user found");
-			}
-			@Override
-			public void onSuccess(User result) {
-				User tmpResultUser = result;
-				removeUser(tmpResultUser);
-			}
-		};
-		myService.getUser(u, callback);
+		myService.removeAuction(a, callback);
 	}
 }

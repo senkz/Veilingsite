@@ -33,6 +33,7 @@ public interface ServerService extends RemoteService {
 	
 	public Auction addAuction(Auction a);
 	public void updateAuction(Auction a);
+	public void removeAuction(Auction a);
 	public Auction getAuction(Long id);
 	
 	/**
