@@ -1,8 +1,12 @@
 package com.veilingsite.client.widgets;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -23,9 +27,11 @@ public class AuctionBidWidget extends VerticalPanel {
 	private Button addBid = new Button("Place bid");
 	private TextBox bidamount = new TextBox();
 	private FlexTable table = new FlexTable();
+	private int countBids;
 	private FlexTable tableBids = new FlexTable();
 	private Label systemStatus = new Label();
 	private Timer systemStatusTimer;
+	private NumberFormat format = NumberFormat.getFormat( "#.##" );
 		
 		public AuctionBidWidget(Auction a) {
 			
@@ -72,14 +78,20 @@ public class AuctionBidWidget extends VerticalPanel {
 			}
 			
 			
-			int i=1;
 			tableBids.setWidget(0, 0, new Label("User"));
 			tableBids.setWidget(0, 1, new Label("Amount"));
-			tableBids.setWidget(i, 0, new Label("None was found"));
-			for(Bid b : auction.getBidList()) {
-				tableBids.setWidget(i, 0, new Label(b.getMyUser().getUserName()));
-				tableBids.setWidget(i, 1, new Label(b.getAmount().toString()));
-				i++;
+			
+			ArrayList<Bid> bids = auction.getBidList();
+			countBids = bids.size()+2;
+			Collections.sort(bids);
+			for(Bid b : bids) {
+				tableBids.setWidget(countBids, 0, new Label(b.getMyUser().getUserName()));
+				tableBids.setWidget(countBids, 1, new Label(format.format(b.getAmount())));
+				countBids = countBids - 1;
+			}
+			
+			if(bids.isEmpty()) {
+				tableBids.setWidget(1, 0, new Label("None was found"));
 			}
 			
 			add(table);
@@ -93,6 +105,8 @@ public class AuctionBidWidget extends VerticalPanel {
 					systemStatusTimer.cancel();
 					double d;
 					try {
+						d = Double.parseDouble(bidamount.getText());
+						bidamount.setText(format.format(d));
 						d = Double.parseDouble(bidamount.getText());
 					} catch(NumberFormatException nfe) {
 						systemStatus.setText("Bid must be a numerical value");			
@@ -113,7 +127,7 @@ public class AuctionBidWidget extends VerticalPanel {
 							addBid(new Bid(UC.getLoggedIn(),d,auction));
 						}
 					} else {
-						if(auction.getHighestBid().getAmount() > d) {
+						if(auction.getHighestBid().getAmount()+1 > d) {
 							systemStatus.setText("Bid must be higher than highest bid");			
 							systemStatus.setStyleName("error");
 							systemStatus.setVisible(true);
@@ -154,6 +168,9 @@ public class AuctionBidWidget extends VerticalPanel {
 					systemStatus.setStyleName("succesfull");
 					systemStatus.setVisible(true);
 					systemStatusTimer.schedule(3000);
+					tableBids.setWidget(countBids, 0, new Label(UC.getLoggedIn().getUserName()));
+					tableBids.setWidget(countBids, 1, new Label(bidamount.getText()));
+					countBids = countBids - 1;
 					refreshInput();
 				}
 			};
