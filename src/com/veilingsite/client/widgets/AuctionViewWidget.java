@@ -77,9 +77,8 @@ public class AuctionViewWidget extends VerticalPanel {
 		this.limitCat = limitCat;
 	}
 	
-	private void showList(ArrayList<Auction> al) {
+	public void showList(ArrayList<Auction> al) {
 		table.clear();
-		System.out.println(al);
 		if(al == null) {
 			table.setWidget(0, 0, new Label("No auctions found."));
 			return;
