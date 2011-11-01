@@ -156,10 +156,10 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		ArrayList<Auction> l = new ArrayList<Auction>();
 		Query qry;
 		if(limitUser == null){
-			qry = em.createQuery("select a from Auction a");
+			qry = em.createQuery("select a from Auction a").setMaxResults(30);
 		}
 		else{
-			qry = em.createQuery("select a from Auction a where a.owner = ?1").setParameter(1, limitUser);
+			qry = em.createQuery("select a from Auction a where a.owner = ?1").setParameter(1, limitUser).setMaxResults(30);
 		}
 		
 		try {
