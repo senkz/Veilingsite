@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.veilingsite.client.controllers.UC;
@@ -166,7 +167,7 @@ public class UserRegisterWidget extends VerticalPanel {
 		confirmButton.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				if(passwordCheck() == true){
+				if(!doesUserExistResult && user_Username.getText() != "" && user_Firstname.getText() != "" && user_Surname.getText() != "" && emailCheck() && phoneCheck() && passwordCheck()){
 					String username = user_Username.getText();
 					String firstname = user_Firstname.getText();
 					String surname = user_Surname.getText();
@@ -178,7 +179,8 @@ public class UserRegisterWidget extends VerticalPanel {
 					userx.setMobilePhoneNumber(mobilephonenumber);
 					addUser(userx);
 				}else{
-					systemStatus.setText("Passwordcheck didn't pass, User not created.");
+					systemStatus.setText("Something is not filled in or is not filled in correctly, User not created.");
+					Window.alert("Something is not filled in or is not filled in correctly, User not created.");
 				}
 			}
 		});
@@ -251,11 +253,11 @@ public class UserRegisterWidget extends VerticalPanel {
 			//user_Password_Status.setText("Password field cannot be empty");
 			user_Password_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
-		}else if(!password.equals("") && !password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		}else if(!password.equals("") && !password.matches(regExpPassword)){
 			//user_Password_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
 			user_Password_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
-		}else if(password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		}else if(password.matches(regExpPassword)){
 			//user_Password_Status.setText("Password field matches criteria");
 			user_Password_Status.setUrl("./images/tick.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
@@ -264,23 +266,23 @@ public class UserRegisterWidget extends VerticalPanel {
 			//user_Password_Check_Status.setText("Password check field cannot be empty");
 			user_Password_Check_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
-		}else if(!passwordcheck.equals("") && !passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		}else if(!passwordcheck.equals("") && !passwordcheck.matches(regExpPassword)){
 			//user_Password_Check_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
 			user_Password_Check_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
-		}else if(passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		}else if(passwordcheck.matches(regExpPassword)){
 			//user_Password_Check_Status.setText("Password check field matches criteria");
 			user_Password_Check_Status.setUrl("./images/tick.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}
-		if(password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$") && passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		if(password.matches(regExpPassword) && passwordcheck.matches(regExpPassword)){
 			//user_Password_Status.setText("Password field matches criteria but does not match with password check field");
 			//user_Password_Check_Status.setText("Password check field matches criteria but does not match with password field");
 			user_Password_Status.setUrl("./images/tick.png");
 			user_Password_Check_Status.setUrl("./images/tick.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}
-		if(password.equals(passwordcheck) && password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$") && passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		if(password.equals(passwordcheck) && password.matches(regExpPassword) && passwordcheck.matches(regExpPassword)){
 			//user_Password_Status.setText("Password field matches criteria and matches password check field");
 			//user_Password_Check_Status.setText("Password check field matches criteria and matches password field");
 			user_Password_Status.setUrl("./images/tick.png");
