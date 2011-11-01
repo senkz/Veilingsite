@@ -177,32 +177,33 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	
 	
 	@Override
-	public ArrayList<Auction> findAuction(String sw, String ct, ArrayList<Category> c, String or, String ad) {
+	public ArrayList<Auction> findAuction(String sw, Category ct, ArrayList<Category> c, String or, String ad) {
 		EntityManager em = EMF.get().createEntityManager();
 		ArrayList<Auction> l = new ArrayList<Auction>();
 		String query;
 		int q = 0;
-		query = "select * from Auction where description like '%" + sw + "%' or title like '%" + sw + "%' ";
-		if(c.isEmpty() != true){
+		query = "select a from Auction a where UPPER(a.description) like UPPER('%" + sw + "%') or UPPER(a.title) like UPPER('%" + sw + "%') ";
+		if(c != null && c.isEmpty() != true){
 			for(Category b : c){
 				if(q == 0){
-					query = query + "and category_title = ' " + b.getTitle() + "' ";
+					query = query + "and a.category = '" + b + "' ";
 					q++;
 				}
 				else{
-					query = query + "or category_title = '" + b.getTitle() + "' ";
+					query = query + "or a.category = '" + b + "' ";
 				}
 			}
 		}
 		else{
-			query = query + "and category_title = '" + ct + "' ";
+			query = query + "and a.category = '" + ct + "' ";
 		}
 		
-		query = query + "order by " + or + " " + ad;
+		query = query + "order by a." + or + " " + ad;
 		System.out.println(query);
 		try {
 			l = new ArrayList<Auction>(em.createQuery(query).getResultList());
 		} catch(Exception e) {
+			e.printStackTrace();
 			System.out.println("JAMMER");
 			return null;
 		}

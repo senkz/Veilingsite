@@ -42,7 +42,7 @@ public interface ServerServiceAsync {
 	 * @param callback AsyncCallback<ArrayList<User>> AsyncCallback with the result.
 	 */
 	void getUserList(AsyncCallback<ArrayList<User>> callback);
-	void findAuction(String sw, String ct, ArrayList<Category> c, String or, String ad, AsyncCallback<ArrayList<Auction>> callback);
+	void findAuction(String sw, Category ct, ArrayList<Category> c, String or, String ad, AsyncCallback<ArrayList<Auction>> callback);
 	void loginUser(User u, AsyncCallback<User> callback);
 
 	void getAuctionList(User limitUser, Category limitCat, AsyncCallback<ArrayList<Auction>> callback);
