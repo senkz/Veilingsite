@@ -154,16 +154,16 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	public ArrayList<Auction> getAuctionList(User limitUser, Category limitCat) {
 		EntityManager em = EMF.get().createEntityManager();
 		ArrayList<Auction> l = new ArrayList<Auction>();
-		String query;
+		Query qry;
 		if(limitUser == null){
-			query = "select a from Auction a";
+			qry = em.createQuery("select a from Auction a").setMaxResults(30);
 		}
 		else{
-			query = "select a from Auction a where a.owner_username = '" + limitUser + "'";
+			qry = em.createQuery("select a from Auction a where a.owner = ?1").setParameter(1, limitUser).setMaxResults(30);
 		}
 		
 		try {
-			l = new ArrayList<Auction>(em.createQuery(query).getResultList());
+			l = new ArrayList<Auction>(qry.getResultList());
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 			return null;
