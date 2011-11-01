@@ -35,6 +35,11 @@ public class AuctionBidWidget extends VerticalPanel {
 		
 		public AuctionBidWidget(Auction a) {
 			
+			Label title = new Label();
+			title.setText("Place a bid");
+			title.setStyleName("heading");
+			add(title);
+			
 			//add class for styling
 			this.addStyleName("widget");
 			
@@ -48,7 +53,7 @@ public class AuctionBidWidget extends VerticalPanel {
 			if(UC.getLoggedIn().getUserName().equals(a.getOwner().getUserName())){
 				HorizontalPanel ymboutbec = new HorizontalPanel();
 				Label ymboutbe = new Label("You cannot bid on your own auctions.");
-				ymboutbe.setStyleName("error");
+				ymboutbe.setStyleName("status");
 				ymboutbec.add(ymboutbe);			
 				
 				bidamount.setEnabled(false);
@@ -61,7 +66,7 @@ public class AuctionBidWidget extends VerticalPanel {
 			}else if(UC.getLoggedIn() == null){
 				HorizontalPanel ymbliec = new HorizontalPanel();
 				Label ymblie = new Label("You must be logged in to bid on auctions.");
-				ymblie.setStyleName("error");
+				ymblie.setStyleName("status");
 				ymbliec.add(ymblie);			
 				
 				bidamount.setEnabled(false);

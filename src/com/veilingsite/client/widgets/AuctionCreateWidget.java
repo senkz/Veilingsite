@@ -38,6 +38,11 @@ public class AuctionCreateWidget extends VerticalPanel{
 		
 		public AuctionCreateWidget() throws UserException  {
 			
+			Label title2 = new Label();
+			title2.setText("Create an Auction");
+			title2.setStyleName("heading");
+			add(title2);
+			
 			//add class for styling
 			this.addStyleName("widget");
 			

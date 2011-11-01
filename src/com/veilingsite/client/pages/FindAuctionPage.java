@@ -22,17 +22,17 @@ public class FindAuctionPage extends VerticalPanel {
 	public FindAuctionPage(){
 		containerLeft.add(fa);	
 		containerRight.add(avc);
+
 		fa.addPageChangeListener(new PageChangeListener<ArrayList<Auction>>() {
 			@Override
 			public void fireListener(ArrayList<Auction> a) {
 				results = a;
 				avc.showList(a);
+				clearPage();
 				refreshPage();
 			}
-
 		});
 	}
-	
 	private void refreshPage() {
 		avc.setLimitUser(UC.getLoggedIn());
 		avc.showList(results);
@@ -40,20 +40,9 @@ public class FindAuctionPage extends VerticalPanel {
 	}
 	
 	private void clearPage() {
-		containerLeft.clear();
 		containerRight.clear();
 		for(AuctionViewPage a: avw) {
 			a.close();
-		}
-	}
-	
-	private void addAuctionView(Auction a) {
-		AuctionViewPage page = new AuctionViewPage(a);
-		if(avw.contains(page)) {
-			add(avw.get(avw.indexOf(page)));
-		} else {
-			avw.add(page);
-			add(page);
 		}
 	}
 	
