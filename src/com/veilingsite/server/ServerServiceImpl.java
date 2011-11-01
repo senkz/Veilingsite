@@ -133,6 +133,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 
 	@Override
 	public User loginUser(User u) {
+		
 		if(u==null)
 			return null;
 		User user = getUser(u.getUserName());
@@ -150,7 +151,6 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	@Override
 	public ArrayList<Auction> getAuctionList(User limitUser, Category limitCat) {
 		EntityManager em = EMF.get().createEntityManager();
-		em.getTransaction().begin();
 		ArrayList<Auction> l = new ArrayList<Auction>();
 		String query;
 		if(limitUser == null){
@@ -166,7 +166,6 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			return null;
 		}
 		finally {
-			em.getTransaction().commit();
 			em.close();
 		}
 		return l;
