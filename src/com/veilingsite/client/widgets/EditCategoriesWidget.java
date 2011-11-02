@@ -27,7 +27,7 @@ public class EditCategoriesWidget extends VerticalPanel {
 		private ListBox listCategories = new ListBox(false);
 		private FlexTable table = new FlexTable();
 		
-		private Label info = new Label("Add/Modify Category");
+		private Label info = new Label("Add/Delete Category");
 		private Label parent = new Label();
 		private Label error = new Label();
 		private Label succes = new Label();
@@ -111,7 +111,8 @@ public class EditCategoriesWidget extends VerticalPanel {
 				
 				@Override
 				public void onSuccess(ArrayList<Category> result) {
-					listParents.removeItem(0);
+					listParents.clear();
+					listCategories.clear();
 					listParents.addItem("No sub category");
 					for(Category c : result) {
 						listParents.addItem(c.getTitle());

@@ -2,6 +2,7 @@ package com.veilingsite.client.widgets;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class LabelWidget extends VerticalPanel {
 
@@ -21,6 +22,13 @@ public class LabelWidget extends VerticalPanel {
 	
 	public void setLabel(String s) {
 		l.setText(s);
+	}
+	
+	public void addTitle(String s) {
+		Label title = new Label();
+		title.setText(s);
+		title.setStyleName("heading");
+		add(title);
 	}
 	
 }

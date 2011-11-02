@@ -75,12 +75,13 @@ public class FindAuctionWidget extends VerticalPanel{
 			ltable.setWidget(1, 0, searchb);
 			
 			lcat.addChangeHandler(new ChangeHandler() {
-				int count = 0;
 				@Override
 				public void onChange(ChangeEvent event) {
+					int count = 0;
 					boolean choosetest = false;
 					table.setWidget(2, 0, null);
 					ctable.clear();
+					ctable.removeAllRows();
 					for(final Category a : categories){
 						if(a.getParent() != null){
 							for(Category s : categories){

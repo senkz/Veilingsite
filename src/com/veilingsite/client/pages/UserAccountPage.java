@@ -4,13 +4,16 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabBar;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.veilingsite.client.controllers.UC;
 import com.veilingsite.client.listeners.PageChangeListener;
 import com.veilingsite.client.widgets.AuctionViewWidget;
+import com.veilingsite.client.widgets.LabelWidget;
 import com.veilingsite.client.widgets.UserEditWidget;
 import com.veilingsite.client.widgets.UserProductWidget;
 import com.veilingsite.shared.domain.Auction;
@@ -23,6 +26,7 @@ public class UserAccountPage extends VerticalPanel {
 	private RootPanel containerLeft = RootPanel.get("containerLeft");
 	private RootPanel containerRight = RootPanel.get("containerRight");
 	private ArrayList<AuctionViewPage> avw = new ArrayList<AuctionViewPage>();
+	private LabelWidget userInfo;
 	public TabBar menu = new TabBar();
 	
 	public UserAccountPage(){
@@ -65,8 +69,18 @@ public class UserAccountPage extends VerticalPanel {
 	
 	private void refreshPage() {
 		subMenu.add(menu);
-		avc.setLimitUser(UC.getLoggedIn());
-		avc.loadAuctions();
+		userInfo = new LabelWidget();
+		if(UC.getLoggedIn() != null) {
+			avc.setLimitUser(UC.getLoggedIn());
+			avc.loadAuctions();
+			FlexTable ft = new FlexTable();
+			ft.setWidget(0, 0, new Label("Username:"));		ft.setWidget(0, 1,  new Label(UC.getLoggedIn().getUserName()));
+			ft.setWidget(1, 0,  new Label("Name:"));		ft.setWidget(1, 1,  new Label(UC.getLoggedIn().getFirstName()));
+			ft.setWidget(2, 0,  new Label("Sur Name:"));	ft.setWidget(2, 1,  new Label(UC.getLoggedIn().getSurName()));
+			userInfo.setTitle("User Info");
+			userInfo.add(ft);
+			containerLeft.add(userInfo);
+		}
 		containerRight.add(avc);
 	}
 	

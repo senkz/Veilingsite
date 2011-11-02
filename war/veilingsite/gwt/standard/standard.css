@@ -1038,13 +1038,13 @@ a, a:visited, a:hover {
   cursor: default;
 }
 .datePickerDay {
-  padding: 4px;
+  padding: 5px;
   cursor: hand;
   cursor: pointer;
 }
 .datePickerDayIsToday {
   border: 1px solid black;
-  padding: 3px;
+  padding: 4px;
 }
 .datePickerDayIsWeekend {
   background: #EEEEEE;

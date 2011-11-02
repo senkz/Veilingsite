@@ -9,14 +9,12 @@ import com.veilingsite.client.widgets.UserRegisterWidget;
 
 public class HomePage extends VerticalPanel {
 	
-	private Label myLabel = new Label("Welcome in the Auction House");
-	private LabelWidget hp = new LabelWidget();
+	private LabelWidget hp = new LabelWidget("Welcome in the Auction House, this is the place to find Auctions and bid on them!");
 	private UserRegisterWidget rw = new UserRegisterWidget();
 	private RootPanel containerLeft = RootPanel.get("containerLeft");
 	private RootPanel containerRight = RootPanel.get("containerRight");
 	
 	public HomePage(){
-		add(myLabel);
 		containerLeft.add(hp);
 		containerRight.add(rw);
 	}

@@ -1,4 +1,8 @@
 /** Add css rules here for your application. */
+html {
+	height: 100%;
+	background: url(veilingsite/gwt/standard/images/bg.png) repeat-x #ECECEC bottom; 	
+}
 
 #header {
 	width: 960px;
