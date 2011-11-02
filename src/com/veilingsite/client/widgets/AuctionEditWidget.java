@@ -24,7 +24,7 @@ public class AuctionEditWidget extends VerticalPanel {
 	private Timer 				systemStatusTimer;
 	
 	//Graphical Components - visible (DUH)
-	private Label 				systemStatus 		   	   	  = new Label("Edit This Auction");	
+	private Label 				systemStatus 		   	   	  = new Label();	
 	private Label				auctionTitle_Label 		  	  = new Label("Title: ");
 	private TextBox				auctionTitle		   		  = new TextBox();
 	private Label				auctionOwner_Label 		  	  = new Label("Owner: ");
@@ -44,7 +44,7 @@ public class AuctionEditWidget extends VerticalPanel {
 	
 	public AuctionEditWidget(Auction a) {
 		widgetAuction = a;
-		
+		systemStatus.setVisible(false);
 		auctionTitle.setText(widgetAuction.getTitle());
 		auctionOwner.setText(widgetAuction.getOwner().getUserName());
 		auctionDescription.setText(widgetAuction.getDescription());
@@ -69,8 +69,6 @@ public class AuctionEditWidget extends VerticalPanel {
 		      }
 		 };
 		// Construct the widget layout
-		add(systemStatus);
-		
 		buttonPanel.add(confirmButton);
 		buttonPanel.add(deleteButton);
 		
@@ -89,6 +87,7 @@ public class AuctionEditWidget extends VerticalPanel {
 		table.setWidget(6, 0, buttonPanel);
 		
 		add(table);
+		add(systemStatus);
 		
 		//adding handlers to components
 		confirmButton.addClickHandler(new ClickHandler(){

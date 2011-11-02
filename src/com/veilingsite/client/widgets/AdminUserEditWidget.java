@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
@@ -17,11 +18,13 @@ import com.veilingsite.shared.domain.User;
 
 public class AdminUserEditWidget extends VerticalPanel {
 	//Regular Expressions used by the widget for email and password checks
+	private String			regExpOnlyLetters	  		  = new String("^[A-Za-z]{1,}$");
 	private String			regExpEmail				   	  = new String("^[a-z0-9._%-]+@[a-z0-9.-]+[.][a-z.]{2,4}$");
 	private String			regExpPassword			   	  = new String("^[A-Za-z]\\w{4,}[A-Za-z]$");
 	private String			regExpMobilePhone		   	  = new String("^06+[0-9]{8}$");
 	
 	private Label 			systemStatus 		   	   	  = new Label();					// The Status of the editing process will be displayed in this label
+	private Timer 			systemStatusTimer;
 	private TextBox			user_Username 		  	   	  = new TextBox(); 				// Contains username - editable
 	private Button			findButton		   	  	   	  = new Button("Find User");		// Button, onclick -> find user specified in user_Username Textbox and put data into Textfields. 
 	private Label 			user_Active_Status 		   	  = new Label("User Status: -"); 	// Password check - Uneditable
@@ -58,7 +61,12 @@ public class AdminUserEditWidget extends VerticalPanel {
 	private FlexTable table = new FlexTable();
 	
 	public AdminUserEditWidget() {
-		
+		systemStatusTimer = new Timer() {
+		      public void run() {
+					systemStatus.setVisible(false);
+		      }
+		 };
+		systemStatus.setVisible(false);
 		Label title = new Label();
 		title.setText("Edit your account");
 		title.setStyleName("heading");
@@ -72,7 +80,6 @@ public class AdminUserEditWidget extends VerticalPanel {
 		widgetUser = (UC.getLoggedIn());
 		
 		// Construct the widget layout
-		add(systemStatus);
 		add(table);
 		
 		user_Firstname_Status.setUrl("./images/cross.png");
@@ -117,9 +124,7 @@ public class AdminUserEditWidget extends VerticalPanel {
 		table.setWidget(9, 0, buttonPanel);
 		
 		add(new Label("* The given password needs to be at least 6 characters long and has to start and end with a letter."));
-		
-		// Fill TextBoxes and Labels with User/System Information 
-		systemStatus.setText("Edit User Account Page");
+		add(systemStatus);
 		
 		//Form Check KeyUpHandlers
 		user_Username.addBlurHandler(new BlurHandler() {
@@ -174,6 +179,9 @@ public class AdminUserEditWidget extends VerticalPanel {
 					findUserData(username);
 				}catch(NullPointerException e){
 					systemStatus.setText("Error: Something went wrong, no User Data found.");
+					systemStatus.setStyleName("error");
+					systemStatus.setVisible(true);
+					systemStatusTimer.schedule(3000);
 				}
 				namesCheck();
 				emailCheck();
@@ -198,10 +206,19 @@ public class AdminUserEditWidget extends VerticalPanel {
 					updateUser(userx);
 				}else if(passwordCheck() == false && emailCheck() == true){
 					systemStatus.setText("Passwordcheck didn't pass, User not edited.");
+					systemStatus.setStyleName("error");
+					systemStatus.setVisible(true);
+					systemStatusTimer.schedule(3000);
 				}else if(passwordCheck() == true && emailCheck() == false){
 					systemStatus.setText("Emailcheck didn't pass, User not edited.");
+					systemStatus.setStyleName("error");
+					systemStatus.setVisible(true);
+					systemStatusTimer.schedule(3000);
 				}else{
 					systemStatus.setText("Password and Emailcheck didn't pass, User not edited.");
+					systemStatus.setStyleName("error");
+					systemStatus.setVisible(true);
+					systemStatusTimer.schedule(3000);
 				}
 			}
 		});
@@ -215,9 +232,15 @@ public class AdminUserEditWidget extends VerticalPanel {
 						blockUser(username);
 					}else{
 						systemStatus.setText("Found user is a admin and can not be blocked");
+						systemStatus.setStyleName("status");
+						systemStatus.setVisible(true);
+						systemStatusTimer.schedule(3000);
 					}
 				}else{
-					systemStatus.setText("ERROR: FindResult not set.");	
+					systemStatus.setText("ERROR: FindResult not set.");
+					systemStatus.setStyleName("error");
+					systemStatus.setVisible(true);
+					systemStatusTimer.schedule(3000);
 				}				
 			}
 		});
@@ -237,7 +260,10 @@ public class AdminUserEditWidget extends VerticalPanel {
 						String username = user_Username.getText();
 						makeUserAdmin(username);
 				}else{
-					systemStatus.setText("findResult not set.");	
+					systemStatus.setText("findResult not set.");
+					systemStatus.setStyleName("error");
+					systemStatus.setVisible(true);
+					systemStatusTimer.schedule(3000);
 				}				
 			}
 		});
@@ -256,25 +282,29 @@ public class AdminUserEditWidget extends VerticalPanel {
 				findUserData(Username);
 			}catch(NullPointerException e){
 				systemStatus.setText("Error: Something went wrong, no User Data found.");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
     	}else{
     		systemStatus.setText("Error: Fill in Username to find a user.");
+    		systemStatus.setStyleName("status");
+			systemStatus.setVisible(true);
+			systemStatusTimer.schedule(3000);
     	}
 		//Firstnamecheck
-    	if(Firstname.equals("")){
-    		user_Firstname_Status.setUrl("./images/cross.png");
-    		checkFirstName = false;
-    	}else{
+    	if(!Firstname.equals("") && Firstname.matches(regExpOnlyLetters)) {
     		user_Firstname_Status.setUrl("./images/tick.png");
     		checkFirstName = true;
+    	}else{
+    		user_Firstname_Status.setUrl("./images/cross.png");
     	}
 		//Surnamecheck
-    	if(Surname.equals("")){
-    		user_Surname_Status.setUrl("./images/cross.png");
-    		checkSurName = false;
-    	}else{
+    	if(!Surname.equals("") && Surname.matches(regExpOnlyLetters)) {
     		user_Surname_Status.setUrl("./images/tick.png");
     		checkSurName = true;
+    	}else{
+    		user_Surname_Status.setUrl("./images/cross.png");
     	}
     	
 		if(checkFirstName && checkSurName){
@@ -379,10 +409,16 @@ public class AdminUserEditWidget extends VerticalPanel {
 			@Override
 			public void onFailure(Throwable caught) {
 				systemStatus.setText("Error: Something went wrong, no User Data Updated.");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 			@Override
 			public void onSuccess(Void result) {
 				systemStatus.setText("User Data Updated.");
+				systemStatus.setStyleName("succesfull");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 		};
 		myService.updateUser(u, callback);
@@ -393,10 +429,16 @@ public class AdminUserEditWidget extends VerticalPanel {
 			@Override
 			public void onFailure(Throwable caught) {
 				systemStatus.setText("Error: Something went wrong, no User removed");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 			@Override
 			public void onSuccess(Void result) {
 				systemStatus.setText("User removed");
+				systemStatus.setStyleName("succesfull");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 		};
 		myService.removeUser(u, callback);
@@ -406,7 +448,10 @@ public class AdminUserEditWidget extends VerticalPanel {
 		AsyncCallback<User> callback = new AsyncCallback<User>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("no user found!");
+				systemStatus.setText("no user found!");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 			@Override
 			public void onSuccess(User result) {
@@ -442,7 +487,9 @@ public class AdminUserEditWidget extends VerticalPanel {
 					user_Password_Check.setText(result.getPassword());
 				}else{
 					systemStatus.setText("No user found");
-					Window.alert("No user found");
+					systemStatus.setStyleName("error");
+					systemStatus.setVisible(true);
+					systemStatusTimer.schedule(3000);
 				}
 			namesCheck();
 			emailCheck();
@@ -457,8 +504,10 @@ public class AdminUserEditWidget extends VerticalPanel {
 		AsyncCallback<User> callback = new AsyncCallback<User>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("no user found!");
 				systemStatus.setText("No user found");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 			@Override
 			public void onSuccess(User result) {
@@ -479,8 +528,10 @@ public class AdminUserEditWidget extends VerticalPanel {
 		AsyncCallback<User> callback = new AsyncCallback<User>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("no user found!");
 				systemStatus.setText("No user found");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 			@Override
 			public void onSuccess(User result) {
@@ -501,8 +552,10 @@ public class AdminUserEditWidget extends VerticalPanel {
 		AsyncCallback<User> callback = new AsyncCallback<User>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("no user found!");
 				systemStatus.setText("No user found");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 			@Override
 			public void onSuccess(User result) {

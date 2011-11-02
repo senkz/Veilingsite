@@ -80,16 +80,7 @@ public class AuctionCreateWidget extends VerticalPanel{
 				@Override
 				public void onClick(ClickEvent event) {
 					systemStatusTimer.cancel();
-					double d;
-					try {
-						d = Double.parseDouble(startamount.getText());
-					} catch(NumberFormatException nfe) {
-						systemStatus.setText("Start amount must be a numerical value");			
-						systemStatus.setStyleName("error");
-						systemStatus.setVisible(true);
-						systemStatusTimer.schedule(3000);
-						return;
-					}
+					
 					if(title.getText().isEmpty() == true){
 						systemStatus.setText("Title cannot be empty.");
 						systemStatus.setStyleName("error");
@@ -113,6 +104,16 @@ public class AuctionCreateWidget extends VerticalPanel{
 					}
 					if(title.getText().length() < 5){
 						systemStatus.setText("Title has to be at least 5 characters.");
+						systemStatus.setStyleName("error");
+						systemStatus.setVisible(true);
+						systemStatusTimer.schedule(3000);
+						return;
+					}
+					double d;
+					try {
+						d = Double.parseDouble(startamount.getText());
+					} catch(NumberFormatException nfe) {
+						systemStatus.setText("Start amount must be a numerical value");			
 						systemStatus.setStyleName("error");
 						systemStatus.setVisible(true);
 						systemStatusTimer.schedule(3000);
