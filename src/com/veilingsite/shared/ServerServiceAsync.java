@@ -1,6 +1,7 @@
 package com.veilingsite.shared;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.veilingsite.shared.domain.Auction;
@@ -53,4 +54,7 @@ public interface ServerServiceAsync {
 	void addCategory(Category c, AsyncCallback<Category> callback);
 	void getCategory(String s, AsyncCallback<Category> callback);
 	void deleteCategory(String s, AsyncCallback<Void> callback);
+
+	void getDayStatistics(AsyncCallback<Map<String, Integer>> callback);
+	void getDayOfWeekStatistics(AsyncCallback<Map<Integer, Integer>> callback);
 }

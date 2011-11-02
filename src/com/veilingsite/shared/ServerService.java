@@ -1,6 +1,7 @@
 package com.veilingsite.shared;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -53,4 +54,8 @@ public interface ServerService extends RemoteService {
 	public Category addCategory(Category c);
 	public Category getCategory(String s);
 	public void deleteCategory(String s) throws Exception;
+
+	public Map<String, Integer> getDayStatistics();
+
+	public Map<Integer, Integer> getDayOfWeekStatistics();
 }

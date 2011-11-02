@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -27,6 +28,8 @@ import com.veilingsite.shared.domain.Category;
 
 
 public class FindAuctionWidget extends VerticalPanel{
+		private Label systemStatus = new Label();
+		private Timer systemStatusTimer;
 		private Label search = new Label("Search Auctions");
 		private FlexTable table = new FlexTable();
 		private FlexTable ltable = new FlexTable();
@@ -43,10 +46,16 @@ public class FindAuctionWidget extends VerticalPanel{
 		private static ArrayList<PageChangeListener<ArrayList<Auction>>> listeners = new ArrayList<PageChangeListener<ArrayList<Auction>>>();
 		
 		public FindAuctionWidget()  {
+			systemStatusTimer = new Timer() {
+			      public void run() {
+						systemStatus.setVisible(false);
+			      }
+			 };
 			//add class for styling
 			this.addStyleName("widget");
 			loadCategories();
 			add(search);
+			add(systemStatus);
 			add(table);	
 			table.setWidget(0, 0, new Label("Choose category:"));
 			table.setWidget(0, 1, lcat);	
@@ -110,7 +119,6 @@ public class FindAuctionWidget extends VerticalPanel{
 			@Override
 			public void onClick(ClickEvent event) {
 				if(checkFields() == true){ // All fields meet the required values...
-					Window.alert("GOEDZO");
 					Category category = null;
 					String orderBy = olist.getItemText(olist.getSelectedIndex());
 					String ascDesc = olist2.getItemText(olist2.getSelectedIndex());
@@ -162,22 +170,43 @@ public class FindAuctionWidget extends VerticalPanel{
 				
 				@Override
 				public void onSuccess(ArrayList<Auction> result){
-					int count = 1; 
-					try{
-						
-						for(PageChangeListener<ArrayList<Auction>> pcl : listeners){
-							if(count < 10){
-								pcl.fireListener(result);
-							}
-							else{
-								break;
-							}
+					if(result.isEmpty()){
+						systemStatus.setText("No results found.");			
+						systemStatus.setStyleName("error");
+						systemStatus.setVisible(true);
+						systemStatusTimer.schedule(3000);
+					}else{
+						String succesfullString = new String();
+						if(result.size() == 1){
+							succesfullString = result.size() + " result found.";
+						}else{
+							succesfullString = result.size() + " results found.";
 						}
-						
+						systemStatus.setText(succesfullString);			
+						systemStatus.setStyleName("succesfull");
+						systemStatus.setVisible(true);
+						systemStatusTimer.schedule(10000);
+						int count = 1; 
+						try{
+							
+							for(PageChangeListener<ArrayList<Auction>> pcl : listeners){
+								if(count < 10){
+									pcl.fireListener(result);
+								}
+								else{
+									break;
+								}
+							}
+							
+						}
+						catch(NullPointerException e){
+							systemStatus.setText("No results found.");			
+							systemStatus.setStyleName("error");
+							systemStatus.setVisible(true);
+							systemStatusTimer.schedule(3000);
+						}
 					}
-					catch(NullPointerException e){
-						Window.alert("No results found.");
-					}
+					
 				}
 			};
 			myService.findAuction(sw, ct, c, or, asc, callback);
@@ -185,15 +214,24 @@ public class FindAuctionWidget extends VerticalPanel{
 		
 		public boolean checkFields(){
 			if(lcat.getSelectedIndex() == 0){ // User chose "Choose Category..." as category
-				Window.alert("You have forgotten to choose a category.");
+				systemStatus.setText("You have forgotten to choose a category.");			
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 				return false;
 			}
 			if(lsearch.getText().isEmpty() == true){
-				Window.alert("You have forgotten to fill in a search word.");
+				systemStatus.setText("You have forgotten to fill in a search word.");			
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 				return false;
 			}
 			if(lsearch.getText().length() < 5){
-				Window.alert("The search word has to be at least 5 characters.");
+				systemStatus.setText("The search word has to be at least 5 characters.");			
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 				return false;
 			}
 			return true;
@@ -246,7 +284,10 @@ public class FindAuctionWidget extends VerticalPanel{
 				table.clear();
 				System.out.println(au);
 				if(au == null) {
-					table.setWidget(0, 0, new Label("No auctions found."));
+					systemStatus.setText("No auctions found.");			
+					systemStatus.setStyleName("error");
+					systemStatus.setVisible(true);
+					systemStatusTimer.schedule(3000);
 					return;
 				}
 				table.setWidget(0, 0, new Label("Title"));
@@ -281,7 +322,6 @@ public class FindAuctionWidget extends VerticalPanel{
 		}
 
 		public void addPageChangeListener(PageChangeListener<ArrayList<Auction>> pcl) {
-			// TODO Auto-generated method stub
 			listeners.add(pcl);
 		}
 	}
