@@ -169,6 +169,7 @@ public class AuctionBidWidget extends VerticalPanel {
 				
 				@Override
 				public void onSuccess(Void result) {
+					tableBids.clearCell(1, 0);
 					systemStatus.setText("Bid has been placed succesfully");			
 					systemStatus.setStyleName("succesfull");
 					systemStatus.setVisible(true);
