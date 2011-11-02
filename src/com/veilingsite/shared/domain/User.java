@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="tbl_user")
@@ -18,10 +19,14 @@ public class User implements Serializable {
 	private String mobilePhoneNumber;
 	private String password;
 	private int permission;
-	
+
+	@Transient
 	private String			regExpOnlyLetters	  		  = new String("^[A-Za-z]{1,}$");
+	@Transient
 	private String			regExpEmail				   	  = new String("^[a-z0-9._%-]+@[a-z0-9.-]+[.][a-z.]{2,4}$");
+	@Transient
 	private String			regExpPassword			   	  = new String("^[A-Za-z]\\w{4,}[A-Za-z]$");
+	@Transient
 	private String			regExpMobilePhone		   	  = new String("^06+[0-9]{8}$");
 	
 	public User() {}
@@ -34,8 +39,8 @@ public class User implements Serializable {
 	 */
 	public User(String un, String pwd) {
 		this.setUserName(un);
-		this.password = pwd;
-		this.permission = 1;
+		this.setPassword(pwd);
+		this.setPermission(1);
 	}
 
 	/**
@@ -48,32 +53,12 @@ public class User implements Serializable {
 	 * @return void
 	 */
 	public User(String un, String pwd, String email, String fn, String sn) {
-		if(un != null){
-			this.userName = un;
-		}else{
-			this.userName = null;
-		}
-		if(pwd.matches(regExpPassword)){
-			this.password = pwd;
-		}else{
-			this.password = null;
-		}
-		if(email.matches(regExpEmail)){
-			this.email = email;
-		}else{
-			this.email = null;
-		}
-		if(fn.matches(regExpOnlyLetters)){
-			this.firstName = fn;
-		}else{
-			this.firstName = null;
-		}
-		if(sn.matches(regExpOnlyLetters)){
-			this.surName = sn;
-		}else{
-			this.surName = null;
-		}
-		this.permission = 1;
+		this.setUserName(un);
+		this.setPassword(pwd);
+		this.setEmail(email);
+		this.setFirstName(fn);
+		this.setSurName(sn);
+		this.setPermission(1);
 	}
 
 	/**

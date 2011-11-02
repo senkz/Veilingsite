@@ -63,9 +63,14 @@ public class Auction implements Serializable {
     public String getTitle() {
     	return title;
     }
-
+    
     public void setTitle(String s) {
-    	title = s;
+    	if(s != null &&!s.equals("")){
+    		title = s;
+    	}else{
+    		title = null;
+    	}
+    	
     }
 
     public String getDescription() {
@@ -73,7 +78,11 @@ public class Auction implements Serializable {
     }
 
     public void setDescription(String s) {
-    	description = s;
+    	if(s != null &&!s.equals("")){
+    		description = s;
+    	}else{
+    		description = null;
+    	}
     }
 
     public Date getStartDate() {
@@ -97,7 +106,12 @@ public class Auction implements Serializable {
     }
 
     public void setStartAmount(Double d) {
-    	startAmount = d;
+    	if(d != null && !d.equals("")){
+    		startAmount = d;
+    	}else{
+    		startAmount = null;
+    	}
+    	
     }
     
     public User getOwner() {
