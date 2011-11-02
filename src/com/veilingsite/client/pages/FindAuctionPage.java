@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.veilingsite.client.controllers.UC;
 import com.veilingsite.client.listeners.PageChangeListener;
-import com.veilingsite.client.widgets.AuctionCreateWidget;
 import com.veilingsite.client.widgets.AuctionViewWidget;
 import com.veilingsite.client.widgets.FindAuctionWidget;
 import com.veilingsite.shared.domain.Auction;

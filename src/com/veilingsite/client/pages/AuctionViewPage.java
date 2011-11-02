@@ -31,7 +31,10 @@ public class AuctionViewPage extends VerticalPanel{
 		
 		containerRight.add(bidWidget);	
 		
-		if(auction.getOwner().getUserName().equals(UC.getLoggedIn().getUserName())){
+		if(UC.getLoggedIn().getPermission() == 2){
+			containerRight.add(auctionEditWidget);
+		}
+		else if(auction.getOwner().getUserName().equals(UC.getLoggedIn().getUserName())){
 			containerRight.add(auctionEditWidget);
 		}
 		

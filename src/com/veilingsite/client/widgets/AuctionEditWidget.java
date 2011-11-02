@@ -120,20 +120,13 @@ public class AuctionEditWidget extends VerticalPanel {
 				updateAuction(widgetAuction);
 			}
 		});
-//		deleteButton.addClickHandler(new ClickHandler(){
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				deleteAuction();
-//			}
-//		});
+		deleteButton.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				deleteAuction(widgetAuction);
+			}
+		});
 	}
-//	
-//	private boolean filledInCheck(){
-//		return false;
-//	}
-//	private boolean filledInCheck(){
-//		return false;
-//	}
 	
 	public void loadCategories() {
 		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
@@ -158,11 +151,17 @@ public class AuctionEditWidget extends VerticalPanel {
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				systemStatus.setText("Error: Something went wrong, no Auction Data Updated.");
+				systemStatus.setText("Error: Something went wrong, no Auction Data Updated.");			
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 			@Override
 			public void onSuccess(Void result) {
-				systemStatus.setText("Auction Updated.");
+				systemStatus.setText("Auction Updated");			
+				systemStatus.setStyleName("succesfull");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 		};
 		myService.updateAuction(a, callback);
@@ -172,11 +171,17 @@ public class AuctionEditWidget extends VerticalPanel {
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				systemStatus.setText("Error: Something went wrong, no Auction removed");
+				systemStatus.setText("Error: Something went wrong, no Auction removed");			
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 			@Override
 			public void onSuccess(Void result) {
-				systemStatus.setText("Auction removed");
+				systemStatus.setText("Auction removed");			
+				systemStatus.setStyleName("succesfull");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 		};
 		myService.removeAuction(a, callback);
