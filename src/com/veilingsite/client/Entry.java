@@ -9,11 +9,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.veilingsite.client.controllers.UC;
 import com.veilingsite.client.listeners.UserChangeListener;
-import com.veilingsite.client.pages.AdminPage;
-import com.veilingsite.client.pages.AuctionPage;
-import com.veilingsite.client.pages.FindAuctionPage;
-import com.veilingsite.client.pages.HomePage;
-import com.veilingsite.client.pages.UserAccountPage;
+import com.veilingsite.client.pages.*;
 import com.veilingsite.client.widgets.UserLoginWidget;
 
 public class Entry implements EntryPoint {
@@ -53,6 +49,9 @@ public class Entry implements EntryPoint {
 					break;
 				case 4:
 					p.add(new AdminPage());
+					break;
+				case 5:
+					p.add(new StatisticsPage());
 				}
 			}
 		});
@@ -62,6 +61,7 @@ public class Entry implements EntryPoint {
 		myTabPanel.add(new HorizontalPanel(), "Find Auctions");
 		myTabPanel.add(new HorizontalPanel(), "My Account");
 		myTabPanel.add(new HorizontalPanel(), "Admin Auctions");
+		myTabPanel.add(new HorizontalPanel(), "Statistics");
 		
 		myTabPanel.getTabBar().setTabEnabled(3, false);
 		myTabPanel.getTabBar().setTabEnabled(4, false);

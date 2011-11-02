@@ -26,8 +26,8 @@
 
 	<!-- enable next line if one of the domainclasses changes, and then after a run disable it again -->
 	<!-- it uses alot of java memory, and traffic -->
-			<!--<property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>-->
-			<!--<property name="eclipselink.ddl-generation.output-mode" value="both"/>-->
+	<!--  		<property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>	-->
+	<!--		<property name="eclipselink.ddl-generation.output-mode" value="both"/>			-->
 		</properties>
 	</persistence-unit>
 </persistence>
