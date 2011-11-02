@@ -1,10 +1,13 @@
 package com.veilingsite.client.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
@@ -19,9 +22,12 @@ public class UserEditWidget extends VerticalPanel {
 	private String			regExpMobilePhone		   	  = new String("^06+[0-9]{8}$");
 	
 	private Label 			systemStatus 		   	   	  = new Label();					// The Status of the editing process will be displayed in this label
+	private Timer 			systemStatusTimer;
 	private TextBox			user_Username 		  	   	  = new TextBox(); 				// Contains username - editable
 	private TextBox			user_Firstname		   		  = new TextBox(); 				// A User's firstname - Editable
+	private Image 			user_Firstname_Status	   	  = new Image(); 					// Password check - Uneditable
 	private TextBox			user_Surname		   		  = new TextBox(); 				// A User's surname - Editable
+	private Image 			user_Surname_Status 		  = new Image(); 					// Password check - Uneditable
 	private TextBox 		user_Email			       	  = new TextBox(); 				// A User's Email - Editable
 	private Image 			user_Email_Status          	  = new Image(); 					// Email check - Uneditable
 	private TextBox 		user_MobilePhoneNumber     	  = new TextBox(); 				// A User's mobile phone number - Editable
@@ -49,13 +55,20 @@ public class UserEditWidget extends VerticalPanel {
 	
 	
 	public UserEditWidget() {
-		
+		systemStatusTimer = new Timer() {
+		      public void run() {
+					systemStatus.setVisible(false);
+		      }
+		 };
+		systemStatus.setVisible(false);
 		//add class for styling
 		this.addStyleName("widget");
 		
 		// Construct the widget layout
 		add(systemStatus);
 		add(table);
+		user_Firstname_Status.setUrl("./images/cross.png");
+		user_Surname_Status.setUrl("./images/cross.png");
 		user_Email_Status.setUrl("./images/cross.png");
 		user_MobilePhoneNumber_Status.setUrl("./images/cross.png");
 		user_Password_Status.setUrl("./images/cross.png");
@@ -72,8 +85,10 @@ public class UserEditWidget extends VerticalPanel {
 		table.setWidget(0, 1, user_Username);
 		table.setWidget(1, 0, new Label("Firstname:"));
 		table.setWidget(1, 1, user_Firstname);
+		table.setWidget(1, 2, user_Firstname_Status);
 		table.setWidget(2, 0, new Label("Surname:"));
 		table.setWidget(2, 1, user_Surname);
+		table.setWidget(2, 2, user_Surname_Status);
 		table.setWidget(3, 0, new Label("Email:"));
 		table.setWidget(3, 1, user_Email);
 		table.setWidget(3, 2, user_Email_Status);
@@ -90,7 +105,6 @@ public class UserEditWidget extends VerticalPanel {
 		table.setWidget(8, 0, buttonPanel);
 		
 		// Fill TextBoxes and Labels with User/System Information 
-		systemStatus.setText("Edit Your Account Page");
 		if(UC.getLoggedIn() != null){													//if a user is logged in, get his data and fill the form
 			user_Username.setText(widgetUser.getUserName());
 			user_Firstname.setText(widgetUser.getFirstName());
@@ -100,14 +114,27 @@ public class UserEditWidget extends VerticalPanel {
 			user_Password.setText(widgetUser.getPassword());
 			user_Password_Check.setText(widgetUser.getPassword());
 			
+			namesCheck();
 			emailCheck();
-			phoneCheck();																//do checks to edit the check status for fetched data
+			phoneCheck();
 			passwordCheck();
 		}else{
 			//if there is no user logged in do nothing with form filling - quite useless because user wont see this page when he is not logged but what the Hell :)
 		}
 		
 		//Form Check KeyUpHandlers
+		user_Firstname.addKeyUpHandler(new KeyUpHandler() {
+		    @Override
+		    public void onKeyUp(KeyUpEvent event) {
+		    	namesCheck();
+		    }
+		});
+		user_Surname.addKeyUpHandler(new KeyUpHandler() {
+		    @Override
+		    public void onKeyUp(KeyUpEvent event) {
+		    	namesCheck();
+		    }
+		});
 		user_Email.addKeyUpHandler(new KeyUpHandler() {
 		    @Override
 		    public void onKeyUp(KeyUpEvent event) {
@@ -177,6 +204,9 @@ public class UserEditWidget extends VerticalPanel {
 					if(!emailCheck() || !phoneCheck() || !passwordCheck()){
 						failMessage += "check didn't pass, account is not edited!";
 						systemStatus.setText(failMessage);
+						systemStatus.setStyleName("error");
+						systemStatus.setVisible(true);
+						systemStatusTimer.schedule(3000);
 					}
 				}
 			}
@@ -190,6 +220,38 @@ public class UserEditWidget extends VerticalPanel {
 		});
 	}
 	
+	private boolean namesCheck(){
+		Boolean checkFirstName = false;
+		Boolean checkSurName = false;
+		Boolean checkOk = false;
+		String Firstname = user_Firstname.getText();
+		String Surname = user_Surname.getText();
+		
+		//Firstnamecheck
+    	if(Firstname.equals("")){
+    		user_Firstname_Status.setUrl("./images/cross.png");
+    		checkFirstName = false;
+    	}else{
+    		user_Firstname_Status.setUrl("./images/tick.png");
+    		checkFirstName = true;
+    	}
+		//Surnamecheck
+    	if(Surname.equals("")){
+    		user_Surname_Status.setUrl("./images/cross.png");
+    		checkSurName = false;
+    	}else{
+    		user_Surname_Status.setUrl("./images/tick.png");
+    		checkSurName = true;
+    	}
+    	
+		if(checkFirstName && checkSurName){
+			checkOk = true;
+		}else{
+			checkOk = false;
+		}
+		return checkOk;
+		
+	}
 	private boolean emailCheck(){
 		final String email = user_Email.getText().toLowerCase();	//needs to be transformed to lowercase to validate correctly using the regular expression
 		Boolean checkOk = false;
@@ -283,10 +345,16 @@ public class UserEditWidget extends VerticalPanel {
 			@Override
 			public void onFailure(Throwable caught) {
 				systemStatus.setText("Error: Something went wrong, no User Data Updated.");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 			@Override
 			public void onSuccess(Void result) {
 				systemStatus.setText("User Data Updated.");
+				systemStatus.setStyleName("succesfull");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 		};
 		myService.updateUser(u, callback);
@@ -296,11 +364,17 @@ public class UserEditWidget extends VerticalPanel {
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				systemStatus.setText("Error: Something went wrong, no User removed");
+				systemStatus.setText("Error: Something went wrong, no User removed.");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 			@Override
 			public void onSuccess(Void result) {
-				systemStatus.setText("User removed");
+				systemStatus.setText("User removed.");
+				systemStatus.setStyleName("succesfull");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 		};
 		myService.removeUser(u, callback);
@@ -310,8 +384,10 @@ public class UserEditWidget extends VerticalPanel {
 		AsyncCallback<User> callback = new AsyncCallback<User>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("no user found!");
 				systemStatus.setText("No user found");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}
 			@Override
 			public void onSuccess(User result) {
