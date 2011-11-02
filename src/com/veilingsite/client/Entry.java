@@ -65,6 +65,7 @@ public class Entry implements EntryPoint {
 		
 		myTabPanel.getTabBar().setTabEnabled(3, false);
 		myTabPanel.getTabBar().setTabEnabled(4, false);
+		myTabPanel.getTabBar().setTabEnabled(5, false);
 		
 		myTabPanel.selectTab(0);
 
@@ -81,14 +82,17 @@ public class Entry implements EntryPoint {
 				if(UC.getLoggedIn()==null) {
 					myTabPanel.getTabBar().setTabEnabled(3, false);
 					myTabPanel.getTabBar().setTabEnabled(4, false);
+					myTabPanel.getTabBar().setTabEnabled(5, false);
 					myTabPanel.selectTab(0);
 				}else if(UC.getLoggedIn() != null && UC.getLoggedIn().getPermission() == 2){
 					myTabPanel.getTabBar().setTabEnabled(3, true);
 					myTabPanel.getTabBar().setTabEnabled(4, true);
+					myTabPanel.getTabBar().setTabEnabled(5, true);
 					myTabPanel.selectTab(3);
 				}else{
 					myTabPanel.getTabBar().setTabEnabled(3, true);
 					myTabPanel.getTabBar().setTabEnabled(4, false);
+					myTabPanel.getTabBar().setTabEnabled(5, false);
 					myTabPanel.selectTab(3);
 				}
 			}
