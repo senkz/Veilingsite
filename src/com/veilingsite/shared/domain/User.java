@@ -133,14 +133,18 @@ public class User implements Serializable {
 	 * @param firstName the firstName to set
 	 */
 	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+		if(firstName.matches("^[^0-9]+$")){
+			this.firstName = firstName;
+		}
 	}
 
 	/**
 	 * @param surName the surName to set
 	 */
 	public void setSurName(String surName) {
-		this.surName = surName;
+		if(surName.matches("^[^0-9]+$")){
+			this.surName = surName;
+		}
 	}
 
 	/**
