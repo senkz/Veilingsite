@@ -19,6 +19,11 @@ public class User implements Serializable {
 	private String password;
 	private int permission;
 	
+	private String			regExpOnlyLetters	  		  = new String("^[A-Za-z]{1,}$");
+	private String			regExpEmail				   	  = new String("^[a-z0-9._%-]+@[a-z0-9.-]+[.][a-z.]{2,4}$");
+	private String			regExpPassword			   	  = new String("^[A-Za-z]\\w{4,}[A-Za-z]$");
+	private String			regExpMobilePhone		   	  = new String("^06+[0-9]{8}$");
+	
 	public User() {}
 	
 	/**
@@ -43,11 +48,31 @@ public class User implements Serializable {
 	 * @return void
 	 */
 	public User(String un, String pwd, String email, String fn, String sn) {
-		this.userName = un;
-		this.password = pwd;
-		this.email = email;
-		this.firstName = fn;
-		this.surName = sn;
+		if(un != null){
+			this.userName = un;
+		}else{
+			this.userName = null;
+		}
+		if(pwd.matches(regExpPassword)){
+			this.password = pwd;
+		}else{
+			this.password = null;
+		}
+		if(email.matches(regExpEmail)){
+			this.email = email;
+		}else{
+			this.email = null;
+		}
+		if(fn.matches(regExpOnlyLetters)){
+			this.firstName = fn;
+		}else{
+			this.firstName = null;
+		}
+		if(sn.matches(regExpOnlyLetters)){
+			this.surName = sn;
+		}else{
+			this.surName = null;
+		}
 		this.permission = 1;
 	}
 
@@ -112,7 +137,11 @@ public class User implements Serializable {
 	 * @param i integer 0 indicates a normal user, 1 indicates an administrator.
 	 */
 	public void setPermission(int i) {
-		this.permission = i;
+		if(i == 1 || i == 2){
+			this.permission = i;
+		}else{
+			this.permission = 0;
+		}
 	}
 
 	/**
@@ -126,38 +155,59 @@ public class User implements Serializable {
 	 * @param email the email to set
 	 */
 	public void setEmail(String email) {
-		this.email = email;
+		if(email.matches(regExpEmail)){
+			this.email = email;
+		}else{
+			this.email = null;
+		}
+		
 	}
 
 	/**
 	 * @param firstName the firstName to set
 	 */
 	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+		if(firstName.matches(regExpOnlyLetters)){
+			this.firstName = firstName;
+		}else{
+			this.firstName = null;
+		}
+		
 	}
 
 	/**
 	 * @param surName the surName to set
 	 */
 	public void setSurName(String surName) {
-		this.surName = surName;
+		if(surName.matches(regExpOnlyLetters)){
+			this.surName = surName;
+		}else{
+			this.surName = null;
+		}
+		
 	}
 
 	/**
 	 * @param mobilePhoneNumber the mobilePhoneNumber to set
 	 */
 	public void setMobilePhoneNumber(String mobilePhoneNumber) {
-		this.mobilePhoneNumber = mobilePhoneNumber;
+		if(mobilePhoneNumber.matches(regExpMobilePhone)){
+			this.mobilePhoneNumber = mobilePhoneNumber;
+		}else{
+			this.mobilePhoneNumber = null;
+		}
 	}
 
 	/**
 	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
-		if(password.matches("^[A-Za-z]\\w{4,}[A-Za-z]$")){
-			
+		if(password.matches(regExpPassword)){
+			this.password = password;
+		}else{
+			this.password = null;
 		}
-		this.password = password;
+		
 	}
 	
 	public String getUserI(){

@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
@@ -17,42 +18,50 @@ import com.veilingsite.shared.domain.User;
 
 public class UserRegisterWidget extends VerticalPanel {
 	//Regular Expressions used by the widget for email and password checks
+	private String			regExpOnlyLetters	  		  = new String("^[A-Za-z]{1,}$");
 	private String			regExpEmail				   	  = new String("^[a-z0-9._%-]+@[a-z0-9.-]+[.][a-z.]{2,4}$");
 	private String			regExpPassword			   	  = new String("^[A-Za-z]\\w{4,}[A-Za-z]$");
 	private String			regExpMobilePhone		   	  = new String("^06+[0-9]{8}$");
 	
-	private Label 			systemStatus 		   = new Label();					// The Status of the editing process will be displayed in this label
-	private TextBox			user_Username 		   = new TextBox(); 				// Contains username - editable
-	private Image 			user_Username_Status = new Image(); 					// Password check - Uneditable
-	private boolean 		doesUserExistResult = false;
-	private TextBox			user_Firstname		   = new TextBox(); 				// A User's firstname - Editable
-	private Image 			user_Firstname_Status = new Image(); 					// Password check - Uneditable
-	private TextBox			user_Surname		   = new TextBox(); 				// A User's surname - Editable
-	private Image 			user_Surname_Status = new Image(); 					// Password check - Uneditable
-	private TextBox 		user_Email			   = new TextBox(); 				// A User's Email - Editable
-	private Image 			user_Email_Status = new Image(); 					// Password check - Uneditable
-	private TextBox 		user_MobilePhoneNumber = new TextBox(); 				// A User's mobile phone number - Editable
+	private Label 			systemStatus 		   		  = new Label();					// The Status of the editing process will be displayed in this label
+	private Timer 			systemStatusTimer;
+	private TextBox			user_Username 		   		  = new TextBox(); 				// Contains username - editable
+	private Image 			user_Username_Status 		  = new Image(); 					// Password check - Uneditable
+	private boolean 		doesUserExistResult 		  = false;
+	private TextBox			user_Firstname		   		  = new TextBox(); 				// A User's firstname - Editable
+	private Image 			user_Firstname_Status 		  = new Image(); 					// Password check - Uneditable
+	private TextBox			user_Surname		   	  	  = new TextBox(); 				// A User's surname - Editable
+	private Image 			user_Surname_Status 		  = new Image(); 					// Password check - Uneditable
+	private TextBox 		user_Email			   		  = new TextBox(); 				// A User's Email - Editable
+	private Image 			user_Email_Status 		  	  = new Image(); 					// Password check - Uneditable
+	private TextBox 		user_MobilePhoneNumber 		  = new TextBox(); 				// A User's mobile phone number - Editable
 	private Image 			user_MobilePhoneNumber_Status = new Image(); 					// Password check - Uneditable
 	
-	private HorizontalPanel panel_Password	  	       = new HorizontalPanel();		    // Contains user_Password & user_Password_Status
-	private PasswordTextBox user_Password 		       = new PasswordTextBox(); 		// A User's password - Editable
-	private Image 			user_Password_Status       = new Image(); 					// Password check - Uneditable
+	private HorizontalPanel panel_Password	  	       	  = new HorizontalPanel();		    // Contains user_Password & user_Password_Status
+	private PasswordTextBox user_Password 		       	  = new PasswordTextBox(); 		// A User's password - Editable
+	private Image 			user_Password_Status       	  = new Image(); 					// Password check - Uneditable
 	
-	private HorizontalPanel panel_Password_Check   	   = new HorizontalPanel();			// Contains user_Password & user_Password_Status	
-	private PasswordTextBox user_Password_Check    	   = new PasswordTextBox(); 		// A User's password check - Editable
-	private Image 			user_Password_Check_Status = new Image(); 					// Password check - Uneditable
+	private HorizontalPanel panel_Password_Check   	   	  = new HorizontalPanel();			// Contains user_Password & user_Password_Status	
+	private PasswordTextBox user_Password_Check    	   	  = new PasswordTextBox(); 		// A User's password check - Editable
+	private Image 			user_Password_Check_Status 	  = new Image(); 					// Password check - Uneditable
 	
-	private Panel			password_Checks_StatusPanel= new HorizontalPanel();			// Panel that contains final result of password check
-	private Label 			password_Checks_StatusLab  = new Label("Passwords match: ");// Password check - Uneditable
-	private Image 			password_Checks_StatusImg  = new Image(); 					// Password check - Uneditable
+	private Panel			password_Checks_StatusPanel	  = new HorizontalPanel();			// Panel that contains final result of password check
+	private Label 			password_Checks_StatusLab  	  = new Label("Passwords match: ");// Password check - Uneditable
+	private Image 			password_Checks_StatusImg  	  = new Image(); 					// Password check - Uneditable
 	
-	private Button 			confirmButton 		   = new Button("Register"); // The Button to confirm changes made to a user object
-	private User 			widgetUser 			   = new User();					// The Widget's User
+	private Button 			confirmButton 		   	  	  = new Button("Register"); // The Button to confirm changes made to a user object
+	private User 			widgetUser 			   		  = new User();					// The Widget's User
 	
 	private FlexTable table = new FlexTable();
 	
 	
 	public UserRegisterWidget() {
+		systemStatusTimer = new Timer() {
+		      public void run() {
+					systemStatus.setVisible(false);
+		      }
+		 };
+		systemStatus.setVisible(false);
 		
 		Label title = new Label();
 		title.setText("Create an account on The Auction House");
@@ -66,7 +75,7 @@ public class UserRegisterWidget extends VerticalPanel {
 		widgetUser = (UC.getLoggedIn());
 		
 		// Construct the widget layout
-		add(systemStatus);
+		
 		add(table);
 		
 		user_Username_Status.setUrl("./images/cross.png");
@@ -106,16 +115,15 @@ public class UserRegisterWidget extends VerticalPanel {
 		table.setWidget(8, 0, confirmButton);
 		
 		add(new Label("* The given password needs to be at least 6 characters long and has to start and end with a letter."));
-		
-		// Fill TextBoxes and Labels with User/System Information 
-		systemStatus.setText("Register User");
+		add(systemStatus);
 		
 		//Form Check KeyUpHandlers
 		user_Username.addBlurHandler(new BlurHandler() {
 		    @Override
 		    public void onBlur(BlurEvent event) {
-		    	if(user_Username.getText() == ""){
+		    	if(user_Username.getText().equals("")){
 		    		systemStatus.setText("The username field cannot be empty.");
+		    		user_Username_Status.setUrl("./images/cross.png");
 		    	}else{
 		    		doesUserExistCheck(user_Username.getText());
 		    	}
@@ -124,23 +132,13 @@ public class UserRegisterWidget extends VerticalPanel {
 		user_Firstname.addKeyUpHandler(new KeyUpHandler() {
 		    @Override
 		    public void onKeyUp(KeyUpEvent event) {
-		    	String Firstname = user_Firstname.getText();
-		    	if(Firstname.equals("")){
-		    		user_Firstname_Status.setUrl("./images/cross.png");
-		    	}else{
-		    		user_Firstname_Status.setUrl("./images/tick.png");
-		    	}
+		    	namesCheck();
 		    }
 		});
 		user_Surname.addKeyUpHandler(new KeyUpHandler() {
 		    @Override
 		    public void onKeyUp(KeyUpEvent event) {
-		    	String Surname = user_Surname.getText();
-		    	if(Surname.equals("")){
-		    		user_Surname_Status.setUrl("./images/cross.png");
-		    	}else{
-		    		user_Surname_Status.setUrl("./images/tick.png");
-		    	}
+		    	namesCheck();
 		    }
 		});
 		user_Email.addKeyUpHandler(new KeyUpHandler() {
@@ -184,8 +182,10 @@ public class UserRegisterWidget extends VerticalPanel {
 					userx.setMobilePhoneNumber(mobilephonenumber);
 					addUser(userx);
 				}else{
-					systemStatus.setText("Something is not filled in or is not filled in correctly, User not created.");
-					Window.alert("Something is not filled in or is not filled in correctly, User not created.");
+					systemStatus.setText("ERROR: Something is not filled in or is not filled in correctly, User not created.");
+					systemStatus.setStyleName("error");
+					systemStatus.setVisible(true);
+					systemStatusTimer.schedule(3000);
 				}
 			}
 		});
@@ -196,7 +196,10 @@ public class UserRegisterWidget extends VerticalPanel {
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {		
 			@Override
 			public void onFailure(Throwable caught) {
-				systemStatus.setText("Does User Exist Check RPC Failed");
+				systemStatus.setText("Does User Exist Check RPC Failed, Please click the usernamebox and click outside of it again.");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
 			}	
 			@Override
 			public void onSuccess(Boolean result) {
@@ -211,6 +214,37 @@ public class UserRegisterWidget extends VerticalPanel {
 			}
 		};
 		myService.doesUserExist(userName, callback);
+	}
+	
+	private boolean namesCheck(){
+		Boolean checkFirstName = false;
+		Boolean checkSurName = false;
+		Boolean checkOk = false;
+		String Firstname = user_Firstname.getText();
+		String Surname = user_Surname.getText();
+
+		//Firstnamecheck
+    	if(!Firstname.equals("") && Firstname.matches(regExpOnlyLetters)) {
+    		user_Firstname_Status.setUrl("./images/tick.png");
+    		checkFirstName = true;
+    	}else{
+    		user_Firstname_Status.setUrl("./images/cross.png");
+    	}
+		//Surnamecheck
+    	if(!Surname.equals("") && Surname.matches(regExpOnlyLetters)) {
+    		user_Surname_Status.setUrl("./images/tick.png");
+    		checkSurName = true;
+    	}else{
+    		user_Surname_Status.setUrl("./images/cross.png");
+    	}
+    	
+		if(checkFirstName && checkSurName){
+			checkOk = true;
+		}else{
+			checkOk = false;
+		}
+		return checkOk;
+		
 	}
 	
 	private boolean emailCheck(){
@@ -303,9 +337,15 @@ public class UserRegisterWidget extends VerticalPanel {
 	
 	private void setRegisterStatus(User u) {
 		if(u != null) {
-			systemStatus.setText("Welcome "+u.getUserName());
+			systemStatus.setText("Welcome to The Auction House "+u.getUserName()+", Please Log In.");
+			systemStatus.setStyleName("status");
+			systemStatus.setVisible(true);
+			systemStatusTimer.schedule(3000);
 		} else {
 			systemStatus.setText("User addition was unsuccesfull, username probably already existed");
+			systemStatus.setStyleName("error");
+			systemStatus.setVisible(true);
+			systemStatusTimer.schedule(3000);
 		}
 	}
 	
@@ -313,7 +353,12 @@ public class UserRegisterWidget extends VerticalPanel {
 		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
 		AsyncCallback<User> callback = new AsyncCallback<User>() {		
 			@Override
-			public void onFailure(Throwable caught) {}	
+			public void onFailure(Throwable caught) {
+				systemStatus.setText("ERROR: addUser RPC Call Failed, Please try to push 'Register' Again");
+				systemStatus.setStyleName("error");
+				systemStatus.setVisible(true);
+				systemStatusTimer.schedule(3000);
+			}	
 			
 			@Override
 			public void onSuccess(User result) {

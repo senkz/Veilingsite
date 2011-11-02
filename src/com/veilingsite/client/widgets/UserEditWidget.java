@@ -17,6 +17,7 @@ import com.veilingsite.shared.ServerServiceAsync;
 import com.veilingsite.shared.domain.User;
 
 public class UserEditWidget extends VerticalPanel {
+	private String			regExpOnlyLetters	  		  = new String("^[A-Za-z]{1,}$");
 	private String			regExpEmail				   	  = new String("^[a-z0-9._%-]+@[a-z0-9.-]+[.][a-z.]{2,4}$");
 	private String			regExpPassword			   	  = new String("^[A-Za-z]\\w{4,}[A-Za-z]$");
 	private String			regExpMobilePhone		   	  = new String("^06+[0-9]{8}$");
@@ -65,7 +66,6 @@ public class UserEditWidget extends VerticalPanel {
 		this.addStyleName("widget");
 		
 		// Construct the widget layout
-		add(systemStatus);
 		add(table);
 		user_Firstname_Status.setUrl("./images/cross.png");
 		user_Surname_Status.setUrl("./images/cross.png");
@@ -103,6 +103,8 @@ public class UserEditWidget extends VerticalPanel {
 		table.setWidget(6, 2, user_Password_Check_Status);
 		table.setWidget(7, 1, password_Checks_StatusPanel);
 		table.setWidget(8, 0, buttonPanel);
+		
+		add(systemStatus);
 		
 		// Fill TextBoxes and Labels with User/System Information 
 		if(UC.getLoggedIn() != null){													//if a user is logged in, get his data and fill the form
@@ -228,20 +230,18 @@ public class UserEditWidget extends VerticalPanel {
 		String Surname = user_Surname.getText();
 		
 		//Firstnamecheck
-    	if(Firstname.equals("")){
-    		user_Firstname_Status.setUrl("./images/cross.png");
-    		checkFirstName = false;
-    	}else{
+    	if(!Firstname.equals("") && Firstname.matches(regExpOnlyLetters)) {
     		user_Firstname_Status.setUrl("./images/tick.png");
     		checkFirstName = true;
+    	}else{
+    		user_Firstname_Status.setUrl("./images/cross.png");
     	}
 		//Surnamecheck
-    	if(Surname.equals("")){
-    		user_Surname_Status.setUrl("./images/cross.png");
-    		checkSurName = false;
-    	}else{
+    	if(!Surname.equals("") && Surname.matches(regExpOnlyLetters)) {
     		user_Surname_Status.setUrl("./images/tick.png");
     		checkSurName = true;
+    	}else{
+    		user_Surname_Status.setUrl("./images/cross.png");
     	}
     	
 		if(checkFirstName && checkSurName){
@@ -297,11 +297,11 @@ public class UserEditWidget extends VerticalPanel {
 			//user_Password_Status.setText("Password field cannot be empty");
 			user_Password_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
-		}else if(!password.equals("") && !password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		}else if(!password.equals("") && !password.matches(regExpPassword)){
 			//user_Password_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
 			user_Password_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
-		}else if(password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		}else if(password.matches(regExpPassword)){
 			//user_Password_Status.setText("Password field matches criteria");
 			user_Password_Status.setUrl("./images/tick.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
@@ -310,23 +310,23 @@ public class UserEditWidget extends VerticalPanel {
 			//user_Password_Check_Status.setText("Password check field cannot be empty");
 			user_Password_Check_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
-		}else if(!passwordcheck.equals("") && !passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		}else if(!passwordcheck.equals("") && !passwordcheck.matches(regExpPassword)){
 			//user_Password_Check_Status.setText("Your password needs to be at least 6 chars long and has to start and end with a letter ");
 			user_Password_Check_Status.setUrl("./images/cross.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
-		}else if(passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		}else if(passwordcheck.matches(regExpPassword)){
 			//user_Password_Check_Status.setText("Password check field matches criteria");
 			user_Password_Check_Status.setUrl("./images/tick.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}
-		if(password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$") && passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		if(password.matches(regExpPassword) && passwordcheck.matches(regExpPassword)){
 			//user_Password_Status.setText("Password field matches criteria but does not match with password check field");
 			//user_Password_Check_Status.setText("Password check field matches criteria but does not match with password field");
 			user_Password_Status.setUrl("./images/tick.png");
 			user_Password_Check_Status.setUrl("./images/tick.png");
 			password_Checks_StatusImg.setUrl("./images/cross.png");
 		}
-		if(password.equals(passwordcheck) && password.matches("^[A-Za-z]\\w{6,}[A-Za-z]$") && passwordcheck.matches("^[A-Za-z]\\w{6,}[A-Za-z]$")){
+		if(password.equals(passwordcheck) && password.matches(regExpPassword) && passwordcheck.matches(regExpPassword)){
 			//user_Password_Status.setText("Password field matches criteria and matches password check field");
 			//user_Password_Check_Status.setText("Password check field matches criteria and matches password field");
 			user_Password_Status.setUrl("./images/tick.png");

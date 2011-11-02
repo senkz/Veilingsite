@@ -18,6 +18,7 @@ import com.veilingsite.shared.domain.User;
 
 public class AdminUserEditWidget extends VerticalPanel {
 	//Regular Expressions used by the widget for email and password checks
+	private String			regExpOnlyLetters	  		  = new String("^[A-Za-z]{1,}$");
 	private String			regExpEmail				   	  = new String("^[a-z0-9._%-]+@[a-z0-9.-]+[.][a-z.]{2,4}$");
 	private String			regExpPassword			   	  = new String("^[A-Za-z]\\w{4,}[A-Za-z]$");
 	private String			regExpMobilePhone		   	  = new String("^06+[0-9]{8}$");
@@ -292,20 +293,18 @@ public class AdminUserEditWidget extends VerticalPanel {
 			systemStatusTimer.schedule(3000);
     	}
 		//Firstnamecheck
-    	if(Firstname.equals("")){
-    		user_Firstname_Status.setUrl("./images/cross.png");
-    		checkFirstName = false;
-    	}else{
+    	if(!Firstname.equals("") && Firstname.matches(regExpOnlyLetters)) {
     		user_Firstname_Status.setUrl("./images/tick.png");
     		checkFirstName = true;
+    	}else{
+    		user_Firstname_Status.setUrl("./images/cross.png");
     	}
 		//Surnamecheck
-    	if(Surname.equals("")){
-    		user_Surname_Status.setUrl("./images/cross.png");
-    		checkSurName = false;
-    	}else{
+    	if(!Surname.equals("") && Surname.matches(regExpOnlyLetters)) {
     		user_Surname_Status.setUrl("./images/tick.png");
     		checkSurName = true;
+    	}else{
+    		user_Surname_Status.setUrl("./images/cross.png");
     	}
     	
 		if(checkFirstName && checkSurName){

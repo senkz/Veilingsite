@@ -53,9 +53,9 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	public User addUser(User u) {
 		EntityManager em = EMF.get().createEntityManager();
 		em.getTransaction().begin();
-		if(getUser(u.getUserName())!=null)
+		if(getUser(u.getUserName())!=null){
 			return null;
-			
+		}
 		try {
 			em.persist(u);
 		} finally {
@@ -82,8 +82,9 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		em.getTransaction().begin();
 		  try{
 		    User userx = em.find(User.class, user.getUserName());
-		    userx.setUserName(user.getUserName()); 
+		    userx.setUserName(user.getUserName());
 		    userx.setEmail(user.getEmail());
+		    userx.setFirstName(user.getFirstName()); 
 		    userx.setFirstName(user.getFirstName()); 
 		    userx.setSurName(user.getSurName()); 
 		    userx.setMobilePhoneNumber(user.getMobilePhoneNumber()); 
@@ -399,7 +400,10 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		
 		Map<Integer, Integer> x = new HashMap<Integer, Integer>();
 		for(Object[] o : l) {
-			x.put(Integer.parseInt(o[0].toString()), Integer.parseInt(o[1].toString()));
+//			int i = Integer.parseInt(o[1].toString());
+//			x.put(Integer.parseInt(o[0].toString()), i);
+			int i = Double.valueOf(o[1].toString()).intValue();
+			x.put(Integer.parseInt(o[0].toString()), i);
 		}
 		return x;
 	}
