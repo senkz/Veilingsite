@@ -394,7 +394,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	@Override
 	public Map<Integer, Integer> getDayOfWeekStatistics() {
 		EntityManager em = EMF.get().createEntityManager();
-		List<Object[]> l = em.createQuery("SELECT FUNC('TO_DAYOFWEEK', b.placementDate), count(b.bidId) FROM Bid b GROUP BY FUNC('TO_DAYOFWEEK', b.placementDate) ORDER BY FUNC('TO_DAYOFWEEK', b.placementDate) asc").getResultList();
+		List<Object[]> l = em.createQuery("SELECT FUNC('TO_DAYOFWEEK', b.placementDate), avg(b.bidId) FROM Bid b GROUP BY FUNC('TO_DAYOFWEEK', b.placementDate) ORDER BY FUNC('TO_DAYOFWEEK', b.placementDate) asc").getResultList();
 		em.close();
 		
 		Map<Integer, Integer> x = new HashMap<Integer, Integer>();

@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
@@ -28,7 +29,7 @@ public class AuctionCreateWidget extends VerticalPanel{
 	private ListBox listCategories = new ListBox(false);
 	private ArrayList<Category> categories = new ArrayList<Category>();
 	private TextBox title = new TextBox();
-	private TextBox description = new TextBox();
+	private TextArea description = new TextArea();
 	private Button addAuction = new Button("Add Auction");
 	private DatePicker auctionclosedate = new DatePicker();
 	private TextBox startamount = new TextBox();
@@ -37,7 +38,8 @@ public class AuctionCreateWidget extends VerticalPanel{
 	private Timer systemStatusTimer;
 		
 		public AuctionCreateWidget() throws UserException  {
-			
+			description.setHeight("50px");
+			description.setWidth("200px");
 			Label title2 = new Label();
 			title2.setText("Create an Auction");
 			title2.setStyleName("heading");
@@ -83,6 +85,34 @@ public class AuctionCreateWidget extends VerticalPanel{
 						d = Double.parseDouble(startamount.getText());
 					} catch(NumberFormatException nfe) {
 						systemStatus.setText("Start amount must be a numerical value");			
+						systemStatus.setStyleName("error");
+						systemStatus.setVisible(true);
+						systemStatusTimer.schedule(3000);
+						return;
+					}
+					if(title.getText().isEmpty() == true){
+						systemStatus.setText("Title cannot be empty.");
+						systemStatus.setStyleName("error");
+						systemStatus.setVisible(true);
+						systemStatusTimer.schedule(3000);
+						return;
+					}
+					if(description.getText().isEmpty() == true){
+						systemStatus.setText("Description cannot be empty.");
+						systemStatus.setStyleName("error");
+						systemStatus.setVisible(true);
+						systemStatusTimer.schedule(3000);
+						return;
+					}
+					if(description.getText().length() < 10){
+						systemStatus.setText("Description has to be at least 10 characters.");
+						systemStatus.setStyleName("error");
+						systemStatus.setVisible(true);
+						systemStatusTimer.schedule(3000);
+						return;
+					}
+					if(title.getText().length() < 5){
+						systemStatus.setText("Title has to be at least 5 characters.");
 						systemStatus.setStyleName("error");
 						systemStatus.setVisible(true);
 						systemStatusTimer.schedule(3000);

@@ -28,7 +28,7 @@ public class User implements Serializable {
 	 * @return void
 	 */
 	public User(String un, String pwd) {
-		this.userName = un;
+		this.setUserName(un);
 		this.password = pwd;
 		this.permission = 1;
 	}
@@ -118,7 +118,7 @@ public class User implements Serializable {
 	/**
 	 * @param userName the userName to set
 	 */
-	public void setUserName(String userName) {
+	public void setUserName(String userName){
 		this.userName = userName;
 	}
 
@@ -154,6 +154,13 @@ public class User implements Serializable {
 	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
+		if(password.matches("^[A-Za-z]\\w{4,}[A-Za-z]$")){
+			
+		}
 		this.password = password;
+	}
+	
+	public String getUserI(){
+		return this.userName.toUpperCase();
 	}
 }
