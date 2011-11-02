@@ -155,7 +155,7 @@ public class User implements Serializable {
 	 * @param email the email to set
 	 */
 	public void setEmail(String email) {
-		if(email.matches(regExpEmail)){
+		if(email != null && email.matches(regExpEmail)){
 			this.email = email;
 		}else{
 			this.email = null;
@@ -167,7 +167,7 @@ public class User implements Serializable {
 	 * @param firstName the firstName to set
 	 */
 	public void setFirstName(String firstName) {
-		if(firstName.matches(regExpOnlyLetters)){
+		if(firstName != null && firstName.matches(regExpOnlyLetters)){
 			this.firstName = firstName;
 		}else{
 			this.firstName = null;
@@ -181,7 +181,7 @@ public class User implements Serializable {
 	 * @param surName the surName to set
 	 */
 	public void setSurName(String surName) {
-		if(surName.matches(regExpOnlyLetters)){
+		if(surName != null && surName.matches(regExpOnlyLetters)){
 			this.surName = surName;
 		}else{
 			this.surName = null;
@@ -196,7 +196,7 @@ public class User implements Serializable {
 	 * @param mobilePhoneNumber the mobilePhoneNumber to set
 	 */
 	public void setMobilePhoneNumber(String mobilePhoneNumber) {
-		if(mobilePhoneNumber.matches(regExpMobilePhone)){
+		if(mobilePhoneNumber != null && mobilePhoneNumber.matches(regExpMobilePhone)){
 			this.mobilePhoneNumber = mobilePhoneNumber;
 		}else{
 			this.mobilePhoneNumber = null;
@@ -206,13 +206,10 @@ public class User implements Serializable {
 	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
-		if(password.matches(regExpPassword)){
+		if(password != null && password.matches(regExpPassword)){
 			this.password = password;
 		}else{
 			this.password = null;
-		}
-		if(password.matches("^[A-Za-z]\\w{4,}[A-Za-z]$")){
-			this.password = password;	
 		}
 	}
 	
