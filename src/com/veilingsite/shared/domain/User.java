@@ -172,7 +172,9 @@ public class User implements Serializable {
 		}else{
 			this.firstName = null;
 		}
-		
+		if(firstName.matches("^[^0-9]+$")){
+			this.firstName = firstName;
+		}
 	}
 
 	/**
@@ -185,6 +187,9 @@ public class User implements Serializable {
 			this.surName = null;
 		}
 		
+		if(surName.matches("^[^0-9]+$")){
+			this.surName = surName;
+		}
 	}
 
 	/**
@@ -197,7 +202,6 @@ public class User implements Serializable {
 			this.mobilePhoneNumber = null;
 		}
 	}
-
 	/**
 	 * @param password the password to set
 	 */
@@ -207,7 +211,9 @@ public class User implements Serializable {
 		}else{
 			this.password = null;
 		}
-		
+		if(password.matches("^[A-Za-z]\\w{4,}[A-Za-z]$")){
+			this.password = password;	
+		}
 	}
 	
 	public String getUserI(){
