@@ -34,13 +34,6 @@ public class AuctionTest {
 	}
 
 	@Test
-	public void testGetCloseDate() {
-		Date d = new Date(new Long(100));
-		Auction a = new Auction(null, null, null, null, null, d);
-		assertTrue(a.getCloseDate().after(new Date()));
-	}
-
-	@Test
 	public void testGetStartAmount() {
 		Double d = 0.00;
 		Auction a = new Auction(null, null, d, null, null, null);
@@ -57,8 +50,8 @@ public class AuctionTest {
 	@Test
 	public void testGetHighestBid() {
 		Bid b1 = new Bid(null, 1.00, null);
-		Bid b2 = new Bid(null, 0.00, null);
-		Auction a = new Auction(null, null, null, null, null, null);
+		Bid b2 = new Bid(null, 5.00, null);
+		Auction a = new Auction("", "", 0.00, null, null, null);
 		a.addBid(b1);
 		a.addBid(b2);
 		assertTrue(a.getHighestBid().equals(b2));

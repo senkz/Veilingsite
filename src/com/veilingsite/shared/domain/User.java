@@ -157,9 +157,6 @@ public class User implements Serializable {
 		}else{
 			this.firstName = null;
 		}
-		if(firstName.matches("^[^0-9]+$")){
-			this.firstName = firstName;
-		}
 	}
 
 	/**
@@ -170,10 +167,6 @@ public class User implements Serializable {
 			this.surName = surName;
 		}else{
 			this.surName = null;
-		}
-		
-		if(surName.matches("^[^0-9]+$")){
-			this.surName = surName;
 		}
 	}
 
