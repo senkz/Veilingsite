@@ -159,9 +159,8 @@ public class User implements Serializable {
 	 */
 	public void setPassword(String password) {
 		if(password.matches("^[A-Za-z]\\w{4,}[A-Za-z]$")){
-			
+			this.password = password;	
 		}
-		this.password = password;
 	}
 	
 	public String getUserI(){
