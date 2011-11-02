@@ -31,11 +31,8 @@ public class FindAuctionPage extends VerticalPanel {
 				clearPage();
 				refreshPage();
 			}
-
 		});
-
 	}
-	
 	private void refreshPage() {
 		avc.setLimitUser(UC.getLoggedIn());
 		avc.showList(results);
