@@ -1,6 +1,8 @@
 package com.veilingsite.shared.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +20,7 @@ public class User implements Serializable {
 	private String surName;
 	private String mobilePhoneNumber;
 	private String password;
+	//private ArrayList<String> recommendation = new ArrayList<String>(); 
 	private int permission;
 
 	@Transient
@@ -194,4 +197,17 @@ public class User implements Serializable {
 	public String getUserI(){
 		return this.userName.toUpperCase();
 	}
+	/*
+	public void setRecommendation(ArrayList<String> rec) {
+		this.recommendation = rec;
+	}
+	
+	public void addRecommendation(String rec) {
+		recommendation.add(rec);
+	}
+	
+	public ArrayList<String> getRecommendation() {
+		return recommendation;
+	}
+	*/
 }
