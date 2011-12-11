@@ -405,10 +405,24 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		
 		Map<Integer, Integer> x = new HashMap<Integer, Integer>();
 		for(Object[] o : l) {
-//			int i = Integer.parseInt(o[1].toString());
-//			x.put(Integer.parseInt(o[0].toString()), i);
 			int i = Double.valueOf(o[1].toString()).intValue();
 			x.put(Integer.parseInt(o[0].toString()), i);
+		}
+		return x;
+	}
+	
+
+
+	@Override
+	public Map<String, Integer> getBestAuctions() {
+		EntityManager em = EMF.get().createEntityManager();
+		
+		List<Object[]> l = em.createQuery("SELECT a.title, count(a.bidList) FROM Auction a GROUP BY a.title ORDER BY count(a.bidList) desc").setMaxResults(10).getResultList();
+		em.close();
+		
+		Map<String, Integer> x = new HashMap<String, Integer>();
+		for(Object[] o : l) {
+			x.put((String) o[0], Integer.parseInt(o[1].toString()));
 		}
 		return x;
 	}

@@ -58,4 +58,6 @@ public interface ServerService extends RemoteService {
 	public Map<String, Integer> getDayStatistics();
 
 	public Map<Integer, Integer> getDayOfWeekStatistics();
+
+	public Map<String, Integer> getBestAuctions();
 }

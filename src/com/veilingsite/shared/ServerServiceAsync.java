@@ -57,4 +57,5 @@ public interface ServerServiceAsync {
 
 	void getDayStatistics(AsyncCallback<Map<String, Integer>> callback);
 	void getDayOfWeekStatistics(AsyncCallback<Map<Integer, Integer>> callback);
+	void getBestAuctions(AsyncCallback<Map<String, Integer>> callback);
 }

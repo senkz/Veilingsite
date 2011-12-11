@@ -1,12 +1,10 @@
 package com.veilingsite.client.widgets;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.core.java.util.Collections;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -22,20 +20,16 @@ import com.google.gwt.visualization.client.visualizations.corechart.PieChart;
 import com.veilingsite.shared.MapUtil;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.ServerServiceAsync;
-import com.veilingsite.shared.domain.Auction;
 
-public class StatBidWidget extends VerticalPanel {
-	private HorizontalPanel topRow = new HorizontalPanel();
-	
+public class StatBidWidget extends VerticalPanel {	
 	private VerticalPanel chartPlace1 = new VerticalPanel();
 	private VerticalPanel chartPlace2 = new VerticalPanel();
 	private VerticalPanel chartPlace3 = new VerticalPanel();
 	
 	public StatBidWidget() {
 		
-		add(topRow);
-		topRow.add(chartPlace1);
-		topRow.add(chartPlace2);
+		add(chartPlace1);
+		add(chartPlace2);
 		add(chartPlace3);
 		
 		
@@ -43,10 +37,17 @@ public class StatBidWidget extends VerticalPanel {
 	      public void run() {
 	        createDayChart();
 	        createDayOfWeekChart();
-	 //     createHighscoreTable();
 	      }
 	    };
 	    VisualizationUtils.loadVisualizationApi(onLoadCallback, AreaChart.PACKAGE);
+	    
+
+	    Runnable onLoadCallback2 = new Runnable() {
+	      public void run() {
+	        createHighscoreTable();
+	      }
+	    };
+	    VisualizationUtils.loadVisualizationApi(onLoadCallback2, Table.PACKAGE);
 	}
 
 	private void createDayChart() {
@@ -86,49 +87,35 @@ public class StatBidWidget extends VerticalPanel {
 		myService.getDayStatistics(callback);
 	}
 
-	/**
-
 	private void createHighscoreTable() {
 		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
-		AsyncCallback<ArrayList<Auction>> callback = new AsyncCallback<ArrayList<Auction>>() {		
+		AsyncCallback<Map<String, Integer>> callback = new AsyncCallback<Map<String, Integer>>() {		
 			@Override
 			public void onFailure(Throwable caught) {}
 			
 			@Override
-			public void onSuccess(ArrayList<Auction> result) {
-				
+			public void onSuccess(Map<String, Integer> result) {
 				DataTable data = DataTable.create();
 				data.addColumn(ColumnType.STRING, "Auction");
 				data.addColumn(ColumnType.NUMBER, "Amount of bids placed");
-				data.addColumn(ColumnType.STRING, "Owner");
-				
-				Collections.sort(result);
-				
-				for(int i = 0; i < 10; i++) {
-					Auction a = result.get(i);
+
+				for (Entry<String, Integer> entry : result.entrySet()) {			
 					data.addRows(1);
-				    data.setValue(data.getNumberOfRows()-1, 0, a.getTitle());
-				    data.setValue(data.getNumberOfRows()-1, 1, a.getBidList().size());
-				    data.setValue(data.getNumberOfRows()-1, 1, a.getOwner().getUserName());
+				    data.setValue(data.getNumberOfRows()-1, 0, entry.getKey());
+				    data.setValue(data.getNumberOfRows()-1, 1, entry.getValue());
 				}
 				
-				Options lOpt = Options.create();
-				lOpt.setWidth(300);
-				lOpt.setHeight(240);
-				
-				Table highscoreTable = new Table();
+				Table highscoreTable = new Table(data, null);
 				highscoreTable.draw(data);
 				VerticalPanel vp = new VerticalPanel();
-			    vp.add(new Label("The most ammount of bids where placed on the following auction:"));
+			    vp.add(new Label("The most amount of bids where placed on the following auction:"));
 			    vp.add(highscoreTable);
 			    
 			    addChart(vp, 2);
 			}
 		};
-		myService.getAuctionList(null, null, callback);
+		myService.getBestAuctions(callback);
 	}
-
-	 **/
 	
 	private void createDayOfWeekChart() {
 		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
