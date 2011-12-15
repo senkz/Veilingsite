@@ -1,9 +1,7 @@
 package com.veilingsite.server;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +12,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.veilingsite.shared.ServerService;
 import com.veilingsite.shared.domain.Auction;
@@ -411,8 +410,6 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		return x;
 	}
 	
-
-
 	@Override
 	public Map<String, Integer> getBestAuctions() {
 		EntityManager em = EMF.get().createEntityManager();
@@ -425,6 +422,15 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 			x.put((String) o[0], Integer.parseInt(o[1].toString()));
 		}
 		return x;
+	}
+	
+	@Override
+	public Double getHighestBid(String s) {
+		EntityManager em = EMF.get().createEntityManager();
+		Double d = (Double) em.createQuery("SELECT MAX(b.amount) FROM Bid b WHERE b.placementDate < '"+s+"'").getSingleResult();
+		em.close();
+		
+		return d;
 	}
 }
 

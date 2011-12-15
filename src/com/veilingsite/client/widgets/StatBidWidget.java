@@ -1,11 +1,12 @@
 package com.veilingsite.client.widgets;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -25,12 +26,14 @@ public class StatBidWidget extends VerticalPanel {
 	private VerticalPanel chartPlace1 = new VerticalPanel();
 	private VerticalPanel chartPlace2 = new VerticalPanel();
 	private VerticalPanel chartPlace3 = new VerticalPanel();
+	private VerticalPanel chartPlace4 = new VerticalPanel();
 	
 	public StatBidWidget() {
 		
 		add(chartPlace1);
 		add(chartPlace2);
 		add(chartPlace3);
+		add(chartPlace4);
 		
 		
 	    Runnable onLoadCallback = new Runnable() {
@@ -48,6 +51,8 @@ public class StatBidWidget extends VerticalPanel {
 	      }
 	    };
 	    VisualizationUtils.loadVisualizationApi(onLoadCallback2, Table.PACKAGE);
+	    
+        createHighestBidTable();
 	}
 
 	private void createDayChart() {
@@ -177,6 +182,29 @@ public class StatBidWidget extends VerticalPanel {
 		myService.getDayOfWeekStatistics(callback);
 	}
 	
+	private void createHighestBidTable() {
+		System.out.println("dit is niet mijn code vriend");
+		Date d = new Date();
+		System.out.println(DateTimeFormat.getFormat("dd-MM-yy").format(d));
+		String s = DateTimeFormat.getFormat("dd-MM-yy").format(d);
+		s = "05-05-10";
+		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
+		AsyncCallback<Double> callback = new AsyncCallback<Double>() {		
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println(caught.getMessage());
+			}
+			
+			@Override
+			public void onSuccess(Double result) {
+				VerticalPanel vp = new VerticalPanel();
+			    vp.add(new Label("The highest bid placed: "+result));
+			    addChart(vp, 4);
+			}
+		};
+		myService.getHighestBid(s,callback);
+	}
+	
 	private void addChart(Widget w, int i) {
 		switch(i) {
 		case 1:
@@ -190,6 +218,10 @@ public class StatBidWidget extends VerticalPanel {
 		case 3:
 			chartPlace3.clear();
 			chartPlace3.add(w);
+			break;
+		case 4:
+			chartPlace4.clear();
+			chartPlace4.add(w);
 			break;
 		}
 	}

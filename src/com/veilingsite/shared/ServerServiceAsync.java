@@ -1,6 +1,7 @@
 package com.veilingsite.shared;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -58,4 +59,5 @@ public interface ServerServiceAsync {
 	void getDayStatistics(AsyncCallback<Map<String, Integer>> callback);
 	void getDayOfWeekStatistics(AsyncCallback<Map<Integer, Integer>> callback);
 	void getBestAuctions(AsyncCallback<Map<String, Integer>> callback);
+	void getHighestBid(String s,AsyncCallback<Double> callback);
 }

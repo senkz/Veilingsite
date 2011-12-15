@@ -1,6 +1,7 @@
 package com.veilingsite.shared;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -60,4 +61,6 @@ public interface ServerService extends RemoteService {
 	public Map<Integer, Integer> getDayOfWeekStatistics();
 
 	public Map<String, Integer> getBestAuctions();
+	
+	public Double getHighestBid(String s);
 }
