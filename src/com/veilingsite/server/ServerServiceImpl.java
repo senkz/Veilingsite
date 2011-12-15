@@ -89,8 +89,8 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 		    userx.setSurName(user.getSurName()); 
 		    userx.setMobilePhoneNumber(user.getMobilePhoneNumber()); 
 		    userx.setPassword(user.getPassword());
-		    //userx.setPermission(user.getPermission());
-		    //userx.setRecommendation(user.getRecommendation());
+		    userx.setPermission(user.getPermission());
+		    userx.setRecommendation(user.getRecommendation());
 		    em.persist(userx);
 		  } finally {
 			em.getTransaction().commit();

@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.veilingsite.client.controllers.UC;
 import com.veilingsite.client.widgets.AuctionBidWidget;
 import com.veilingsite.client.widgets.AuctionEditWidget;
+import com.veilingsite.client.widgets.AuctionRateWidget;
 import com.veilingsite.shared.domain.Auction;
 
 public class AuctionViewPage extends VerticalPanel{
@@ -39,6 +40,7 @@ public class AuctionViewPage extends VerticalPanel{
 		}
 		
 		loadPage();
+		containerLeft.add(new AuctionRateWidget(a));
 		open();
 	}
 	

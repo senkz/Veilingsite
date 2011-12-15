@@ -70,6 +70,25 @@ public class UserAccountPage extends VerticalPanel {
 	private void refreshPage() {
 		subMenu.add(menu);
 		userInfo = new LabelWidget();
+		
+		int pos = 0;
+		int neg = 0;
+		
+		if(UC.getLoggedIn()!=null) {
+			ArrayList<String> rating = UC.getLoggedIn().getRecommendation();
+			
+			if(!rating.isEmpty()){
+				for(String s : rating) {
+					if(s.equals("Positive")) {
+						pos++;
+					} else if(s.equals("Negative")){
+						System.out.println(s);
+						neg++;
+					}
+				}
+			}
+		}
+		
 		if(UC.getLoggedIn() != null) {
 			avc.setLimitUser(UC.getLoggedIn());
 			avc.loadAuctions();
@@ -77,6 +96,8 @@ public class UserAccountPage extends VerticalPanel {
 			ft.setWidget(0, 0, new Label("Username:"));		ft.setWidget(0, 1,  new Label(UC.getLoggedIn().getUserName()));
 			ft.setWidget(1, 0,  new Label("Name:"));		ft.setWidget(1, 1,  new Label(UC.getLoggedIn().getFirstName()));
 			ft.setWidget(2, 0,  new Label("Sur Name:"));	ft.setWidget(2, 1,  new Label(UC.getLoggedIn().getSurName()));
+			ft.setWidget(3, 0,  new Label("Postive rating:"));	ft.setWidget(3, 1,  new Label(pos+""));
+			ft.setWidget(4, 0,  new Label("Negative rating:"));	ft.setWidget(4, 1,  new Label(neg+""));
 			userInfo.setTitle("User Info");
 			userInfo.add(ft);
 			containerLeft.add(userInfo);

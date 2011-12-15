@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PersistenceProperty;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -20,7 +21,7 @@ public class User implements Serializable {
 	private String surName;
 	private String mobilePhoneNumber;
 	private String password;
-	//private ArrayList<String> recommendation = new ArrayList<String>(); 
+	private ArrayList<String> recommendation = new ArrayList<String>(); 
 	private int permission;
 
 	@Transient
@@ -197,17 +198,27 @@ public class User implements Serializable {
 	public String getUserI(){
 		return this.userName.toUpperCase();
 	}
-	/*
+	
 	public void setRecommendation(ArrayList<String> rec) {
 		this.recommendation = rec;
 	}
 	
 	public void addRecommendation(String rec) {
-		recommendation.add(rec);
+		if(recommendation instanceof ArrayList<?>) {
+			recommendation.add(rec);
+		} else {
+			recommendation = new ArrayList<String>();
+			recommendation.add(rec);
+		}
 	}
 	
 	public ArrayList<String> getRecommendation() {
-		return recommendation;
+		if(recommendation instanceof ArrayList<?>) {
+			return recommendation;
+		} else {
+			recommendation = new ArrayList<String>();
+			return recommendation;
+		}
 	}
-	*/
+	
 }
