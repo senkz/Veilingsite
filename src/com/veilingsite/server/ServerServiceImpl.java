@@ -427,7 +427,7 @@ public class ServerServiceImpl extends RemoteServiceServlet implements ServerSer
 	@Override
 	public Double getHighestBid(String s) {
 		EntityManager em = EMF.get().createEntityManager();
-		Double d = (Double) em.createQuery("SELECT MAX(b.amount) FROM Bid b WHERE b.placementDate < '"+s+"'").getSingleResult();
+		Double d = (Double) em.createQuery("SELECT b.amount FROM Bid b WHERE b.placementDate > '"+s+"' ORDER BY b.amount desc").setMaxResults(1).getSingleResult();
 		em.close();
 		
 		return d;

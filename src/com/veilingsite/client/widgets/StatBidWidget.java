@@ -1,5 +1,6 @@
 package com.veilingsite.client.widgets;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -182,12 +183,18 @@ public class StatBidWidget extends VerticalPanel {
 		myService.getDayOfWeekStatistics(callback);
 	}
 	
-	private void createHighestBidTable() {
-		System.out.println("dit is niet mijn code vriend");
-		Date d = new Date();
-		System.out.println(DateTimeFormat.getFormat("dd-MM-yy").format(d));
-		String s = DateTimeFormat.getFormat("dd-MM-yy").format(d);
-		s = "05-05-10";
+	private void createHighestBidTable() {		
+		Calendar cal = Calendar.getInstance();
+		
+		cal.set(Calendar.YEAR, 2010);
+		cal.add(Calendar.MONTH, -4);
+		Date d = cal.getTime();
+		
+		System.out.println("Dit is een date:");
+		System.out.println(d.toString());
+
+		String s = DateTimeFormat.getFormat("yyyy-MM-dd").format(d);
+		
 		ServerServiceAsync myService = (ServerServiceAsync) GWT.create(ServerService.class);
 		AsyncCallback<Double> callback = new AsyncCallback<Double>() {		
 			@Override
