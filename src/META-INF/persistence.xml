@@ -15,8 +15,8 @@
 			<property name="eclipselink.logging.exceptions" value="false"/>
 			
 	        <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@ondora01.hu.nl:8521:cursus01"/>
-	        <property name="javax.persistence.jdbc.user" value="stud1593882"/>
-	        <property name="javax.persistence.jdbc.password" value="stud1593882"/>
+	        <property name="javax.persistence.jdbc.user" value="*"/>
+	        <property name="javax.persistence.jdbc.password" value="*"/>
 	        
 			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
 			
